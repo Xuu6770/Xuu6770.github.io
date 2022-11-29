@@ -19,12 +19,12 @@
     <meta name="description" content="Intent 可谓是在 Activity 之间的交互中起到了重要的作用，启动模式也是学习 Activity 不可缺少的知识点。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Intent 和 Activity 的启动模式">
-<meta property="og:url" content="http://xuu6770.github.io/post/Intent-and-Activity-startup-modes/index.html">
+<meta property="og:url" content="http://xuu6770.github.io/post/Intent-and-Activity-startup-modes-in-Android/index.html">
 <meta property="og:site_name" content="RisingSun">
 <meta property="og:description" content="Intent 可谓是在 Activity 之间的交互中起到了重要的作用，启动模式也是学习 Activity 不可缺少的知识点。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-12-29T10:37:10.000Z">
-<meta property="article:modified_time" content="2022-10-15T03:37:28.553Z">
+<meta property="article:modified_time" content="2022-11-20T09:00:51.849Z">
 <meta property="article:author" content="Aiden Lin">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -194,7 +194,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          7.2k 字
+          7.3k 字
         
       </span>
     
@@ -269,6 +269,7 @@
 <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs Kotlin"><span class="hljs-comment">/* SecondActivity */</span><br><br><span class="hljs-keyword">val</span> <span class="hljs-keyword">data</span> = intent.getStringExtra(<span class="hljs-string">&quot;dataFromMainActivity&quot;</span>)<br>Log.d(<span class="hljs-string">&quot;SecondActivity&quot;</span>, <span class="hljs-string">&quot;传递过来的消息是：<span class="hljs-variable">$data</span>&quot;</span>)<br></code></pre></td></tr></table></figure>
 
 <p>在「SecondActivity」中并没有定义名为<code>intent</code>的 Intent 对象，<code>intent.getStringExtra(&quot;dataFromMainActivity&quot;)</code>中的<code>intent</code>实际上是调用了父类的<code>getIntent()</code>，该方法会获取用于启动「SecondActivity」的 Intent ，然后再通过 getXxxExtra 方法并传入键（dataFromMainActivity），就可以取出相应的值。</p>
+<p>除了上方代码中的<code>getStringExtra()</code>以及其它用于接收基本数据类型的方法之外，还有<code>getSerializableExtra()</code>、<code>getParcelableExtra()</code>、<code>getBundleExtra()</code>、<code>getCharSequenceExtra()</code>这四个方法用于接收相对应的对象。</p>
 <h3 id="返回给上一个-Activity"><a href="#返回给上一个-Activity" class="headerlink" title="返回给上一个 Activity"></a>返回给上一个 Activity</h3><p>在<code>androidx.appcompat:appcompat:1.3.0</code>以及更高的版本当中，<code>startActivityForResult()</code>已被废弃，同时被废弃的还有<code>requestPermissions()</code>。取而代之的是 Activity Result API ，通过这个 API 来实现两个 Activity 间的数据交换以及请求运行时权限。</p>
 <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs Kotlin"><span class="hljs-comment">/* MainActivity */</span><br><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> requestDataLauncher =<br>    <span class="hljs-comment">// 调用 registerForActivityResult() 来注册一个对 Activity 结果的监听</span><br>    registerForActivityResult(ActivityResultContracts.StartActivityForResult()) &#123;<br>        <span class="hljs-comment">// 若有结果发返回则会回调此处的 Lambda 表达式对结果进行处理</span><br>        <span class="hljs-keyword">if</span> (it.resultCode == RESULT_OK) &#123;<br>            <span class="hljs-keyword">val</span> <span class="hljs-keyword">data</span> = it.<span class="hljs-keyword">data</span>?.getStringExtra(<span class="hljs-string">&quot;dataFromSecondActivity&quot;</span>)<br>            Log.d(<span class="hljs-string">&quot;dataFromSecondActivity&quot;</span>, <span class="hljs-string">&quot;<span class="hljs-variable">$data</span>&quot;</span>)<br>        &#125;<br>    &#125;<br><br><span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onCreate</span><span class="hljs-params">(savedInstanceState: <span class="hljs-type">Bundle</span>?)</span></span> &#123;<br>    <span class="hljs-keyword">super</span>.onCreate(savedInstanceState)<br>    <span class="hljs-keyword">val</span> intent = Intent(<span class="hljs-keyword">this</span>, SecondActivity::<span class="hljs-keyword">class</span>.java)<br>    setContent &#123;<br>        <span class="hljs-comment">// 使用 ActivityResultLauncher 对象的 launch() 来启动 Intent</span><br>        Button(onClick = &#123; requestDataLauncher.launch(intent) &#125;) &#123;<br>            Text(text = <span class="hljs-string">&quot;启动 SecondActivity&quot;</span>)<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
@@ -354,7 +355,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>Intent 和 Activity 的启动模式</div>
-      <div>http://xuu6770.github.io/post/Intent-and-Activity-startup-modes/</div>
+      <div>http://xuu6770.github.io/post/Intent-and-Activity-startup-modes-in-Android/</div>
     </div>
     <div class="license-meta">
       
@@ -372,7 +373,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2022年10月15日</div>
+          <div>2022年11月20日</div>
         </div>
       
       
@@ -409,9 +410,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/post/Broadcast-in-Android/" title="Android 中的广播">
+                      <a href="/post/Broadcast-and-Notification-in-Android/" title="Android 中的广播和通知">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Android 中的广播</span>
+                        <span class="hidden-mobile">Android 中的广播和通知</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -520,7 +521,7 @@
     <div class="footer-inner">
   
     <div class="footer-content">
-       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span> 1.9.3</a> 
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 1.9.3 
     </div>
   
   
