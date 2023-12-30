@@ -1,0 +1,754 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Aiden Lin">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="真的很抽象，很难理解。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 中的范围裁切和几何变换">
+<meta property="og:url" content="https://xuu6770.github.io/posts/Range-clipping-and-geometric-transformations-in-Android/index.html">
+<meta property="og:site_name" content="Rising Sun">
+<meta property="og:description" content="真的很抽象，很难理解。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-05-15T11:59:03.000Z">
+<meta property="article:modified_time" content="2023-05-16T11:19:36.000Z">
+<meta property="article:author" content="Aiden Lin">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Android 中的范围裁切和几何变换 - Rising Sun</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/font_3301692_z35nm65vkgq.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xuu6770.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Rising Sun</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/RisingSun.jpeg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Android 中的范围裁切和几何变换"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-05-15 19:59" pubdate>
+          2023年5月15日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.6k 字
+        
+      </span>
+    
+
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Android 中的范围裁切和几何变换</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>真的很抽象，很难理解。</p>
+<span id="more"></span>
+
+<h2 id="范围裁切"><a href="#范围裁切" class="headerlink" title="范围裁切"></a>范围裁切</h2><p>在<code>Canvas</code>类中有很多用于范围裁切的函数，首先来介绍一下<code>clipRect()</code>，这是一个用于裁剪矩形区域的函数，只有在指定的矩形区域内绘制的内容才会被显示出来。该函数接收 4 个参数，代表所裁剪矩形的位置（左上右下），这和定义一个矩形是一致的：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> paint = Paint(Paint.ANTI_ALIAS_FLAG)<br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> imageSize = <span class="hljs-number">150f</span>.px  <span class="hljs-comment">// 图片大小</span><br><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> bitmap = betterGetBitmap(imageSize.toInt(), R.drawable.dedsec_logo)  <span class="hljs-comment">// 获取图片</span><br><br><span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDraw</span><span class="hljs-params">(canvas: <span class="hljs-type">Canvas</span>)</span></span> &#123;<br>    <span class="hljs-keyword">super</span>.onDraw(canvas)<br>    canvas.clipRect(<br>        imageMargin,<br>        imageMargin,<br>        imageMargin + imageSize / <span class="hljs-number">2f</span>,<br>        imageMargin + imageSize / <span class="hljs-number">2f</span><br>    )<br>    canvas.drawBitmap(bitmap, imageMargin, imageMargin, paint)<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 根据需求加载图片，以节省资源提高性能</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> requireWidth 需要返回的图片的宽度</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> picId 需要读取的图片</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">betterGetBitmap</span><span class="hljs-params">(requireWidth: <span class="hljs-type">Int</span>, picId: <span class="hljs-type">Int</span>)</span></span>: Bitmap &#123;<br>    <span class="hljs-keyword">val</span> options = BitmapFactory.Options().apply &#123;<br>        inJustDecodeBounds = <span class="hljs-literal">true</span>  <span class="hljs-comment">// 只获取图片的宽度和高度信息，而不加载整个图片</span><br>        BitmapFactory.decodeResource(resources, picId, <span class="hljs-keyword">this</span>)  <span class="hljs-comment">// 读取宽度和高度</span><br>        inJustDecodeBounds = <span class="hljs-literal">false</span>  <span class="hljs-comment">// 置为 false ，以便后续加载整个图片</span><br>        inDensity = outWidth  <span class="hljs-comment">// 设置读取到的图片的密度</span><br>        inTargetDensity = requireWidth  <span class="hljs-comment">// 设置目标密度</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> BitmapFactory.decodeResource(resources, picId, options)  <span class="hljs-comment">// 按照目标重新读取图片并返回</span><br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 为 Float 类型的数据定义一个扩展属性，将这个值的 dp 单位转换为 px 并返回</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">val</span> <span class="hljs-built_in">Float</span>.px<br>    <span class="hljs-keyword">get</span>() = TypedValue.applyDimension(<br>        TypedValue.COMPLEX_UNIT_DIP, <span class="hljs-keyword">this</span>, Resources.getSystem().displayMetrics<br>    )<br></code></pre></td></tr></table></figure>
+
+<p>程序运行，将会看到图片被裁成原本大小的四分之一。</p>
+<p>接下来是<code>clipPath()</code>，<code>clipPath()</code>允许创建更复杂的裁剪区域，这与它所接收的参数是一个 Path 对象有关，和<code>clipRect()</code>一样，只有在该区域内绘制的内容才会被显示出来：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">// 省略重复代码</span><br><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> path = Path().apply &#123;<br>    addOval(<br>        imageMargin,<br>        imageMargin,<br>        imageMargin + imageSize,<br>        imageMargin + imageSize,<br>        Path.Direction.CW<br>    )<br>&#125;<br><br><span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDraw</span><span class="hljs-params">(canvas: <span class="hljs-type">Canvas</span>)</span></span> &#123;<br>    <span class="hljs-keyword">super</span>.onDraw(canvas)<br>    canvas.clipPath(path)<br>    canvas.drawBitmap(bitmap, imageMargin, imageMargin, paint)<br>&#125;<br><br><span class="hljs-comment">// 省略重复代码</span><br></code></pre></td></tr></table></figure>
+
+<p>在上面的代码中，定义了一个 Path 对象，并向其中添加了一个椭圆，随后为这个椭圆设置了位置参数，使其成为矩形图片的内切圆，最后调用<code>clipPath()</code>并将这个 Path 对象传入以实现裁切效果，最终的效果就好像各大社交 app 中的头像一样，把一个矩形的图片限制在一个圆形的头像框内。</p>
+<p>值得一提的是，在先前的笔记中，这种将矩形裁成其内切圆的效果，也可以通过 Xfermode 的混合操作来实现，它和<code>clipPath()</code>的差距就在于裁切后的图片是否含有锯齿。对于<code>clipPath()</code>来说，是有锯齿的，这是因为<code>clipPath()</code>会按照 Path 对象提供的路径进行严格裁切，所裁切出来的区域存在的锯齿是无法通过 Paint 对象的<code>ANTI_ALIAS_FLAG</code>来进行修正的。反观 Xfermode 则可以在使用 Paint 对象进行绘制时向其设置抗锯齿属性，让最终效果看起来更平滑。</p>
+<p>此外还有<code>clipOutRect()</code>和<code>clipOutPath()</code>，这两个函数的效果与<code>clipRect()</code>和<code>clipPath()</code>是相反的，也就是在被裁切的区域之外绘制的内容才会被显示出来，这里就不记录用例了。</p>
+<h2 id="几何变换"><a href="#几何变换" class="headerlink" title="几何变换"></a>几何变换</h2><p>View 和 Canvas 有各自的坐标系，几何变换改变的是 Canvas 的坐标系，二维变换通常用到这四个方法：</p>
+<ul>
+<li><code>translate(float dx, float dy)</code>: 用于平移坐标系，它将坐标系沿着 x 轴和 y 轴分别平移 dx 和 dy 个像素，之后所有的绘制操作都会在新的坐标系上进行。</li>
+<li><code>rotate(float degrees)</code>: 用于旋转坐标系，它将坐标系以原点为中心旋转 degrees 度，之后所有的绘制操作都会在新的坐标系上进行。<ul>
+<li><code>rotate(float degrees, float px, float py)</code>：三参数版本，坐标系将以横坐标为 px 纵坐标为 py 的点为中心旋转 degrees 度。</li>
+</ul>
+</li>
+<li><code>scale(float sx, float sy)</code>: 用于缩放坐标系，它将坐标系沿着 x 轴和 y 轴分别缩放 sx 和 sy 倍，之后所有的绘制操作都会在新的坐标系上进行。</li>
+<li><code>skew(float sx, float sy)</code>: 用于扭曲坐标系，它将坐标系沿着 x 轴和 y 轴分别扭曲 sx 和 sy 度，之后所有的绘制操作都会在新的坐标系上进行。</li>
+</ul>
+<p>这些方法的作用对象都是 Canvas 坐标系，而不是图像或者图形本身，所以在进行多次变换的情况下，不同的调用顺序将会出现不一样的结果，就比如先平移后旋转和先旋转后平移是完全不一样的，所以调用这些方法的顺序就显得尤为讲究。</p>
+<p>这里有一个技巧，对于如何在变换后仍然能绘制出理想结果也许有帮助：如果能够清楚地知道每次调用变换方法后，新的 Canvas 坐标系的位置，那么就可以按照正常的思路来进行变换；反之，如果关注点在于图像，不考虑坐标系的变换，或者说假设坐标系一直位于起始位置没动过，那么就可以将原来的写法倒过来写，就能得到理想结果。</p>
+<h3 id="Matrix"><a href="#Matrix" class="headerlink" title="Matrix"></a>Matrix</h3><p>上述提到的<code>translate(float dx, float dy)</code>等方法都是 Canvas 中用于进行二维变换的方法，而<code>Matrix</code>类也有一系列方法可以提供二维变换：</p>
+<ul>
+<li><code>setTranslate(float dx, float dy)</code>：清除 Matrix 中的所有其它变换，然后设置新的平移变换。两个参数分别表示 x 和 y 方向上的位移。<ul>
+<li><code>preTranslate(float dx, float dy)</code>：将新的平移变换与 Matrix 中的现有变换进行前乘，即新的平移变换会首先被应用。该方法在实现复合变换时会用到，两个参数分别表示 x 和 y 方向上的位移。</li>
+<li><code>postTranslate(float dx, float dy)</code>：与上面的相反，即后乘，该变换会靠后被应用。</li>
+</ul>
+</li>
+<li><code>setRotate()</code>：设置旋转变换。<ul>
+<li><code>preRotate()</code>：同上。</li>
+<li><code>postRotate()</code>：同上。</li>
+</ul>
+</li>
+<li><code>setScale()</code>：设置缩放变换。<ul>
+<li><code>preScale()</code>：同上。</li>
+<li><code>postScale()</code>：同上。</li>
+</ul>
+</li>
+<li><code>setSkew()</code>：设置斜切变换。<ul>
+<li><code>preSkew()</code>：同上。</li>
+<li><code>postSkew()</code>：同上。</li>
+</ul>
+</li>
+</ul>
+<p>Matrix 的变换更适合被复用，因为它的作用对象并不一定是 Canvas 坐标系，简单来说就是谁应用了 Matrix ，谁就会变换。例如将其应用给 Bitmap ：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> imageSize = <span class="hljs-number">150f</span>.px  <span class="hljs-comment">// 图片大小</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> bitmap = betterGetBitmap(imageSize.toInt(), R.drawable.dedsec_logo)  <span class="hljs-comment">// 获取图片</span><br><br><span class="hljs-comment">// 创建一个 Matrix 并进行变换</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> matrix = Matrix().apply &#123;<br>    postRotate(<span class="hljs-number">45F</span>)  <span class="hljs-comment">// 进行旋转变换</span><br>    postScale(<span class="hljs-number">1.5F</span>, <span class="hljs-number">1.5F</span>)  <span class="hljs-comment">// 进行缩放变换</span><br>&#125;<br><br><span class="hljs-comment">// 通过创建一个新的 Bitmap 来把 Matrix 应用到其之上</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> transformedBitmap =<br>    Bitmap.createBitmap(bitmap, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, bitmap.width, bitmap.height, matrix, <span class="hljs-literal">true</span>)<br><br><span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDraw</span><span class="hljs-params">(canvas: <span class="hljs-type">Canvas</span>)</span></span> &#123;<br>    <span class="hljs-keyword">super</span>.onDraw(canvas)<br>    canvas.drawBitmap(transformedBitmap, <span class="hljs-number">0F</span>, <span class="hljs-number">0F</span>, <span class="hljs-literal">null</span>)  <span class="hljs-comment">// 绘制 Bitmap</span><br>&#125;<br><br><span class="hljs-comment">// 省略重复代码</span><br></code></pre></td></tr></table></figure>
+
+<p>或者也可以将其应用给 Canvas ，如果是这样的话，所有的变换又将会影响到坐标系了：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> imageSize = <span class="hljs-number">150f</span>.px  <span class="hljs-comment">// 图片大小</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> bitmap = betterGetBitmap(imageSize.toInt(), R.drawable.dedsec_logo)  <span class="hljs-comment">// 获取图片</span><br><br><span class="hljs-comment">// 创建一个 Matrix 并进行变换</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> matrix = Matrix().apply &#123;<br>    postRotate(<span class="hljs-number">45F</span>)  <span class="hljs-comment">// 进行旋转变换</span><br>    postScale(<span class="hljs-number">1.5F</span>, <span class="hljs-number">1.5F</span>)  <span class="hljs-comment">// 进行缩放变换</span><br>&#125;<br><br><span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDraw</span><span class="hljs-params">(canvas: <span class="hljs-type">Canvas</span>)</span></span> &#123;<br>    <span class="hljs-keyword">super</span>.onDraw(canvas)<br>    canvas.setMatrix(matrix)  <span class="hljs-comment">// 先应用 Matrix 再绘制 Bitmap</span><br>    <span class="hljs-comment">// canvas.concat(matrix)</span><br>    canvas.drawBitmap(bitmap, <span class="hljs-number">0F</span>, <span class="hljs-number">0F</span>, <span class="hljs-literal">null</span>)  <span class="hljs-comment">// 绘制 Bitmap</span><br>&#125;<br><br><span class="hljs-comment">// 省略重复代码</span><br></code></pre></td></tr></table></figure>
+
+<p>要将 Matrix 应用给 Canvas 一般有两个方法可以调用，分别是<code>setMatrix()</code>和<code>concat()</code>，前者是将 Canvas 的当前变换矩阵替换为指定的 Matrix ，后者则是将指定的 Matrix 与 Canvas 的当前变换矩阵进行合并。由于上面的代码中，Canvas 本身也没有发生变换，所以调用两个方法得到的效果都是一致的。</p>
+<h3 id="三维变换"><a href="#三维变换" class="headerlink" title="三维变换"></a>三维变换</h3><p>三维变换通常会使用到<code>Camera</code>类，<code>Camera</code>类是 Android 提供的一个用于实现三维变换效果的类，它可以实现从相机视角的角度来对 Canvas 进行平移、旋转、缩放等操作。进一步说，Camera 的变换操作将默认以坐标系原点为中心进行，并且其所产生的变换不是针对具体某一个物体，而是会影响整个场景中的所有物体。</p>
+<p>三维变换涉及到三维（Camera）坐标系，其具有以下特点：</p>
+<ul>
+<li>增加了一个垂直于屏幕的 z 轴，指向屏幕内的为正方向。</li>
+<li>原点（三轴交汇处）默认在 View 左上角。</li>
+<li>存在一个 Camera 模型，可以将其想象成用户的眼睛，其位于屏幕外的 z 轴上，对 Camera 坐标系上的图像进行投影，投射到 Canvas 坐标系上的内容将是最终的绘制结果。</li>
+<li>y 轴的正方向由往下为正变为了往上为正。</li>
+</ul>
+<p>接下来通过一个旋转 x 轴从而达到翻起图形的效果的例子来说明一下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> imageSize = <span class="hljs-number">150F</span>.px  <span class="hljs-comment">// 图片大小</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> imageMargin = <span class="hljs-number">50F</span>.px  <span class="hljs-comment">// 图片与屏幕左侧和顶部的距离</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> bitmap = betterGetBitmap(imageSize.toInt(), R.drawable.dedsec_logo)  <span class="hljs-comment">// 获取图片</span><br><br><span class="hljs-comment">// 初始化一个 Camera 并沿着 x 轴进行旋转</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> camera = Camera().apply &#123;<br>    rotateX(<span class="hljs-number">30F</span>)<br>&#125;<br><br><span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDraw</span><span class="hljs-params">(canvas: <span class="hljs-type">Canvas</span>)</span></span> &#123;<br>    <span class="hljs-keyword">super</span>.onDraw(canvas)<br><br>    camera.applyToCanvas(canvas)  <span class="hljs-comment">// 将 Camera 对象与 Canvas 联系起来</span><br>    canvas.drawBitmap(bitmap, imageMargin, imageMargin, <span class="hljs-literal">null</span>)  <span class="hljs-comment">// 绘制 Bitmap</span><br>&#125;<br><br><span class="hljs-comment">// 省略重复代码</span><br></code></pre></td></tr></table></figure>
+
+<p>在上面的代码中，尝试通过调用 Camera 对象的<code>rotateX()</code>来让 Camare 坐标系沿 x 轴进行旋转。程序运行后，可以看到在 Canvas 上绘制的矩形确实实现了翻起的效果，但是整个图像整体又过于偏右了，因为理想中的结果是，这个矩形在被翻转后，将会变成一个等腰梯形。</p>
+<p>为什么结果应该是等腰梯形？这主要是前面提到的 Camera 会对其坐标系上的图像进行投影，而在现实生活中，人眼在观察物体的时候是没有投影的，就算把一个本子或者是一张纸放在我们面前进行 x 轴翻转，最终的结果也仍然是矩形。</p>
+<p>但为什么实际运行的结果又不是等腰梯形？这是因为理想中的变换操作是建立在 Camera 坐标系的原点位于图形或图像中心进行的，但实际上前面也提到，原点默认位于屏幕左上角，又因为 Camera 是位于原点的 z 轴上的，所以当往右投影时，投射出来的结果会往右倾斜就好理解了。</p>
+<p>正确的做法应该是让 Camera 坐标系的原点处在 Bitmap 的中心，这样投射出来的结果就是正确的了。而为了达到这个目的，方法之一是：</p>
+<ol>
+<li>移动 Canvas 坐标系，让 z 轴刚好贯穿 Bitmap 的中心。</li>
+<li>调用<code>applyToCanvas()</code>进行投射。</li>
+<li>投射完成后再把 Canvas 坐标系移回原处。</li>
+</ol>
+<p>根据上面的思路修改前面的代码：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">// 省略重复代码</span><br><br><span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDraw</span><span class="hljs-params">(canvas: <span class="hljs-type">Canvas</span>)</span></span> &#123;<br>    <span class="hljs-keyword">super</span>.onDraw(canvas)<br><br>    <span class="hljs-comment">// 将 Canvas 坐标系向左上角移动，让图形中心与原点重合</span><br>    canvas.translate(-(imageMargin + imageSize / <span class="hljs-number">2</span>), -(imageMargin + imageSize / <span class="hljs-number">2</span>))<br><br>    <span class="hljs-comment">// 进行投射</span><br>    camera.applyToCanvas(canvas)<br><br>    <span class="hljs-comment">// 将 Canvas 坐标系移动回原来的位置</span><br>    canvas.translate(imageMargin + imageSize / <span class="hljs-number">2</span>, imageMargin + imageSize / <span class="hljs-number">2</span>)<br><br>    <span class="hljs-comment">// 绘制 Bitmap</span><br>    canvas.drawBitmap(bitmap, imageMargin, imageMargin, <span class="hljs-literal">null</span>)<br>&#125;<br><br><span class="hljs-comment">// 省略重复代码</span><br></code></pre></td></tr></table></figure>
+
+<p>即便思路很清晰，程序运行却仍然没有得到理想的结果。这是因为三维变换一般都会用到前面提到的技巧，也就是在正常思路下的代码写完以后，按照正常思路，把代码再「倒着写」一遍，这样一来，上面的代码就会变成：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">// 省略重复代码</span><br><br><span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDraw</span><span class="hljs-params">(canvas: <span class="hljs-type">Canvas</span>)</span></span> &#123;<br>    <span class="hljs-keyword">super</span>.onDraw(canvas)<br><br>    <span class="hljs-comment">// 4. 将 Canvas 坐标系移动回原来的位置</span><br>    canvas.translate(imageMargin + imageSize / <span class="hljs-number">2</span>, imageMargin + imageSize / <span class="hljs-number">2</span>)<br><br>    <span class="hljs-comment">// 3. 进行投射</span><br>    camera.applyToCanvas(canvas)<br><br>    <span class="hljs-comment">// 2. 将 Canvas 坐标系向左上角移动，让图形中心与原点重合</span><br>    canvas.translate(-(imageMargin + imageSize / <span class="hljs-number">2</span>), -(imageMargin + imageSize / <span class="hljs-number">2</span>))<br><br>    <span class="hljs-comment">// 1. 先绘制 Bitmap</span><br>    canvas.drawBitmap(bitmap, imageMargin, imageMargin, <span class="hljs-literal">null</span>)<br>&#125;<br><br><span class="hljs-comment">// 省略重复代码</span><br></code></pre></td></tr></table></figure>
+
+<p>再次运行就可以得到想要的结果了。</p>
+<h3 id="移动-Camera"><a href="#移动-Camera" class="headerlink" title="移动 Camera"></a>移动 Camera</h3><p>在<code>Camera</code>类中，有一个方法叫<code>setLocation(float x, float y, float z)</code>，该方法用于设定 Camera 的位置，默认位置为（0, 0, -8）。其中第三个参数，也就是垂直于屏幕的距离的远近，对绘制结果的影响最大，它的变化会影响投影时图像或图形的大小，所以这个方法经常用来对拥有不同屏幕像素密度的设备进行适配。至于另外两个参数，一般用处不大。</p>
+<p>这个物理模型其实也好理解，离屏幕近，看到的东西就大，反之就小，默认值为<code>-8</code>就代表 Camera 默认就是在屏幕外的，已经有一个高度了，所以就算不手动调用<code>setLocation()</code>，也仍然可以实现一些 3D 效果，就比如上面的投影。但是一个写死的值是不能成为最佳方案的，为了适配上面提到的不同屏幕像素密度的设备，就需要进行以下修改：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">// 省略重复代码</span><br><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> camera = Camera().apply &#123;<br>    rotateX(<span class="hljs-number">30F</span>)<br>    setLocation(<span class="hljs-number">0F</span>, <span class="hljs-number">0F</span>, -<span class="hljs-number">8F</span> * resources.displayMetrics.density)<br>&#125;<br><br><span class="hljs-comment">// 省略重复代码</span><br></code></pre></td></tr></table></figure>
+
+<p>由于<code>resources.displayMetrics.density</code>是屏幕像素密度，会根据不同的设备而变化，故而<code>-8F * resources.displayMetrics.density</code>整体就是一个动态的值，至于<code>-8</code>其实也不一定是<code>-8</code>，也可以是<code>-7</code>或者<code>-9</code>，具体是哪个值可以根据具体的显示效果来调整，直到满意为止。</p>
+<h2 id="简单运用"><a href="#简单运用" class="headerlink" title="简单运用"></a>简单运用</h2><p>接下来通过将范围裁切和几何变换进行配合，实现一个 Bitmap 对半折效果（从下往上翻）：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">// 省略重复代码</span><br><br><span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDraw</span><span class="hljs-params">(canvas: <span class="hljs-type">Canvas</span>)</span></span> &#123;<br>    <span class="hljs-keyword">super</span>.onDraw(canvas)<br><br>    canvas.save()<br>    canvas.translate(imageMargin + imageSize / <span class="hljs-number">2</span>, imageMargin + imageSize / <span class="hljs-number">2</span>)<br>    canvas.clipRect(-imageSize / <span class="hljs-number">2</span>, -imageSize / <span class="hljs-number">2</span>, imageSize / <span class="hljs-number">2</span>, <span class="hljs-number">0F</span>)<br>    canvas.translate(-(imageMargin + imageSize / <span class="hljs-number">2</span>), -(imageMargin + imageSize / <span class="hljs-number">2</span>))<br>    canvas.drawBitmap(bitmap, imageMargin, imageMargin, <span class="hljs-literal">null</span>)<br>    canvas.restore()<br><br>    <span class="hljs-comment">// 保存当前 Canvas 状态</span><br>    canvas.save()<br>    <span class="hljs-comment">// 将 Canvas 坐标系移动回原来的位置</span><br>    canvas.translate(imageMargin + imageSize / <span class="hljs-number">2</span>, imageMargin + imageSize / <span class="hljs-number">2</span>)<br>    <span class="hljs-comment">// 进行投射</span><br>    camera.applyToCanvas(canvas)<br>    <span class="hljs-comment">// 进行范围裁切，只保留 Bitmap 的下半部分</span><br>    canvas.clipRect(-imageSize / <span class="hljs-number">2</span>, <span class="hljs-number">0F</span>, imageSize / <span class="hljs-number">2</span>, imageSize / <span class="hljs-number">2</span>)<br>    <span class="hljs-comment">// 将 Canvas 坐标系向左上角移动，让图形中心与原点重合</span><br>    canvas.translate(-(imageMargin + imageSize / <span class="hljs-number">2</span>), -(imageMargin + imageSize / <span class="hljs-number">2</span>))<br>    <span class="hljs-comment">// 绘制 Bitmap</span><br>    canvas.drawBitmap(bitmap, imageMargin, imageMargin, <span class="hljs-literal">null</span>)<br>    <span class="hljs-comment">// 恢复 Canvas 状态</span><br>    canvas.restore()<br>&#125;<br><br><span class="hljs-comment">// 省略重复代码</span><br></code></pre></td></tr></table></figure>
+
+<p>并没有现成的方法能够实现 Bitmap 对半折（一半翻起来另一半不翻）的效果，所以自行实现的思路就是在几何变换的基础上加上范围裁切，先裁切下半部分，然后进行翻转，最后裁切上半部分，将两部分重合即可。</p>
+<p>这里额外需要提及的就是调用了 Canvas 的<code>save()</code>和<code>restore()</code>来保存和恢复状态，这是因为在第一次裁切以后，Canvas 的可绘制区域已被改变，需要通过保存裁切前的状态，并在裁切完成后进行恢复，才能保证绘制下半部分时能正常工作。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%AC%94%E8%AE%B0/" class="category-chain-item">笔记</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Android 中的范围裁切和几何变换</div>
+      <div>https://xuu6770.github.io/posts/Range-clipping-and-geometric-transformations-in-Android/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Aiden Lin</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年5月15日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2023年5月16日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-nc"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/I-am-not-dead-yet/" title="我还活着呢">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">我还活着呢</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/Another-Labor-Day-holiday-is-over/" title="又一个劳动节假期结束了">
+                        <span class="hidden-mobile">又一个劳动节假期结束了</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"KxvB15jyw49OOEE4AH5BpO9m-gzGzoHsz","appKey":"eiY4KeAI2BOHkSYuLYv1IBLg","path":"window.location.pathname","placeholder":"有何高见？","avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":true,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span> 7.0.0</a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span> 1.9.7</a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

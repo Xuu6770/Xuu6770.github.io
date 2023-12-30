@@ -1,0 +1,715 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Aiden Lin">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="不是很难的知识点，但还是花了点时间才理解。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Xfermode 的简单使用">
+<meta property="og:url" content="https://xuu6770.github.io/posts/Simple-usage-of-Xfermode/index.html">
+<meta property="og:site_name" content="Rising Sun">
+<meta property="og:description" content="不是很难的知识点，但还是花了点时间才理解。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-04-24T11:44:06.000Z">
+<meta property="article:modified_time" content="2023-04-25T16:27:16.000Z">
+<meta property="article:author" content="Aiden Lin">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Xfermode 的简单使用 - Rising Sun</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/font_3301692_z35nm65vkgq.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xuu6770.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Rising Sun</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/RisingSun.jpeg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Xfermode 的简单使用"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-04-24 19:44" pubdate>
+          2023年4月24日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.1k 字
+        
+      </span>
+    
+
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Xfermode 的简单使用</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>不是很难的知识点，但还是花了点时间才理解。</p>
+<span id="more"></span>
+
+<h2 id="简单用例"><a href="#简单用例" class="headerlink" title="简单用例"></a>简单用例</h2><p>Xfermode（transfer mode）是 Android 开发中用于实现图形混合效果的一种技术，于<code>android.graphics</code>包中的<code>PorterDuffXfermode</code>类中实现，主要用于处理位图（Bitmap）和绘制操作（如绘制图形、文字等）之间的像素混合。Xfermode 基于 Porter-Duff 混合算法，该算法是由 Thomas Porter 和 Tom Duff 于 1984 年提出的一种图形混合算法，可以实现多种不同的混合模式。</p>
+<p>Xfermode 提供了 16 种不同的混合模式，全部都在<code>PorterDuff.Mode</code>枚举中定义，包括：</p>
+<ul>
+<li>CLEAR：清除所有像素，即结果为透明。</li>
+<li>SRC：显示源图像，覆盖目标图像。</li>
+<li>DST：显示目标图像，忽略源图像。</li>
+<li>SRC_OVER：源图像覆盖在目标图像之上。</li>
+<li>DST_OVER：目标图像覆盖在源图像之上。</li>
+<li>SRC_IN：只显示源图像和目标图像相交的部分。</li>
+<li>DST_IN：只显示目标图像和源图像相交的部分。</li>
+<li>SRC_OUT：只显示源图像和目标图像不相交的部分。</li>
+<li>DST_OUT：只显示目标图像和源图像不相交的部分。</li>
+<li>SRC_ATOP：源图像覆盖在目标图像相交的部分，保留目标图像不相交的部分。</li>
+<li>DST_ATOP：目标图像覆盖在源图像相交的部分，保留源图像不相交的部分。</li>
+<li>XOR：显示源图像和目标图像不相交的部分，忽略相交部分。</li>
+<li>DARKEN：显示源图像和目标图像中较暗的像素。</li>
+<li>LIGHTEN：显示源图像和目标图像中较亮的像素。</li>
+<li>MULTIPLY：源图像和目标图像的颜色值相乘，结果为更暗的颜色。</li>
+<li>SCREEN：源图像和目标图像的颜色值进行反向相乘，结果为更亮的颜色。</li>
+</ul>
+<p>更详细的介绍可以查看官方文档：<a target="_blank" rel="noopener" href="https://developer.android.com/reference/android/graphics/PorterDuff.Mode">https://developer.android.com/reference/android/graphics/PorterDuff.Mode</a></p>
+<p>要使用 Xfermode，需要创建一个 PorterDuffXfermode 对象，并将其赋值给一个 Paint 对象的<code>xfermode</code>属性。例如：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">val</span> paint = Paint(Paint.ANTI_ALIAS_FLAG)<br><span class="hljs-keyword">val</span> mode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)<br>paint.xfermode = mode<br></code></pre></td></tr></table></figure>
+
+<p>然后在绘制时，使用带有该 Paint 对象的 Canvas 绘制方法，就可以实现相应的混合效果。不过需要注意的是，在使用 Xfermode 时，通常需要用到离屏缓冲。利用离屏缓冲，可以将某个 View 或图形对象在屏幕外部的缓冲区进行绘制，然后再将绘制结果显示到屏幕上。离屏绘制可以用于实现各种高级图形效果，如阴影、圆角、蒙版等。接下来看一个将椭圆和某张矩形图片混合的用例（可以理解为矩形的头像被裁切成圆形展示）：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> paint = Paint(Paint.ANTI_ALIAS_FLAG)<br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> picWidth = <span class="hljs-number">200f</span>.px  <span class="hljs-comment">// 图片宽度</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">lateinit</span> <span class="hljs-keyword">var</span> bounds: RectF  <span class="hljs-comment">// 延迟初始化一个矩形区域，用来画椭圆，和割出离屏缓冲的区域</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> mode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)  <span class="hljs-comment">// 定义 Xfermode</span><br><br><span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDraw</span><span class="hljs-params">(canvas: <span class="hljs-type">Canvas</span>)</span></span> &#123;<br>    <span class="hljs-keyword">super</span>.onDraw(canvas)<br>    <br>    <span class="hljs-keyword">val</span> count = canvas.saveLayer(bounds, <span class="hljs-literal">null</span>)  <span class="hljs-comment">// 保存当前图层并返回一个代表当前图层的 ID</span><br>    canvas.drawOval(bounds, paint)  <span class="hljs-comment">// 画椭圆</span><br>    paint.xfermode = mode  <span class="hljs-comment">// 设置 Xfermode</span><br><br>    <span class="hljs-comment">// 在屏幕中央获取并绘制出已准备好的图片</span><br>    <span class="hljs-comment">// R.drawable.dedsec_logo 为准备好的图片</span><br>    canvas.drawBitmap(<br>        betterGetBitmap(picWidth.toInt(), R.drawable.dedsec_logo),<br>        width / <span class="hljs-number">2f</span> - picWidth / <span class="hljs-number">2f</span>,<br>        height / <span class="hljs-number">2f</span> - picWidth / <span class="hljs-number">2f</span>,<br>        paint<br>    )<br><br>    paint.xfermode = <span class="hljs-literal">null</span>  <span class="hljs-comment">// 恢复 Xfermode</span><br>    canvas.restoreToCount(count)  <span class="hljs-comment">// 复原图层</span><br>&#125;<br><br><span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onSizeChanged</span><span class="hljs-params">(w: <span class="hljs-type">Int</span>, h: <span class="hljs-type">Int</span>, oldw: <span class="hljs-type">Int</span>, oldh: <span class="hljs-type">Int</span>)</span></span> &#123;<br>    <span class="hljs-keyword">super</span>.onSizeChanged(w, h, oldw, oldh)<br>    <span class="hljs-comment">// 计算涉及到屏幕的宽高，所以需要在 View 的大小改变时进行该操作</span><br>    bounds = RectF(<br>        width / <span class="hljs-number">2f</span> - picWidth / <span class="hljs-number">2f</span>,<br>        height / <span class="hljs-number">2f</span> - picWidth / <span class="hljs-number">2f</span>,<br>        width / <span class="hljs-number">2f</span> + picWidth / <span class="hljs-number">2f</span>,<br>        height / <span class="hljs-number">2f</span> + picWidth / <span class="hljs-number">2f</span><br>    )<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 根据需求加载图片，以节省资源提高性能</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> requireWidth 需要返回的图片的宽度</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> picId 需要读取的图片</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">betterGetBitmap</span><span class="hljs-params">(requireWidth: <span class="hljs-type">Int</span>, picId: <span class="hljs-type">Int</span>)</span></span>: Bitmap &#123;<br>    <span class="hljs-keyword">val</span> options = BitmapFactory.Options().apply &#123;<br>        inJustDecodeBounds = <span class="hljs-literal">true</span>  <span class="hljs-comment">// 只获取图片的宽度和高度信息，而不加载整个图片</span><br>        BitmapFactory.decodeResource(resources, picId, <span class="hljs-keyword">this</span>)  <span class="hljs-comment">// 读取宽度和高度</span><br>        inJustDecodeBounds = <span class="hljs-literal">false</span>  <span class="hljs-comment">// 置为 false ，以便后续加载整个图片</span><br>        inDensity = outWidth  <span class="hljs-comment">// 设置读取到的图片的密度</span><br>        inTargetDensity = requireWidth  <span class="hljs-comment">// 设置目标密度</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> BitmapFactory.decodeResource(resources, picId, options)  <span class="hljs-comment">// 按照目标重新读取图片并返回</span><br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 为 Float 类型的数据定义一个扩展属性，将这个值的 dp 单位转换为 px 并返回</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">val</span> <span class="hljs-built_in">Float</span>.px<br>    <span class="hljs-keyword">get</span>() = TypedValue.applyDimension(<br>        TypedValue.COMPLEX_UNIT_DIP, <span class="hljs-keyword">this</span>, Resources.getSystem().displayMetrics<br>    )<br></code></pre></td></tr></table></figure>
+
+<p>这就是 Xfermode 的一个简单用法，注释很详细，除了要知道<code>saveLayer()</code>很消耗性能以外似乎没有什么需要记录的。代码运行后会将准备好的矩形图片和椭圆混合，并将结果显示在屏幕中央。</p>
+<h2 id="理解误区"><a href="#理解误区" class="headerlink" title="理解误区"></a>理解误区</h2><p>在上面的用例中，使用到了一张图片和椭圆进行混合，并且图片和图形的坐标是一致的，同时图片的面积比图形大（椭圆成为了矩形的内切圆）。在这样的情况下，Xfermode 确实达到了理想中的效果。</p>
+<p>接下来来看另一个用例，现在要在使用<code>PorterDuff.Mode.SRC_IN</code>的情况下，将一个矩形（正方形）和椭圆（圆形）进行混合，来达到官方文档中 SRC_IN 的效果：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> paint = Paint(Paint.ANTI_ALIAS_FLAG)<br><span class="hljs-keyword">private</span> <span class="hljs-keyword">lateinit</span> <span class="hljs-keyword">var</span> ovalBounds: RectF  <span class="hljs-comment">// 延迟初始化一个矩形区域，用来画椭圆</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">lateinit</span> <span class="hljs-keyword">var</span> rectBounds: RectF  <span class="hljs-comment">// 延迟初始化一个矩形区域，用来画矩形</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> mode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)  <span class="hljs-comment">// 定义 Xfermode</span><br><br><span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDraw</span><span class="hljs-params">(canvas: <span class="hljs-type">Canvas</span>)</span></span> &#123;<br>    <span class="hljs-keyword">super</span>.onDraw(canvas)<br><br>    <span class="hljs-keyword">val</span> count = canvas.saveLayer(<br>        width / <span class="hljs-number">2f</span> - <span class="hljs-number">100f</span>.px,<br>        height / <span class="hljs-number">2f</span> - <span class="hljs-number">50f</span>.px,<br>        width / <span class="hljs-number">2f</span> + <span class="hljs-number">50f</span>.px,<br>        height / <span class="hljs-number">2f</span> + <span class="hljs-number">100f</span>.px,<br>        paint<br>    )<br>    paint.color = Color.parseColor(<span class="hljs-string">&quot;#53868B&quot;</span>)  <span class="hljs-comment">// 青色</span><br>    canvas.drawOval(ovalBounds, paint)  <span class="hljs-comment">// 先画椭圆</span><br>    paint.xfermode = mode<br>    paint.color = Color.parseColor(<span class="hljs-string">&quot;#B22222&quot;</span>)  <span class="hljs-comment">// 深红色</span><br>    canvas.drawRect(rectBounds, paint)  <span class="hljs-comment">// 再画矩形</span><br>    paint.xfermode = <span class="hljs-literal">null</span><br>    canvas.restoreToCount(count)<br>&#125;<br><br><span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onSizeChanged</span><span class="hljs-params">(w: <span class="hljs-type">Int</span>, h: <span class="hljs-type">Int</span>, oldw: <span class="hljs-type">Int</span>, oldh: <span class="hljs-type">Int</span>)</span></span> &#123;<br>    <span class="hljs-keyword">super</span>.onSizeChanged(w, h, oldw, oldh)<br>    <span class="hljs-comment">// 计算涉及到屏幕的宽高，所以需要在 View 的大小改变时进行该操作</span><br>    ovalBounds = RectF(<br>        width / <span class="hljs-number">2f</span> - <span class="hljs-number">50f</span>.px,<br>        height / <span class="hljs-number">2f</span> - <span class="hljs-number">50f</span>.px,<br>        width / <span class="hljs-number">2f</span> + <span class="hljs-number">50f</span>.px,<br>        height / <span class="hljs-number">2f</span> + <span class="hljs-number">50f</span>.px<br>    )<br>    <span class="hljs-comment">// 刻意将矩形的位置相对圆的位置进行一点偏移</span><br>    rectBounds = RectF(<br>        width / <span class="hljs-number">2f</span> - <span class="hljs-number">100f</span>.px,<br>        height / <span class="hljs-number">2f</span>,<br>        width / <span class="hljs-number">2f</span>,<br>        height / <span class="hljs-number">2f</span> + <span class="hljs-number">100f</span>.px<br>    )<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>上面的代码在不使用 Xfermode 的情况下会把两个图形完整地画出，同时圆的左下四分之一的部分将会与正方形重叠，也就是说，一切正常。然而在使用<code>PorterDuff.Mode.SRC_IN</code>模式后，却并不能得到官方文档中对应的 Source In 的效果，反而是得到了 Source Atop 的效果……具体原因个人理解如下：</p>
+<ul>
+<li>实际上，官方文档中用例所使用的并不是两个图形，而是两张大小相同、绘制位置也相同的图片（图片中包含了图形和透明区域）。</li>
+<li>混合结果与谁是 Source image 和谁是 Destination image 有关——在设置 Paint 对象的<code>xfermode</code>属性之前绘制的是 Destination image ，相应的，之后的就是 Source image 。</li>
+</ul>
+<p>以 SRC_IN 为例，其官方解释为：</p>
+<blockquote>
+<p>Keeps the source pixels that cover the destination pixels, discards the remaining source and destination pixels.</p>
+</blockquote>
+<p>先来看上半句话，大致意思是保留源与目标重叠的像素——在这里就是圆的左下四分之一的部分（在结果中可以看到这一部分确实是属于矩形的深红色）；然后是下半句话，抛弃源和目标剩下的像素。源剩下的像素被抛弃了好理解，因为矩形除了重叠的部分以外的都消失了，但是圆（目标）还剩下四分之三的像素保留在那里呢……所以这里只能是理解成非重叠的目标像素不在混合的计算范围内了。</p>
+<p>这时候如果把<code>canvas.drawOval(ovalBounds, paint)</code>和<code>canvas.drawRect(rectBounds, paint)</code>这两行代码调换一下位置，也就是先画矩形再画椭圆，就又会出现不一样的结果，这是因为它们之间源和目标的身份互换了。不过只要结合上面的理论，会发现这样的结果其实也还是说得通。</p>
+<p>再来一个例子，假设在原来先画椭圆再画矩形的基础上，把<code>canvas.drawRect(rectBounds, paint)</code>改成<code>canvas.drawRect(ovalBounds, paint)</code>，也就是将矩形绘制在和椭圆相同的位置，这时候圆又会成为这个矩形的内切圆，在<code>SRC_IN</code>的情况下，就又会得到一开始把矩形图片裁切成圆形的效果。</p>
+<p>总的来说，图形混合最终的效果主要和以下 3 点有关：</p>
+<ul>
+<li>Paint 对象的<code>xfermode</code>属性设置了什么值。</li>
+<li>两张图像哪张是 Destination image 哪张是 Source image 。</li>
+<li>两张图像的重叠部分。</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%AC%94%E8%AE%B0/" class="category-chain-item">笔记</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Xfermode 的简单使用</div>
+      <div>https://xuu6770.github.io/posts/Simple-usage-of-Xfermode/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Aiden Lin</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年4月24日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2023年4月26日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-nc"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/Measuring-and-drawing-text-in-Android/" title="文字的测量和绘制">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">文字的测量和绘制</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/Android-study-note-custom-views-part-1/" title="学习自定义 View 的第 1 节">
+                        <span class="hidden-mobile">学习自定义 View 的第 1 节</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"KxvB15jyw49OOEE4AH5BpO9m-gzGzoHsz","appKey":"eiY4KeAI2BOHkSYuLYv1IBLg","path":"window.location.pathname","placeholder":"有何高见？","avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":true,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span> 7.0.0</a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span> 1.9.7</a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

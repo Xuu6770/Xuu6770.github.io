@@ -1,0 +1,1015 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Aiden Lin">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="如果只是了解基础语法，那只能算是入门了 Kotlin 。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="更多的 Kotlin 学习笔记：协程">
+<meta property="og:url" content="https://xuu6770.github.io/posts/Kotlin-study-note-Coroutine/index.html">
+<meta property="og:site_name" content="Rising Sun">
+<meta property="og:description" content="如果只是了解基础语法，那只能算是入门了 Kotlin 。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-03-29T04:51:28.000Z">
+<meta property="article:modified_time" content="2023-05-07T15:58:50.000Z">
+<meta property="article:author" content="Aiden Lin">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>更多的 Kotlin 学习笔记：协程 - Rising Sun</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/font_3301692_z35nm65vkgq.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xuu6770.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Rising Sun</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/RisingSun.jpeg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="更多的 Kotlin 学习笔记：协程"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-03-29 12:51" pubdate>
+          2023年3月29日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          11k 字
+        
+      </span>
+    
+
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">更多的 Kotlin 学习笔记：协程</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>如果只是了解基础语法，那只能算是入门了 Kotlin 。</p>
+<span id="more"></span>
+
+<h2 id="历史"><a href="#历史" class="headerlink" title="历史"></a>历史</h2><p>Kotlin 的协程是 2017 年初在 1.1 版本加入进来的，那时协程还只是实验性的（Experimental）。等到 2018 年底，Kotlin 更新到 1.3 版本的时候，协程才成为 Kotlin 的正式特性。接着到 2019 年 Kotlin 协程才推出 Flow 相关的 API。事实上早在 1967 年的 Simula 语言当中，就已经出现了协程。不过在之后的几十年里，协程并没有被推广开，后续的 C、C++、Java 之类的语言，更多的是使用线程来进行异步和并发。直到 2012 年左右，C# 重新拾起了协程这个特性，实现了 async、await、yield。之后，JavaScript、Python、Kotlin 等语言才继续跟进实现了对应的协程。</p>
+<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><ul>
+<li>可以简单理解为「相互协作的程序」，例如在编写代码时，可以通过<code>yield()</code>挂起，让出执行权，然后当下一个需求到来时再继续执行。</li>
+<li>可以理解为更加轻量的线程，成千上万个协程可以同时运行在一个线程当中，但是成千上万个线程就可能会出现内存溢出。</li>
+<li>可以理解为是运行在线程当中的轻量的 Task ，这些 Task 支持挂起和恢复，当 Task 挂起时，就不会阻挡到后续的 Task 。</li>
+<li>不会与特定的线程绑定，可以在不同的线程之间灵活切换。</li>
+<li>是非阻塞式的，而线程是阻塞式的，比如协程的<code>delay()</code>和线程的<code>Thread.sleep()</code>。</li>
+</ul>
+<h2 id="启动协程"><a href="#启动协程" class="headerlink" title="启动协程"></a>启动协程</h2><h3 id="launch"><a href="#launch" class="headerlink" title="launch"></a>launch</h3><p>第一种启动协程的方式是通过协程作用域的扩展函数，这种方式是 <strong>非阻塞式</strong> 的，但是 <strong>拿不到</strong> 执行结果。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    GlobalScope.launch &#123;<br>        delay(<span class="hljs-number">1000</span>)<br>        println(Thread.currentThread().name)<br>    &#125;<br>    Thread.sleep(<span class="hljs-number">2000</span>)<br>    println(Thread.currentThread().name)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">DefaultDispatcher-worker-1 @coroutine#1<br>main<br></code></pre></td></tr></table></figure>
+
+<p>结论是：</p>
+<ul>
+<li><code>GlobalScope</code>是一个不怎么推荐使用的协程作用域（CoroutineScope）。</li>
+<li><code>launch()</code>是协程作用域的扩展函数。</li>
+<li>进入<code>launch()</code>内部发现该函数接收 3 个参数，分别是：<ol>
+<li>协程上下文（CoroutineContext），默认为<code>EmptyCoroutineContext</code>，可以手动传入<code>Dispatchers</code>，例如<code>GlobalScope.launch(Dispatchers.Main)</code>。</li>
+<li>协程启动模式（CoroutineStart），默认为<code>CoroutineStart.DEFAULT</code>，代表立即执行。</li>
+<li>一个函数类型的参数：<code>suspend CoroutineScope.() -&gt; Unit</code>，该函数的类型首先是挂起函数，其次还应该是<code>CoroutineScope</code>的成员函数或者扩展函数，最后就是该函数没有返回值。</li>
+</ol>
+</li>
+<li><code>launch()</code>返回一个<code>Job</code>，代表协程的句柄（Handle），它并不能返回协程的执行结果。</li>
+</ul>
+<h3 id="runBlocking"><a href="#runBlocking" class="headerlink" title="runBlocking"></a>runBlocking</h3><p>第二种启动协程的方式是使用<code>runBlocking()</code>，这种方式是 <strong>阻塞式</strong> 的，可以 <strong>拿到</strong> 执行结果。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-keyword">val</span> result = runBlocking &#123;<br>        println(<span class="hljs-string">&quot;协程启动&quot;</span>)<br>        delay(<span class="hljs-number">1000</span>)<br>        println(<span class="hljs-string">&quot;延迟结束&quot;</span>)<br>        <span class="hljs-string">&quot;114514&quot;</span>  <span class="hljs-comment">// 根据 Lambda 表达式的规则，最后一行将成为返回值</span><br>    &#125;<br><br>    println(<span class="hljs-string">&quot;协程结束，睡一下&quot;</span>)<br>    Thread.sleep(<span class="hljs-number">2000</span>)<br>    println(<span class="hljs-string">&quot;睡醒了，协程的执行结果是：<span class="hljs-variable">$result</span>&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">协程启动<br>延迟结束<br>协程结束，睡一下<br>睡醒了，协程的执行结果是：114514<br></code></pre></td></tr></table></figure>
+
+<p>结论是：</p>
+<ul>
+<li><code>runBlocking()</code>是阻塞式的，<code>Thread.sleep()</code>也是阻塞式的，所以整个程序非常正常地按照从上到下的顺序执行。</li>
+<li><code>runBlocking()</code>是一个普通函数，它接受两个参数，分别是协程上下文和一个函数类型的参数，其中后者具体类型为<code>suspend CoroutineScope.() -&gt; T</code>，可以看到它也提供了一个函数作用域，同时返回了一个泛型，同时这个泛型也将成为<code>runBlocking()</code>的返回值。</li>
+<li>Kotlin 官方强调 runBlocking 只推荐用于连接线程与协程，并且大部分情况下都只应该用于编写 Demo 或是测试代码。所以不应该在生产环境当中使用 runBlocking 。</li>
+</ul>
+<h3 id="async"><a href="#async" class="headerlink" title="async"></a>async</h3><p>第三种方式是使用<code>async()</code>，async 是在很多其它语言中都存在的一种协程模式，例如 C# 。在 Kotlin 当中，可以使用 async 创建协程，并且还能通过它返回的句柄 <strong>拿到</strong> 协程的执行结果。同时 async 也是 <strong>非阻塞式</strong> 的。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> = runBlocking &#123;<br>    println(<span class="hljs-string">&quot;进入 runBlocking&quot;</span>)<br><br>    <span class="hljs-keyword">val</span> deferred: Deferred&lt;String&gt; = async &#123;<br>        println(<span class="hljs-string">&quot;进入 async&quot;</span>)<br>        delay(<span class="hljs-number">2000</span>)<br>        println(<span class="hljs-string">&quot;async 结束&quot;</span>)<br>        <span class="hljs-string">&quot;114514&quot;</span><br>    &#125;<br><br>    println(<span class="hljs-string">&quot;获取协程结果&quot;</span>)<br>    <span class="hljs-keyword">val</span> result = deferred.await()<br>    println(<span class="hljs-string">&quot;结果为：<span class="hljs-variable">$result</span>&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs text">进入 runBlocking<br>获取协程结果<br>进入 async<br>async 结束<br>结果为：114514<br></code></pre></td></tr></table></figure>
+
+<p>结论是：</p>
+<ul>
+<li><code>async()</code>和<code>launch()</code>一样是协程作用域的扩展函数，需要<code>CoroutineScope</code>才能调用。在前面的例子中，<code>launch()</code>是跟在<code>GlobalScope</code>之后的调用的，而<code>async()</code>在此处由于是在 runBlocking 内部，runBlocking 提供了协程作用域，所以就直接调用了。</li>
+<li><code>async()</code>和<code>launch()</code>一样接收 3 个参数，同样是上下文、启动模式、函数类型的参数，只不过函数参数和<code>launch()</code>的不一样，<code>launch()</code>的函数参数没有返回值，<code>async()</code>的函数参数和 runBlocking 的函数参数一样返回一个泛型，但是又不完全一样，因为 runBlocking 的函数参数返回的这个泛型同样会作为 runBlocking 的返回值，但是<code>async()</code>的返回值并不是这个泛型，而是带有这个泛型的<code>Deferred&lt;T&gt;</code>。</li>
+<li>调用<code>Deferred&lt;T&gt;</code>的<code>await()</code>就可以拿到这个泛型返回值。</li>
+</ul>
+<h2 id="挂起函数"><a href="#挂起函数" class="headerlink" title="挂起函数"></a>挂起函数</h2><p>在 Kotlin 中，可以用<code>suspend</code>关键字来修饰函数，被修饰的函数将成为“挂起函数”。挂起函数可以以编写同步代码的方式完成异步任务，是 Kotlin 协程最大的优势。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> = runBlocking &#123;<br>    <span class="hljs-keyword">val</span> user = getUserInfo()<br>&#125;<br><br><span class="hljs-keyword">suspend</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">getUserInfo</span><span class="hljs-params">()</span></span>: String &#123;<br>    <span class="hljs-comment">// 网络请求</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Foobar&quot;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>以上是一个定义并使用挂起函数简单用例，其中需要了解的是：</p>
+<ul>
+<li>在 IntelliJ（Android Studio）中，IDE 会在挂起函数的使用处标记一个特殊的向右箭头用于表明这是挂起函数，而调用挂起函数的位置，又叫做挂起点（suspension point）。</li>
+<li>使用挂起函数后，表面上看起来是同步的代码，实际上涉及到了线程切换。例如上面的<code>val user = getUserInfo()</code>这一行代码就切换了两个线程。其中等号左边的代码运行在主线程，而等号右边的代码运行在 IO 线程。</li>
+<li>每一次从主线程到 IO 线程，都是一次协程挂起。每一次从 IO 线程到主线程，都是一次协程恢复。挂起和恢复是挂起函数特有的能力。</li>
+<li>挂起只是将程序执行流程转移到了其他线程，主线程不会被阻塞。如果代码运行在 Android 系统，那么 App 仍然可以响应用户的操作，主线程并不繁忙。</li>
+<li>被<code>suspend</code>修饰的函数，其函数类型也会发生变化。例如上面的<code>getUserInfo()</code>，它的类型是并不是<code>() -&gt; String</code>而是<code>suspend () -&gt; String</code>。</li>
+<li>把挂起函数反编译至 Java 后会变成一个普通函数，只不过这个函数会额外接收一个<code>Continuation</code>类型的参数。</li>
+<li>Continuation 封装了挂起函数的执行状态，当一个函数被挂起时，其相关信息会被保存到 Continuation 中，然后将该 Continuation 传递给异步操作，当异步操作完成后，将会使用该 Continuation 对象来恢复挂起函数的执行。</li>
+<li><code>Continuation</code>是一个接口，包含了：</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Interface representing a continuation after a suspension point that returns a value of type `T`.</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@SinceKotlin(<span class="hljs-string">&quot;1.3&quot;</span>)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">Continuation</span>&lt;<span class="hljs-type">in T</span>&gt; &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * The context of the coroutine that corresponds to this continuation.</span><br><span class="hljs-comment">     * 协程上下文</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">val</span> context: CoroutineContext<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * Resumes the execution of the corresponding coroutine passing a successful or failed [result] as the</span><br><span class="hljs-comment">     * return value of the last suspension point.</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * 恢复挂起函数的执行，并返回一个执行结果给挂起点。</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">resumeWith</span><span class="hljs-params">(result: <span class="hljs-type">Result</span>&lt;<span class="hljs-type">T</span>&gt;)</span></span><br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Resumes the execution of the corresponding coroutine passing [value] as the return value of the last suspension point.</span><br><span class="hljs-comment"> * 扩展函数，间接调用了`resumeWith()`，返回不一样的内容而已。</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@SinceKotlin(<span class="hljs-string">&quot;1.3&quot;</span>)</span><br><span class="hljs-meta">@InlineOnly</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">inline</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-type">&lt;T&gt;</span> Continuation<span class="hljs-type">&lt;T&gt;</span>.<span class="hljs-title">resume</span><span class="hljs-params">(value: <span class="hljs-type">T</span>)</span></span>: <span class="hljs-built_in">Unit</span> =<br>    resumeWith(Result.success(value))<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Resumes the execution of the corresponding coroutine so that the [exception] is re-thrown right after the</span><br><span class="hljs-comment"> * last suspension point.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * 扩展函数，恢复挂起函数并抛出异常。</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@SinceKotlin(<span class="hljs-string">&quot;1.3&quot;</span>)</span><br><span class="hljs-meta">@InlineOnly</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">inline</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-type">&lt;T&gt;</span> Continuation<span class="hljs-type">&lt;T&gt;</span>.<span class="hljs-title">resumeWithException</span><span class="hljs-params">(exception: <span class="hljs-type">Throwable</span>)</span></span>: <span class="hljs-built_in">Unit</span> =<br>    resumeWith(Result.failure(exception))<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>Continuation 和回调类似，但不完全一样。<ul>
+<li>控制流（指程序执行的顺序和流程）方向：回调的控制流方向是由异步操作来控制的。在使用回调函数的场景中，我们通常将回调函数传递给异步 API ，异步 API 在异步操作完成后会调用回调函数，从而改变控制流的方向。而 Continuation 是由我们自己来控制控制流方向的，它通过协程来管理挂起函数的状态。协程可以随时暂停执行，并在异步操作完成后恢复执行。</li>
+<li>上下文信息：回调函数通常只包含异步操作完成后的结果或错误信息。而 Continuation 不仅包含了结果或错误信息，还包含了协程的上下文信息，例如协程的堆栈和局部变量等。</li>
+<li>处理方式:在使用回调函数的场景中，我们通常需要编写一些额外的代码来处理异步操作的结果或错误信息。而在使用协程的场景中，我们可以像编写同步代码一样编写异步代码，避免了大量的回调函数嵌套。</li>
+</ul>
+</li>
+<li>从挂起函数到 Continuation 的过程叫做“CPS 转换”（Continuation-Passing-Style Transformation）。协程之所以是非阻塞，是因为它支持“挂起和恢复”，而挂起和恢复的能力，主要是源自于“挂起函数”，而挂起函数是由 CPS 实现的。</li>
+<li>综上所述，挂起函数只能在协程作用域中调用，或者是被另一个挂起函数调用。<ul>
+<li>以<code>runBlocking()</code>这个函数来说，尽管可以在它的 Lambda 表达式中调用挂起函数，但实际上它的 Lambda 表达式的本体就是一个被<code>suspend</code>修饰的函数类型的参数，所以说到底，作用域中调用挂起函数其实还是挂起函数调用挂起函数。</li>
+<li>关于为什么只能在挂起函数中调用挂起函数，是因为挂起函数中包含一个<code>Continuation</code>类型的参数，而<code>Continuation</code>当中又包含了只有在协程作用域里才能传递的协程上下文。</li>
+</ul>
+</li>
+</ul>
+<h3 id="withContext"><a href="#withContext" class="headerlink" title="withContext"></a>withContext</h3><p><code>withContext</code>就是一个挂起函数，用于切换协程的执行上下文（不是用于启动一个协程）。来看一个用例：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">import</span> kotlinx.coroutines.*<br><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> = runBlocking &#123;<br>    println(<span class="hljs-string">&quot;in runBlocking: <span class="hljs-subst">$&#123;Thread.currentThread().name&#125;</span>&quot;</span>)<br>    <span class="hljs-keyword">val</span> defaultResult = withContext(Dispatchers.Default) &#123;<br>        repeat(<span class="hljs-number">3</span>) &#123;<br>            println(<span class="hljs-string">&quot;延迟 <span class="hljs-subst">$&#123;it + <span class="hljs-number">1</span>&#125;</span> 秒&quot;</span>)<br>            delay(<span class="hljs-number">1000</span>)<br>        &#125;<br>        Thread.currentThread().name<br>    &#125;<br>    println(<span class="hljs-string">&quot;Dispatchers.Default 执行完毕&quot;</span>)<br>    <span class="hljs-keyword">val</span> ioResult = withContext(Dispatchers.IO) &#123;<br>        Thread.currentThread().name<br>    &#125;<br>    println(<span class="hljs-string">&quot;Dispatchers.Default 所在线程：<span class="hljs-variable">$defaultResult</span>\nDispatchers.IO 所在线程：<span class="hljs-variable">$ioResult</span>&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs text">in runBlocking: main @coroutine#1<br>延迟 1 秒<br>延迟 2 秒<br>延迟 3 秒<br>Dispatchers.Default 执行完毕<br>Dispatchers.Default 所在线程：DefaultDispatcher-worker-1 @coroutine#1<br>Dispatchers.IO 所在线程：DefaultDispatcher-worker-1 @coroutine#1<br></code></pre></td></tr></table></figure>
+
+<p>可以看到：</p>
+<ul>
+<li><code>withContext()</code>为挂起函数，需要在协程作用域或者挂起函数中调用。在调用时，还需要传入一个协程上下文类型的参数。</li>
+<li><code>withContext()</code>为挂起函数，在调用后，当前协程会被挂起，<code>withContext()</code>之后的代码在<code>withContext()</code>内的代码执行完成前都不会被执行。</li>
+<li><code>withContext()</code>是可以有返回值的，它的 Lambda 表达式的最后一行将作为协程执行结果返回。</li>
+</ul>
+<h2 id="协程作业（Job）"><a href="#协程作业（Job）" class="headerlink" title="协程作业（Job）"></a>协程作业（Job）</h2><p>在编程领域中，句柄（Handle）通常指一个标识符或引用，它可以用来引用或访问操作系统、应用程序中的对象或资源。协程的句柄通常是<code>Job</code>类型的对象，它提供了一些函数来管理协程的状态和执行，通过 Job 暴露的 API 还可以让不同的协程之间互相配合，从而实现更加复杂的功能。</p>
+<h3 id="Job"><a href="#Job" class="headerlink" title="Job"></a>Job</h3><p><code>launch()</code>返回一个<code>Job</code>对象，<code>async()</code>返回一个<code>Deferred&lt;out T&gt;</code>，但其实由于<code>Deferred&lt;out T&gt;</code>实现了<code>Job</code>接口，所以说到底<code>async()</code>还是返回了一个<code>Job</code>对象。通过<code>Job</code>对象，就可以监测协程的生命周期状态和操控协程：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">import</span> kotlinx.coroutines.Job<br><span class="hljs-keyword">import</span> kotlinx.coroutines.launch<br><span class="hljs-keyword">import</span> kotlinx.coroutines.runBlocking<br><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> = runBlocking &#123;<br>    <span class="hljs-keyword">val</span> job = launch &#123; &#125;<br>    job.printInfo()<br>    job.cancel()<br>    job.printInfo()<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">fun</span> Job.<span class="hljs-title">printInfo</span><span class="hljs-params">()</span></span> &#123;<br>    println(<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        isActive: <span class="hljs-variable">$isActive</span></span><br><span class="hljs-string">        isCancelled: <span class="hljs-variable">$isCancelled</span></span><br><span class="hljs-string">        isCompleted: <span class="hljs-variable">$isCompleted</span></span><br><span class="hljs-string">        Thread: <span class="hljs-subst">$&#123;Thread.currentThread().name&#125;</span></span><br><span class="hljs-string">        ======================================</span><br><span class="hljs-string">    &quot;&quot;&quot;</span>.trimIndent()<br>    )<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs text">isActive: true<br>isCancelled: false<br>isCompleted: false<br>Thread: main @coroutine#1<br>======================================<br>isActive: false<br>isCancelled: true<br>isCompleted: false<br>Thread: main @coroutine#1<br>======================================<br></code></pre></td></tr></table></figure>
+
+<p>在上面的代码中，先是定义了一个<code>Job</code>对象的扩展函数<code>printInfo()</code>，用于打印对象的一些属性。然后在主函数中通过<code>launch()</code>拿到一个<code>Job</code>对象，并调用了<code>printInfo()</code>。从输出结果来看，一开始的时候，协程的<code>isActive</code>为<code>true</code>，即处于活跃状态，而在调用<code>cancel()</code>以后，协程将不再活跃，并且<code>isCancelled</code>变为<code>true</code>。</p>
+<p>也就是说，可以通过<code>Job</code>对象的属性（调用<code>printInfo()</code>）来监测协程，通过调用<code>cancel()</code>来操控协程。</p>
+<p>操控协程除了<code>cancel()</code>用于取消协程外，还可以通过<code>start()</code>来启动协程，只不过启动协程这件事一般会由协程框架去做，如果要手动启动协程，一般会配合<code>CoroutineStart.LAZY</code>来使用：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">import</span> kotlinx.coroutines.*<br><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> = runBlocking &#123;<br>    <span class="hljs-keyword">val</span> job = launch(start = CoroutineStart.LAZY) &#123;<br>        println(<span class="hljs-string">&quot;协程 <span class="hljs-subst">$&#123;Thread.currentThread().name&#125;</span> 启动&quot;</span>)<br>    &#125;<br>    delay(<span class="hljs-number">500</span>)<br>    job.printInfo()<br>    job.start()<br>    job.printInfo()<br>    delay(<span class="hljs-number">500</span>)<br>    job.cancel()<br>    delay(<span class="hljs-number">500</span>)<br>    job.printInfo()<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">fun</span> Job.<span class="hljs-title">printInfo</span><span class="hljs-params">()</span></span> &#123;<br>    println(<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        isActive: <span class="hljs-variable">$isActive</span></span><br><span class="hljs-string">        isCancelled: <span class="hljs-variable">$isCancelled</span></span><br><span class="hljs-string">        isCompleted: <span class="hljs-variable">$isCompleted</span></span><br><span class="hljs-string">        Thread: <span class="hljs-subst">$&#123;Thread.currentThread().name&#125;</span></span><br><span class="hljs-string">        ======================================</span><br><span class="hljs-string">    &quot;&quot;&quot;</span>.trimIndent()<br>    )<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs text">isActive: false<br>isCancelled: false<br>isCompleted: false<br>Thread: main @coroutine#1<br>======================================<br>isActive: true<br>isCancelled: false<br>isCompleted: false<br>Thread: main @coroutine#1<br>======================================<br>协程 main @coroutine#2 启动<br>isActive: false<br>isCancelled: false<br>isCompleted: true<br>Thread: main @coroutine#1<br>======================================<br></code></pre></td></tr></table></figure>
+
+<p><code>CoroutineStart.LAZY</code>实际上是作为<code>launch()</code>的第二个参数传入，代表了协程的懒加载启动，可以看到就算是一开始的时候延迟了 500 毫秒，launch 内部的打印也没有执行。而当调用了<code>start()</code>手动启动协程后，Job 的<code>isActive</code>变为了<code>true</code>，并且执行了 launch 内部的打印。</p>
+<p>透过 Job 接口的源码，我们也可以看到官方提供的注释中解释了 Job 的各种状态：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs plain">                                        wait children<br>+-----+ start  +--------+ complete   +-------------+  finish  +-----------+<br>| New | -----&gt; | Active | ---------&gt; | Completing  | -------&gt; | Completed |<br>+-----+        +--------+            +-------------+          +-----------+<br>                    |  cancel / fail       |<br>                    |     +----------------+<br>                    |     |<br>                    V     V<br>                +------------+                           finish  +-----------+<br>                | Cancelling | --------------------------------&gt; | Cancelled |<br>                +------------+                                   +-----------+<br></code></pre></td></tr></table></figure>
+
+<p>默认情况下一个 Job 在创建以后就是 Active 状态，但如果使用的是<code>CoroutineStart.LAZY</code>创建的话，那就是 New 状态，只有在调用<code>start()</code>或者<code>join()</code>以后才会进入 Active 状态。而<code>join()</code>也是一个挂起函数，它的作用就是挂起当前的程序执行流程，等待 Job 当中的协程任务执行完毕，然后再恢复当前的程序执行流程。</p>
+<p>此外还有一个函数与<code>join()</code>类似，都是用来处理协程完成事件的函数，这个函数是<code>invokeOnCompletion()</code>，尽管这两个函数都是定义在<code>Job</code>接口中，但是它们之间还是有差别的，接下来用代码来解释，先看<code>join()</code>：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> = runBlocking &#123;<br>    <span class="hljs-keyword">val</span> job = launch &#123;<br>        delay(<span class="hljs-number">3000</span>)<br>        println(<span class="hljs-string">&quot;job 完成了。&quot;</span>)<br>    &#125;<br>    job.join()<br>    println(<span class="hljs-string">&quot;runBlocking 完成了。&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">job 完成了。<br>runBlocking 完成了。<br></code></pre></td></tr></table></figure>
+
+<p><code>join()</code>是挂起函数，在<code>join()</code>被调用时，当前协程将会被挂起，也就是调用处以下的代码都不会执行，只有等到目标协程完成了，也就是 Job 对象引用的协程完成了，<code>join()</code>才会返回并继续执行当前协程。反映到上面这个例子就是 3 秒钟之后，两个文本几乎同时打印。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> = runBlocking &#123;<br>    <span class="hljs-keyword">val</span> job = launch &#123;<br>        delay(<span class="hljs-number">3000</span>)<br>    &#125;<br>    job.invokeOnCompletion &#123;<br>        println(<span class="hljs-string">&quot;job 完成了。&quot;</span>)<br>    &#125;<br>    println(<span class="hljs-string">&quot;runBlocking 完成了。&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">runBlocking 完成了。<br>job 完成了。<br></code></pre></td></tr></table></figure>
+
+<p>而<code>invokeOnCompletion()</code>更像是为协程注册了一个回调函数，当协程执行完成后，就会接着执行<code>invokeOnCompletion()</code>内部的代码。反映到上面这个例子就是先打印“runBlocking 完成了。”，等了 3 秒钟后再打印“job 完成了。”。</p>
+<h3 id="Deferred"><a href="#Deferred" class="headerlink" title="Deferred"></a>Deferred</h3><ul>
+<li><code>Deferred</code>是由<code>async()</code>返回的一个协程的结果类型，通过<code>Deferred</code>，就可以拿到异步计算的结果。</li>
+<li><code>Job</code>是由<code>launch()</code>返回的一个协程的任务类型，表示一个协程的执行任务。通过<code>Job</code>就可以拿到这个执行任务的引用。</li>
+</ul>
+<p>查看<code>Deferred</code>接口的源码可以看到，它继承了<code>Job</code>接口，同时多出了几个自己的函数，其中最主要的是<code>await()</code>：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">import</span> kotlinx.coroutines.*<br><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> = runBlocking &#123;<br>    <span class="hljs-keyword">val</span> deferred = async &#123;<br>        println(<span class="hljs-string">&quot;协程启动：<span class="hljs-subst">$&#123;Thread.currentThread().name&#125;</span>&quot;</span>)<br>        delay(<span class="hljs-number">1000</span>)<br>        println(<span class="hljs-string">&quot;协程结束：<span class="hljs-subst">$&#123;Thread.currentThread().name&#125;</span>&quot;</span>)<br>        <span class="hljs-string">&quot;114514&quot;</span>  <span class="hljs-comment">// Lambda 最后一行作为返回值</span><br>    &#125;<br>    <span class="hljs-keyword">val</span> result = deferred.await()<br>    println(<span class="hljs-string">&quot;结果：<span class="hljs-variable">$result</span>&quot;</span>)<br>    println(<span class="hljs-string">&quot;协程结束：<span class="hljs-subst">$&#123;Thread.currentThread().name&#125;</span>&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>执行结果是：</p>
+<blockquote>
+<p>协程启动：main @coroutine#2<br>协程结束：main @coroutine#2<br>结果：114514<br>协程结束：main @coroutine#1</p>
+</blockquote>
+<p>程序运行后先是打印了第一行文本，然后暂停了 1 秒钟，接着打印剩下 3 行。可以看到，<code>await()</code>是挂起函数，它的执行和<code>Job.join()</code>类似，会挂起当前协程，但不同的是，<code>await()</code>会返回结果。</p>
+<p>除了<code>Deferred</code>以外，还有一个实现了<code>Deferred</code>的接口也值得一提，就是<code>CompletableDeferred</code>。从名字上可以看出，这是一个具有“可完成”性质的 Deferred ，即可以手动标记协程的计算完成，并传递计算结果。来看个例子：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">import</span> kotlinx.coroutines.*<br><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-keyword">val</span> deferred = CompletableDeferred&lt;String&gt;()<br>    GlobalScope.launch &#123;<br>        println(<span class="hljs-string">&quot;开始执行 GlobalScope&quot;</span>)<br>        <span class="hljs-keyword">val</span> result = asyncCalculation()<br>        println(<span class="hljs-string">&quot;开始执行 complete&quot;</span>)<br>        deferred.complete(result)<br>        println(<span class="hljs-string">&quot;GlobalScope 结束&quot;</span>)<br>    &#125;<br>    runBlocking &#123;<br>        println(<span class="hljs-string">&quot;开始执行 runBlocking&quot;</span>)<br>        repeat(<span class="hljs-number">4</span>) &#123;<br>            delay(<span class="hljs-number">1000</span>)<br>            println(<span class="hljs-string">&quot;延迟 <span class="hljs-subst">$&#123;it + <span class="hljs-number">1</span>&#125;</span> 秒&quot;</span>)<br>        &#125;<br>        <span class="hljs-keyword">val</span> result = deferred.await()<br>        println(<span class="hljs-string">&quot;在 <span class="hljs-subst">$&#123;Thread.currentThread().name&#125;</span> 中打印执行结果：<span class="hljs-variable">$result</span>&quot;</span>)<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">suspend</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">asyncCalculation</span><span class="hljs-params">()</span></span>: String &#123;<br>    println(<span class="hljs-string">&quot;开始执行 asyncCalculation&quot;</span>)<br>    delay(<span class="hljs-number">2000</span>)<br>    <span class="hljs-keyword">return</span> Thread.currentThread().name<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>执行结果是：</p>
+<p>开始执行 runBlocking<br>开始执行 GlobalScope<br>开始执行 asyncCalculation<br>延迟 1 秒<br>延迟 2 秒<br>开始执行 complete<br>GlobalScope 结束<br>延迟 3 秒<br>延迟 4 秒<br>在 main @coroutine#2 中打印执行结果：DefaultDispatcher-worker-1 @coroutine#1</p>
+<p>在上面的代码中，先声明了一个<code>CompletableDeferred</code>对象，然后定义了一个挂起函数<code>asyncCalculation()</code>用来模拟异步计算，然后启动了一个 GlobalScope 和一个 runBlocking ，从输出结果来看，它们几乎是同时运行的，并且相互间没有什么干涉，也就是 GlobalScope 中调用的<code>asyncCalculation()</code>会被执行，而 runBlocking 中的<code>delay()</code>也会执行。而 GlobalScope 中的<code>asyncCalculation()</code>是挂起函数，当它被执行时，在它之下的代码将会被暂时搁置。</p>
+<p>在<code>asyncCalculation()</code>中的代码执行完毕以后，可以通过调用<code>CompletableDeferred</code>接口特有的<code>complete()</code>来设置异步计算的结果，然后当在 runBlocking 中调用<code>await()</code>时，该结果就会被返回。但是如果不调用<code>complete()</code>，那么在调用<code>await()</code>的地方就会被挂起，协程就一直会被阻塞。这种情况下可以通过<code>withTimeoutOrNull()</code>来设置等待超时（从而避免协程一直被阻塞的情况），例如可以把上面代码中的<code>val result = deferred.await()</code>改写成：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">try</span> &#123;<br>    withTimeoutOrNull(<span class="hljs-number">10000L</span>) &#123;<br>        <span class="hljs-keyword">val</span> result = deferred.await()<br>    &#125;<br>&#125; <span class="hljs-keyword">catch</span> (ex: TimeoutCancellationException) &#123;<br>    <span class="hljs-comment">// do something</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="CoroutineContext"><a href="#CoroutineContext" class="headerlink" title="CoroutineContext"></a>CoroutineContext</h2><p>CoroutineContext 可以理解为协程的上下文，是一个用于定义协程行为和配置的关键概念，在很多地方都有用到：</p>
+<ul>
+<li><code>launch()</code>中的第一个参数，接收的就是 CoroutineContext 对象，之前一直没传递是因为它有默认值。</li>
+<li><code>withContext()</code>的第一个参数也是 CoroutineContext 对象，而当我们在使用<code>withContext()</code>时，会经常传入<code>Dispatchers.Main</code>、<code>Dispatchers.IO</code>等值，由此可知，这些值也都是协程上下文。同时，<code>Dispatchers</code>也被称为“调度器”，是一个单例类，用于确定协程应在哪个线程或线程池上运行。</li>
+<li><code>runBlocking()</code>的第一个参数也是 CoroutineContext 对象，所以在使用时也可以向其传入<code>Dispatchers.IO</code>等值。</li>
+</ul>
+<p><code>Dispatchers</code>中除了<code>IO</code>以外，还有其它的可选值，这些可选值当中，除了<code>Main</code>以外的都是<code>CoroutineDispatcher</code>类型，而<code>Main</code>则是<code>MainCoroutineDispatcher</code>类型，不过<code>MainCoroutineDispatcher</code>也是继承自<code>CoroutineDispatcher</code>。这些可选值为：</p>
+<ul>
+<li><code>Dispatchers.Default</code>：这是一个用于 CPU 密集型任务的默认调度器。它在一个共享的线程池中运行协程，该线程池的线程数量根据设备的 CPU 核心数量进行调整。如果需要在协程中执行密集型计算，可以使用此调度器。</li>
+<li><code>Dispatchers.Main</code>：这是一个在 Android 和其他 UI 框架（如 JavaFX 和 Swing）中使用的主线程调度器。它用于执行与 UI 相关的操作，如更新 UI 组件。当需要在协程中执行 UI 操作时，可以使用此调度器，也就是说，该调度器在普通的 JVM 工程当中是无法直接使用的。</li>
+<li><code>Dispatchers.Unconfined</code>：这是一个特殊的调度器，通常仅用于测试和调试目的，不建议在生产环境中使用，其原因在于该协程可能运行在任意线程之上。</li>
+<li><code>Dispatchers.IO</code>：这是一个用于 I&#x2F;O 密集型任务的调度器，它使用了一个专门的线程池来处理 I&#x2F;O 操作，如文件读写、网络请求和数据库操作等。这个线程池的线程数量根据系统可用的处理器数量进行调整，以避免由于过多的线程导致的性能问题。值得注意的是，当 Dispatchers.Default 线程池中有富余线程的时候，它是可以被 IO 线程池复用的。</li>
+</ul>
+<h3 id="CoroutineScope"><a href="#CoroutineScope" class="headerlink" title="CoroutineScope"></a>CoroutineScope</h3><p>CoroutineScope 是启动协程的入口，提供了协程的上下文信息，定义了协程的基本操作，包括启动协程、取消协程、处理异常等。CoroutineScope 还可以与 Activity 或 Fragment 的生命周期相关联（例如在 Activity 或 Fragment 的<code>onStop()</code>中取消协程），这样一来，在 Activity 或 Fragment 的生命周期结束时，CoroutineScope 的生命周期也会结束，而所有在该 CoroutineScope 中启动的协程都会被自动取消。</p>
+<p>从源码上看，<code>CoroutineScope</code>接口中就仅仅只有一个<code>CoroutineContext</code>对象而已，<code>CoroutineScope.kt</code>中更多的是扩展函数和扩展属性，其中就包括了用于取消这个 scope 用的<code>CoroutineScope.cancel()</code>。那么这个<code>CoroutineScope.cancel()</code>和<code>Job.cancel()</code>有什么区别的，来看一段代码：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">import</span> kotlinx.coroutines.*<br><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> = runBlocking &#123;<br>    <span class="hljs-keyword">val</span> scope = CoroutineScope(Job())<br>    scope.launch &#123;<br>        println(<span class="hljs-string">&quot;Scope 1 <span class="hljs-subst">$&#123;Thread.currentThread().name&#125;</span> 启动&quot;</span>)<br>        delay(<span class="hljs-number">1000</span>)<br>        println(<span class="hljs-string">&quot;Scope 1 结束&quot;</span>)<br>    &#125;<br><br>    scope.launch &#123;<br>        println(<span class="hljs-string">&quot;Scope 2 <span class="hljs-subst">$&#123;Thread.currentThread().name&#125;</span> 启动&quot;</span>)<br>        delay(<span class="hljs-number">1000</span>)<br>        println(<span class="hljs-string">&quot;Scope 2 结束&quot;</span>)<br>    &#125;<br><br>    scope.launch &#123;<br>        println(<span class="hljs-string">&quot;Scope 3 <span class="hljs-subst">$&#123;Thread.currentThread().name&#125;</span> 启动&quot;</span>)<br>        delay(<span class="hljs-number">1000</span>)<br>        println(<span class="hljs-string">&quot;Scope 3 结束&quot;</span>)<br>    &#125;<br><br>    delay(<span class="hljs-number">500</span>)<br>    scope.cancel()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">Scope 1 DefaultDispatcher-worker-1 @coroutine#2 启动<br>Scope 2 DefaultDispatcher-worker-2 @coroutine#3 启动<br>Scope 3 DefaultDispatcher-worker-3 @coroutine#4 启动<br></code></pre></td></tr></table></figure>
+
+<p>在上面的代码中，分别创建了 3 个协程并打印一条信息总共 3 条信息，并且每个协程将会在 1 秒钟后再打印一条信息。只不过由于在 500 毫秒以后，CoroutineScope 调用了<code>cancel()</code>，导致 CoroutineScope 内部的协程均被取消，从而 1 秒钟后的消息都打不出来。由此得知，Job 是一个协程的句柄，它的<code>cancel()</code>只会取消它所对应的单个协程，而 CoroutineScope 的<code>cancel()</code>将会取消 CoroutineScope 中的所有协程包括子协程。</p>
+<h3 id="Job-和-Dispatcher"><a href="#Job-和-Dispatcher" class="headerlink" title="Job 和 Dispatcher"></a>Job 和 Dispatcher</h3><p>如果说 CoroutineScope 是封装了 CoroutineContext ，那么 Job 就是一个真正的 CoroutineContext 了。从<code>Job</code>接口的源码中可以看到，<code>Job</code>接口实现了<code>CoroutineContext.Element</code>，而<code>Element</code>接口又实现了<code>CoroutineContext</code>，所以 Job 算是间接实现了 CoroutineContext 。</p>
+<p>前面提到，通过对<code>withContext()</code>的了解得知，<code>Dispatchers.Main</code>、<code>Dispatchers.IO</code>等值也都是 CoroutineContext ，以<code>IO</code>为例，它的类型为<code>CoroutineDispatcher</code>，该类实现了<code>ContinuationInterceptor</code>接口，而这个接口又实现了<code>CoroutineContext.Element</code>，后面的就不用说了。</p>
+<h3 id="其它-CoroutineContext"><a href="#其它-CoroutineContext" class="headerlink" title="其它 CoroutineContext"></a>其它 CoroutineContext</h3><p><code>CoroutineName</code>是一个可选的上下文元素，它用于为协程指定一个名称，以便在调试和跟踪日志时更容易识别该协程。例如：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">import</span> kotlinx.coroutines.*<br><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> = runBlocking &#123;<br>    <span class="hljs-keyword">val</span> scope = CoroutineScope(Job())<br>    scope.launch(CoroutineName(<span class="hljs-string">&quot;自定义协程名称&quot;</span>)) &#123;<br>        println(Thread.currentThread().name)<br>    &#125;<br>    delay(<span class="hljs-number">500</span>)<br>    scope.cancel()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">DefaultDispatcher-worker-1 @自定义协程名称#2<br></code></pre></td></tr></table></figure>
+
+<p>而输出结果中的<code>#2</code>是一个代表该协程的自增且唯一 ID 。</p>
+<hr>
+<p><code>CoroutineExceptionHandler</code>是一个可选的上下文元素，用于在协程出现未处理异常时执行指定的操作。从源码中可以看到，接口定义了一个<code>handleException()</code>，也就是说，如果要自定义异常处理，只需要实现该函数即可。例如：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">import</span> kotlinx.coroutines.*<br><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> = runBlocking &#123;<br>    <span class="hljs-keyword">val</span> exception = CoroutineExceptionHandler &#123; _, throwable -&gt;<br>        println(<span class="hljs-string">&quot;未捕获异常：<span class="hljs-variable">$throwable</span>&quot;</span>)<br>    &#125;<br>    <span class="hljs-keyword">val</span> scope = CoroutineScope(Job())<br>    scope.launch(exception) &#123;<br>        <span class="hljs-keyword">val</span> str: String? = <span class="hljs-literal">null</span>  <span class="hljs-comment">// 将字符串对象定义为 null</span><br>        println(str!!.length)  <span class="hljs-comment">// 刻意造成空指针异常并且不捕获</span><br>        println(<span class="hljs-string">&quot;上一句出现了异常，那么这条语句还会执行吗？&quot;</span>)<br>    &#125;<br>    delay(<span class="hljs-number">500</span>)<br>    println(<span class="hljs-string">&quot;scope 内部出现了异常，那外面的协程还会继续执行吗？&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs text">未捕获异常：java.lang.NullPointerException<br>scope 内部出现了异常，那外面的协程还会继续执行吗？<br></code></pre></td></tr></table></figure>
+
+<p>在上面的代码中，首先通过<code>CoroutineExceptionHandler()</code>这个构造函数创建了<code>CoroutineExceptionHandler</code>对象：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">public</span> <span class="hljs-keyword">inline</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">CoroutineExceptionHandler</span><span class="hljs-params">(<span class="hljs-keyword">crossinline</span> handler: (<span class="hljs-type">CoroutineContext</span>, <span class="hljs-type">Throwable</span>) -&gt; <span class="hljs-type">Unit</span>)</span></span>: CoroutineExceptionHandler =<br>    <span class="hljs-keyword">object</span> : AbstractCoroutineContextElement(CoroutineExceptionHandler), CoroutineExceptionHandler &#123;<br>        <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">handleException</span><span class="hljs-params">(context: <span class="hljs-type">CoroutineContext</span>, exception: <span class="hljs-type">Throwable</span>)</span></span> =<br>            handler.invoke(context, exception)<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p>可以看到，构造函数直接返回了一个匿名内部类，这个匿名内部类实现了<code>CoroutineExceptionHandler</code>接口并重写了<code>handleException()</code>，但实际上真正的重写工作是交给了我们（因为在这里匿名内部类也只是去 invoke 了<code>handler</code>这个函数类型的参数而已），真正的实现是在我们的 Lambda 表达式中，在上面这个例子中就是这一部分：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">val</span> exception = CoroutineExceptionHandler &#123; _, throwable -&gt;<br>    println(<span class="hljs-string">&quot;未捕获异常：<span class="hljs-variable">$throwable</span>&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>而函数体中的内容就是捕获异常时具体要做的事情。</p>
+<p>接下来就是启动了一个协程并将这个自定义异常捕获传入进去，然后在协程中刻意制造了空指针异常并且不使用 try-catch 语句进行处理（因为 CoroutineExceptionHandler 只会捕获在协程内未处理的异常）。同时还需要注意，CoroutineExceptionHandler 只能处理当前协程（作为参数传入的那个协程）内的异常，但是同一个 CoroutineExceptionHandler 可以传入多个不同的协程中。</p>
+<h2 id="Channel"><a href="#Channel" class="headerlink" title="Channel"></a>Channel</h2><p>Channel 是一种线程安全的异步流数据传输机制，利用它，可以做到在不同的协程之间发送和接收数据。</p>
+<h3 id="发送数据"><a href="#发送数据" class="headerlink" title="发送数据"></a>发送数据</h3><p>在下面这个用例中，将会利用 Channel 对象发送 3 个整型数据：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>: <span class="hljs-built_in">Unit</span> = runBlocking &#123;<br>    println(<span class="hljs-string">&quot;<span class="hljs-subst">$&#123;Thread.currentThread().name&#125;</span> → 创建 Channel&quot;</span>)<br>    <span class="hljs-keyword">val</span> channel = Channel&lt;<span class="hljs-built_in">Int</span>&gt;(capacity = Channel.UNLIMITED)  <span class="hljs-comment">// 创建 Channel</span><br><br>    launch &#123;<br>        (<span class="hljs-number">1.</span><span class="hljs-number">.3</span>).forEach &#123;<br>            channel.send(it)<br>            println(<span class="hljs-string">&quot;<span class="hljs-subst">$&#123;Thread.currentThread().name&#125;</span> → 发送消息：<span class="hljs-variable">$it</span>&quot;</span>)<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<blockquote>
+<p>main @coroutine#1 → 创建 Channel<br>main @coroutine#2 → 发送消息：1<br>main @coroutine#2 → 发送消息：2<br>main @coroutine#2 → 发送消息：3</p>
+</blockquote>
+<p>要点：</p>
+<ul>
+<li>通过<code>Channel()</code>就能获得实例对象，<code>&lt;Int&gt;</code>表示该 Channel 用于传递 Int 类型的数据。</li>
+<li>创建了一个新的协程并在其中调用了 Channel 的<code>send()</code>，这是一个用于发送数据的挂起函数，发送的数据会被存储到 Channel 中，如果 Channel 的缓冲区已满，则发送方会被挂起，如果 Channel 被关闭，则会抛出一个异常。</li>
+<li>在上面的用例中，并没有编写从 Channel 中读取数据的逻辑，但是这并不影响 Channel 的工作（发送数据）。这就是 Channel 被称为“热数据流”的原因。这就好比去了饭店，服务员将茶具和茶杯端上，当顾客需要喝茶的时候，只需要自己倒就行了。又或者好比家里的水龙头，无论是否打开，自来水厂都在工作，而在需要用水的时候，只需要把水龙头打开，就会有自来水流出。</li>
+</ul>
+<h3 id="接收数据"><a href="#接收数据" class="headerlink" title="接收数据"></a>接收数据</h3><p>与挂起函数和 async 不同，Channel 可以通过循环来接收多个结果：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>: <span class="hljs-built_in">Unit</span> = runBlocking &#123;<br>    <span class="hljs-comment">// 省略重复代码</span><br><br>    launch &#123;<br>        <span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> channel) &#123;<br>            println(<span class="hljs-string">&quot;<span class="hljs-subst">$&#123;Thread.currentThread().name&#125;</span> → 接收消息：<span class="hljs-variable">$i</span>&quot;</span>)<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<blockquote>
+<p>main @coroutine#1 → 创建 Channel<br>main @coroutine#2 → 发送消息：1<br>main @coroutine#2 → 发送消息：2<br>main @coroutine#2 → 发送消息：3<br>main @coroutine#3 → 接收消息：1<br>main @coroutine#3 → 接收消息：2<br>main @coroutine#3 → 接收消息：3</p>
+</blockquote>
+<p>另外一种循环的方式是使用<code>consumeEach()</code>：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>: <span class="hljs-built_in">Unit</span> = runBlocking &#123;<br>    <span class="hljs-keyword">val</span> channel: ReceiveChannel&lt;<span class="hljs-built_in">Int</span>&gt; = produce &#123;<br>        (<span class="hljs-number">1.</span><span class="hljs-number">.3</span>).forEach &#123;<br>            send(it)<br>            println(<span class="hljs-string">&quot;<span class="hljs-subst">$&#123;Thread.currentThread().name&#125;</span> 发送了 <span class="hljs-variable">$it</span>&quot;</span>)<br>        &#125;<br>    &#125;<br><br>    channel.consumeEach &#123;<br>        println(<span class="hljs-string">&quot;<span class="hljs-subst">$&#123;Thread.currentThread().name&#125;</span> 接收了 <span class="hljs-variable">$it</span>&quot;</span>)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<blockquote>
+<p>main @coroutine#2 发送了 1<br>main @coroutine#1 接收了 1<br>main @coroutine#1 接收了 2<br>main @coroutine#2 发送了 2<br>main @coroutine#2 发送了 3<br>main @coroutine#1 接收了 3</p>
+</blockquote>
+<p>在 Channel 中，并不推荐使用<code>receive()</code>来读取数据。</p>
+<h3 id="关闭-Channel"><a href="#关闭-Channel" class="headerlink" title="关闭 Channel"></a>关闭 Channel</h3><p>在上一个用例中可以注意到，就算数据的发送和接收操作都已经完成了，程序却仍然没有结束运行。这是因为当 Channel 中没有数据可供接收时，从 Channel 接收数据的操作会被阻塞，也就是 launch 启动的协程一直在运行。</p>
+<p>解决方案之一就是调用 Channel 的<code>close()</code>：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>: <span class="hljs-built_in">Unit</span> = runBlocking &#123;<br>    <span class="hljs-comment">// 省略重复代码</span><br><br>    launch &#123;<br>        (<span class="hljs-number">1.</span><span class="hljs-number">.3</span>).forEach &#123;<br>            channel.send(it)<br>            println(<span class="hljs-string">&quot;<span class="hljs-subst">$&#123;Thread.currentThread().name&#125;</span> → 发送消息：<span class="hljs-variable">$it</span>&quot;</span>)<br>        &#125;<br><br>        channel.close()  <span class="hljs-comment">// 发送完数据后关闭 Channel</span><br>    &#125;<br><br>    <span class="hljs-comment">// 省略重复代码</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>解决方案之二是使用<code>produce()</code>来创建一个 ReceiveChannel 对象，该对象在数据发送完成后会自动关闭：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>: <span class="hljs-built_in">Unit</span> = runBlocking &#123;<br>    <span class="hljs-keyword">val</span> channel: ReceiveChannel&lt;<span class="hljs-built_in">Int</span>&gt; = produce &#123;<br>        (<span class="hljs-number">1.</span><span class="hljs-number">.3</span>).forEach &#123;<br>            send(it)<br>            println(<span class="hljs-string">&quot;<span class="hljs-subst">$&#123;Thread.currentThread().name&#125;</span> 发送了 <span class="hljs-variable">$it</span>&quot;</span>)<br>        &#125;<br>    &#125;<br><br>    launch &#123;<br>        <span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> channel) &#123;<br>            println(<span class="hljs-string">&quot;<span class="hljs-subst">$&#123;Thread.currentThread().name&#125;</span> 接收了 <span class="hljs-variable">$i</span>&quot;</span>)<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>ReceiveChannel 可以被视为一个只读的 Channel ，它只允许消费者从中读取数据，而不允许生产者向其中写入数据（没有<code>send()</code>）。这使得在协程中处理数据变得更加方便和安全。</p>
+<h3 id="函数签名"><a href="#函数签名" class="headerlink" title="函数签名"></a>函数签名</h3><p><code>Channel()</code>的函数签名如下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-type">&lt;E&gt;</span> <span class="hljs-title">Channel</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">    capacity: <span class="hljs-type">Int</span> = RENDEZVOUS,</span></span><br><span class="hljs-params"><span class="hljs-function">    onBufferOverflow: <span class="hljs-type">BufferOverflow</span> = BufferOverflow.SUSPEND,</span></span><br><span class="hljs-params"><span class="hljs-function">    onUndeliveredElement: ((<span class="hljs-type">E</span>) -&gt; <span class="hljs-type">Unit</span>)? = <span class="hljs-literal">null</span></span></span><br><span class="hljs-params"><span class="hljs-function">)</span></span>: Channel&lt;E&gt;<br></code></pre></td></tr></table></figure>
+
+<p>要点：</p>
+<ul>
+<li><code>Channel()</code>实际上并不是一个构造函数，而是一个带有泛型参数和另外三个参数的顶层函数。</li>
+<li><code>capacity: Int</code>：代表了 Channel 的容量。</li>
+<li><code>onBufferOverflow: BufferOverflow</code>：指定 Channel 在数据溢出时的处理方式：<ul>
+<li><code>SUSPEND</code>：默认值，缓冲区满了以后如果还要继续发送，发送方就会被挂起。</li>
+<li><code>DROP_OLDEST</code>：丢弃最旧的那条数据，然后发送新的数据。</li>
+<li><code>DROP_LATEST</code>：丢弃当前正准备发送的那条最新数据，而管道中的内容将维持不变。</li>
+</ul>
+</li>
+<li><code>onUndeliveredElement: ((E) -&gt; Unit)?</code>：当某些数据发送了但是没有被成功接收时会调用这个回调。</li>
+</ul>
+<p>接下来来看一下几个用例，首先是修改 capacity 后程序执行所发生的一些变化：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>: <span class="hljs-built_in">Unit</span> = runBlocking &#123;<br>    println(<span class="hljs-string">&quot;<span class="hljs-subst">$&#123;Thread.currentThread().name&#125;</span> → 创建 Channel&quot;</span>)<br>    <span class="hljs-keyword">val</span> channel = Channel&lt;<span class="hljs-built_in">Int</span>&gt;(capacity = Channel.UNLIMITED)  <span class="hljs-comment">// 将 Channel 的容量设置为无限大</span><br><br>    launch &#123;<br>        (<span class="hljs-number">1.</span><span class="hljs-number">.3</span>).forEach &#123;<br>            channel.send(it)<br>            println(<span class="hljs-string">&quot;<span class="hljs-subst">$&#123;Thread.currentThread().name&#125;</span> → 发送消息：<span class="hljs-variable">$it</span>&quot;</span>)<br>        &#125;<br><br>        channel.close()  <span class="hljs-comment">// 发送完数据后关闭 Channel</span><br>    &#125;<br><br>    launch &#123;<br>        <span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> channel) &#123;<br>            println(<span class="hljs-string">&quot;<span class="hljs-subst">$&#123;Thread.currentThread().name&#125;</span> → 接收消息：<span class="hljs-variable">$i</span>&quot;</span>)<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<blockquote>
+<p>main @coroutine#1 → 创建 Channel<br>main @coroutine#2 → 发送消息：1<br>main @coroutine#2 → 发送消息：2<br>main @coroutine#2 → 发送消息：3<br>main @coroutine#3 → 接收消息：1<br>main @coroutine#3 → 接收消息：2<br>main @coroutine#3 → 接收消息：3</p>
+</blockquote>
+<p>可以看到，当 Channel 的容量是无限大时，发送方可以一直往 Channel 中塞入数据，等数据都塞完以后，接收方才开始接收。如果此处的 capacity 是默认值的话，那么程序执行后，发送和接收的操作将会交替执行。</p>
+<p>而当把 capacity 设置为<code>Channel.CONFLATED</code>时，程序运行又会有别的结果：</p>
+<blockquote>
+<p>main @coroutine#1 → 创建 Channel<br>main @coroutine#2 → 发送消息：1<br>main @coroutine#2 → 发送消息：2<br>main @coroutine#2 → 发送消息：3<br>main @coroutine#3 → 接收消息：3</p>
+</blockquote>
+<p>对于该选项，如果有新的元素发送到该 Channel ，它将替换掉已经缓存的元素，否则新发送的元素将被直接缓存。如果不进行这个设置，而是将 capacity 设置为<code>1</code>，然后把 onBufferOverflow 设置为<code>BufferOverflow.DROP_OLDEST</code>，也可以得到一样的效果。</p>
+<p>而当把 onBufferOverflow 设置为<code>BufferOverflow.DROP_LATEST</code>并且 Channel 的容量已经满了情况下，新发送的数据会被直接丢弃。</p>
+<p>最后是<code>onUndeliveredElement</code>这个回调：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>: <span class="hljs-built_in">Unit</span> = runBlocking &#123;<br>    <span class="hljs-keyword">val</span> channel = Channel&lt;<span class="hljs-built_in">Int</span>&gt;(Channel.UNLIMITED) &#123;<br>        println(<span class="hljs-string">&quot;没有成功接收到的元素是 <span class="hljs-variable">$it</span>&quot;</span>)<br>    &#125;<br><br>    (<span class="hljs-number">1.</span><span class="hljs-number">.3</span>).forEach &#123;<br>        channel.send(it)  <span class="hljs-comment">// 发送 3 个元素</span><br>    &#125;<br><br>    channel.receive()  <span class="hljs-comment">// 只接收一个</span><br>    channel.cancel()  <span class="hljs-comment">// 后面两个不要了</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>对于这个函数类型的参数，这里传入的内容是将没有成功接收到的元素打印出来。随后便调用<code>send()</code>发送了 3 个数据，但是只调用<code>receive()</code>接收了一个，然后就调用<code>cancel()</code>取消了 Channel 。这时候<code>onUndeliveredElement</code>这个回调就会被调用。输出结果：</p>
+<blockquote>
+<p>没有成功接收到的元素是 2<br>没有成功接收到的元素是 3</p>
+</blockquote>
+<p>还有就是<code>Channel.cancel()</code>和<code>Channel.close()</code>的区别：前者用于取消当前 Channel 的所有挂起操作，包括发送和接收，但是在这种情况下，Channel 仍然可以重新发送和接收数据；后者则会把 Channel 整个关闭，不再允许发送数据，但是已经发送到 Channel 中的数据仍然可以被接收。</p>
+<p>Channel 中还有两个属性<code>isClosedForReceive</code>和<code>isClosedForSend</code>，它们分别用来帮助接收方和发送方判断当前 Channel 是否已经关闭。</p>
+<h2 id="Flow"><a href="#Flow" class="headerlink" title="Flow"></a>Flow</h2><p>Flow 提供了一种声明式的、响应式的数据流处理方式，用简洁、易读的代码处理异步操作，而无需回调或其他复杂的同步方法。</p>
+<p>「Flow」意为「流」，这里可以理解为「数据流」。在 Flow 中，存在发送数据的「上游」和接收数据的「下游」，以及在数据传输中进行各种处理的「中转站」。</p>
+<h3 id="创建-Flow"><a href="#创建-Flow" class="headerlink" title="创建 Flow"></a>创建 Flow</h3><p>一个简单的创建 Flow 的方式和使用<code>launch()</code>创建协程类似，就是使用<code>flow()</code>：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> = runBlocking &#123;<br>    <span class="hljs-keyword">val</span> myFlow = flow &#123;<br>        (<span class="hljs-number">1.</span><span class="hljs-number">.5</span>).forEach &#123;<br>            println(<span class="hljs-string">&quot;emit: <span class="hljs-variable">$it</span>&quot;</span>)<br>            emit(it)<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在上面的代码中，通过<code>flow &#123; &#125;</code>代码块创建了一个 Flow 对象，并且在代码块内部使用<code>emit()</code>来发送数据。但是当运行程序运行起来后会发现，日志中并没有显示该有的打印内容，这其实与 Flow 的特性有关。前面有提到 Channel 是“热”的，这是因为对于 Channel 来说，无论有没有接收方，发送方都会工作。而相对于 Channel 来说，Flow 算是“冷”的，这是因为数据的发送以及处理，是只有在调用了终止操作符后才会开始。</p>
+<p>第二种创建 Flow 的方式是通过<code>flowOf()</code>函数，这种以「xxxOf」命名的函数在其它地方也经常遇到，比如创建一个列表可以用<code>listOf()</code>，创建一个数组可以用<code>arrayOf()</code>。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">val</span> myFlow = flowOf(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>)<br></code></pre></td></tr></table></figure>
+
+<p>Flow 看起来和 List 在各方面都很像，实际上两者之间也是可以相互转换的：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">val</span> myFlow = flowOf(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>)<br><span class="hljs-keyword">val</span> myList = listOf(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>)<br>myFlow.toList()  <span class="hljs-comment">// 将 Flow 转换为 List</span><br>myList.asFlow()  <span class="hljs-comment">// 将 List 转换为 Flow</span><br></code></pre></td></tr></table></figure>
+
+<p>简单来说：</p>
+<ul>
+<li>第一种方式一般在需要处理异步操作时使用（比如执行网络请求数据、读取文件、数据库查询等），直接把数据作为参数传入<code>emit()</code>即可。</li>
+<li>第二种方式则适用于创建一个只包含有限数量值的 Flow ，或者说当需要发送一组已知的、固定数量的值时，就可以使用这种方式。</li>
+<li>第三种方式一般在需要对现有集合执行异步操作时使用，<code>asFlow()</code>允许将集合数据转换为 Flow ，然后在协程上下文中处理数据。</li>
+</ul>
+<h3 id="中间操作符"><a href="#中间操作符" class="headerlink" title="中间操作符"></a>中间操作符</h3><p>Flow 在创建完成后，可以通过各种中间操作符来对数据进行过滤和处理，最后再利用终止操作符来终止 Flow 并接收这些数据：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> = runBlocking &#123;<br>    <span class="hljs-keyword">val</span> myFlow = flowOf(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>)<br>    myFlow.filter &#123; it &gt; <span class="hljs-number">2</span> &#125;  <span class="hljs-comment">// 根据条件进行过滤</span><br>        .map &#123; it * <span class="hljs-number">3</span> &#125;  <span class="hljs-comment">// 对每个元素进行处理</span><br>        .take(<span class="hljs-number">1</span>)  <span class="hljs-comment">// 只取 1 个结果</span><br>        .collect &#123; println(it) &#125;  <span class="hljs-comment">// 结束 Flow 并接收数据；这里对每个数据进行打印</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<blockquote>
+<p>9</p>
+</blockquote>
+<h4 id="onStart、onCompletion"><a href="#onStart、onCompletion" class="headerlink" title="onStart、onCompletion"></a>onStart、onCompletion</h4><p>在上面的代码中，<code>filter</code>、<code>map</code>、<code>take</code>都算是比较基础的操作符，在 List 中也有。但是有些操作符是只有 Flow 才有的，比如<code>onStart</code>、<code>onCompletion</code>：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> = runBlocking &#123;<br>    <span class="hljs-keyword">val</span> myFlow = flowOf(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>)<br>    myFlow.onCompletion &#123;<br>        <span class="hljs-keyword">if</span> (it == <span class="hljs-literal">null</span>) println(<span class="hljs-string">&quot;Flow 正常结束&quot;</span>)<br>        <span class="hljs-keyword">else</span> println(<span class="hljs-string">&quot;存在异常：<span class="hljs-variable">$it</span>&quot;</span>)<br>    &#125;.filter &#123;<br>        println(<span class="hljs-string">&quot;filter: <span class="hljs-variable">$it</span>&quot;</span>)<br>        it &gt; <span class="hljs-number">2</span><br>    &#125;.map &#123;<br>        println(<span class="hljs-string">&quot;map: <span class="hljs-variable">$it</span>&quot;</span>)<br>        it * <span class="hljs-number">3</span><br>    &#125;.take(<span class="hljs-number">1</span>).onStart &#123; println(<span class="hljs-string">&quot;Flow 即将启动&quot;</span>) &#125;.collect &#123; println(<span class="hljs-string">&quot;collect: <span class="hljs-variable">$it</span>&quot;</span>) &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<blockquote>
+<p>Flow 即将启动<br>filter: 1<br>filter: 2<br>filter: 3<br>map: 3<br>collect: 9<br>存在异常：kotlinx.coroutines.flow.internal.AbortFlowException: Flow was aborted, no more elements needed</p>
+</blockquote>
+<p>可以看到，就算是把<code>onStart</code>操作符的位置放在最后面，但它仍然是第一个执行的，把<code>onCompletion</code>放到最前面，但它仍然是最后一个执行的。也就是说，这两个操作符的本质更像是一个回调而不是像<code>map</code>那样作为一个数据中转站来处理数据，同时，它们的执行顺序也与它们实际所在的位置无关。但是对于<code>map</code>和<code>take</code>等这些一般的操作符而言，它们的位置就会影响最终得到的结果了。</p>
+<p><code>onCompletion</code>就像一个收尾人，它负责在 Flow 完成收集后执行一些操作，并且无论 Flow 是否成功完成或发生异常，都会触发<code>onCompletion</code>。这使得它在清理资源或更新状态方面非常有用。以上面的代码来说，Flow 的结束伴随着异常，出现异常的原因也可以通过打印的内容得知：在调用完<code>map</code>操作符后，满足条件的结果有两个，但是又因为调用了<code>take</code>操作符，只取了第一个结果，第二个结果就不要了，所以在调用<code>collect</code>以后，Flow 就会终止并且传回一个“不再需要更多元素”的异常。</p>
+<p>这里如果把<code>take</code>操作符去掉，Flow 将会正常结束：</p>
+<blockquote>
+<p>Flow 即将启动<br>filter: 1<br>filter: 2<br>filter: 3<br>map: 3<br>collect: 9<br>filter: 4<br>map: 4<br>collect: 12<br>Flow 正常结束</p>
+</blockquote>
+<p>再来看一种情况：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> = runBlocking &#123;<br>    launch &#123;<br>        flow &#123;<br>            (<span class="hljs-number">1.</span><span class="hljs-number">.4</span>).forEach &#123; emit(it) &#125;<br>        &#125;.onCompletion &#123;<br>            <span class="hljs-keyword">if</span> (it == <span class="hljs-literal">null</span>) println(<span class="hljs-string">&quot;Flow completed successfully&quot;</span>)<br>            <span class="hljs-keyword">else</span> println(<span class="hljs-string">&quot;Flow completed with an exception: <span class="hljs-subst">$&#123;it.message&#125;</span>&quot;</span>)<br>        &#125;.collect &#123;<br>            <span class="hljs-keyword">if</span> (it == <span class="hljs-number">3</span>) cancel()<br>            println(<span class="hljs-string">&quot;collect: <span class="hljs-variable">$it</span>&quot;</span>)<br>        &#125;<br>    &#125;<br><br>    delay(<span class="hljs-number">100</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<blockquote>
+<p>collect: 1<br>collect: 2<br>collect: 3<br>Flow completed with an exception: StandaloneCoroutine was cancelled</p>
+</blockquote>
+<p>在上面的代码中，手动调用了<code>emit()</code>来发送数据，而在 collect 代码块内，判断当接收到的数据为 3 时，就调用<code>cancel()</code>来取消整个 Flow ，这里可以看到 Flow 的结束同样伴随着异常，只不过这里还有一个细节就是如果是以<code>flowOf()</code>的方式创建 Flow 的话，那么 Flow 将会正常结束，也就是只有手动调用<code>emit()</code>发送数据并在接收全部数据前取消才会发生上述状况。</p>
+<h4 id="catch"><a href="#catch" class="headerlink" title="catch"></a>catch</h4><p>不过以上所说的异常并不是什么很致命的错误，毕竟像<code>take</code>和<code>cancel()</code>本就是由我们手动执行的。但是如果在 Flow 中出现了类似于 RuntimeException 这样的异常，则是真正会终止程序的运行的。这时候可以考虑使用<code>catch</code>操作符来捕获异常：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> = runBlocking &#123;<br>    flow &#123;<br>        (<span class="hljs-number">1.</span><span class="hljs-number">.4</span>).forEach &#123;<br>            println(<span class="hljs-string">&quot;emit: <span class="hljs-variable">$it</span>&quot;</span>)<br>            <span class="hljs-comment">// if (it == 3) throw RuntimeException()  // 可以捕获</span><br>            emit(it)<br>        &#125;<br>    &#125;.filter &#123;<br>        <span class="hljs-comment">// if (it == 3) throw RuntimeException()  // 可以捕获</span><br>        println(<span class="hljs-string">&quot;filter: <span class="hljs-variable">$it</span>&quot;</span>)<br>        it &gt; <span class="hljs-number">2</span><br>    &#125;.<span class="hljs-keyword">catch</span> &#123;<br>        println(<span class="hljs-string">&quot;异常捕获：<span class="hljs-subst">$&#123;it&#125;</span>\n异常信息：<span class="hljs-subst">$&#123;it.message&#125;</span>&quot;</span>)<br>    &#125;.map &#123;<br>        println(<span class="hljs-string">&quot;map: <span class="hljs-variable">$it</span>&quot;</span>)<br>        <span class="hljs-comment">// if (it == 3) throw RuntimeException()  // 无法捕获</span><br>    &#125;.collect &#123;<br>        println(<span class="hljs-string">&quot;collect: <span class="hljs-variable">$it</span>&quot;</span>)<br>        <span class="hljs-comment">// throw RuntimeException()  // 无法捕获</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在上面的代码中，通过在 4 个不同的地方手动抛出异常，来检验<code>catch</code>操作符所能捕获的异常的范围。可以看到，这个范围与操作符本身所在的位置有关，具体来说就是，<code>catch</code>操作符只能捕获在它上游出现的异常。在上面的代码中，由于<code>map</code>操作符和<code>collect</code>操作符在<code>catch</code>操作符的下游，所以它们当中抛出的异常，就只能考虑使用传统的 try-catch 语句来捕获了。</p>
+<h4 id="flowOn"><a href="#flowOn" class="headerlink" title="flowOn"></a>flowOn</h4><p>接下来看一下<code>flowOn</code>这个操作符，这个操作符感觉和<code>withContext()</code>有点像，都是通过传入一个调度器来指定（切换）协程运行的上下文的：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> = runBlocking &#123;<br>    flow &#123;<br>        (<span class="hljs-number">1.</span><span class="hljs-number">.3</span>).forEach &#123;<br>            println(<span class="hljs-string">&quot;emit: <span class="hljs-variable">$it</span> in <span class="hljs-subst">$&#123;Thread.currentThread().name&#125;</span>&quot;</span>)<br>            emit(it)<br>        &#125;<br>    &#125;.map &#123;<br>        println(<span class="hljs-string">&quot;map: <span class="hljs-variable">$it</span> in <span class="hljs-subst">$&#123;Thread.currentThread().name&#125;</span>&quot;</span>)<br>        it * <span class="hljs-number">2</span><br>    &#125;.flowOn(Dispatchers.IO).collect &#123;<br>        println(<span class="hljs-string">&quot;collect: <span class="hljs-variable">$it</span> in <span class="hljs-subst">$&#123;Thread.currentThread().name&#125;</span>&quot;</span>)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<blockquote>
+<p>emit: 1 in DefaultDispatcher-worker-1 @coroutine#2<br>map: 1 in DefaultDispatcher-worker-1 @coroutine#2<br>emit: 2 in DefaultDispatcher-worker-1 @coroutine#2<br>map: 2 in DefaultDispatcher-worker-1 @coroutine#2<br>emit: 3 in DefaultDispatcher-worker-1 @coroutine#2<br>map: 3 in DefaultDispatcher-worker-1 @coroutine#2<br>collect: 2 in main @coroutine#1<br>collect: 4 in main @coroutine#1<br>collect: 6 in main @coroutine#1</p>
+</blockquote>
+<p>可以看到，<code>flowOn</code>和<code>catch</code>一样，其作用域仅限于它的上游，并且由于它们的位置并不能放在<code>collect</code>之后，所以 collect 代码块始终不在它们的作用域内。如果想要在 collect 代码块中指定协程上下文，就还得用回<code>withContext()</code>。</p>
+<h3 id="终止操作符"><a href="#终止操作符" class="headerlink" title="终止操作符"></a>终止操作符</h3><p>终止操作符或者又叫末端操作符，该类操作符一般用于将 Flow 转换为一个最终的数据结果或触发一个副作用。首先来看<code>launchIn</code>，该操作符用于将<code>flowOn</code>作用域以外的数据流放到一个指定的协程作用域中执行：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> = runBlocking &#123;<br>    flow &#123;<br>        (<span class="hljs-number">1.</span><span class="hljs-number">.3</span>).forEach &#123;<br>            println(<span class="hljs-string">&quot;emit: <span class="hljs-variable">$it</span> in <span class="hljs-subst">$&#123;Thread.currentThread().name&#125;</span>&quot;</span>)<br>            emit(it)<br>        &#125;<br>    &#125;.flowOn(Dispatchers.IO).map &#123;<br>        println(<span class="hljs-string">&quot;map: <span class="hljs-variable">$it</span> in <span class="hljs-subst">$&#123;Thread.currentThread().name&#125;</span>&quot;</span>)<br>        it * <span class="hljs-number">2</span><br>    &#125;.launchIn(<span class="hljs-keyword">this</span>)<br><br>    delay(<span class="hljs-number">100</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<blockquote>
+<p>emit: 1 in DefaultDispatcher-worker-1 @coroutine#3<br>emit: 2 in DefaultDispatcher-worker-1 @coroutine#3<br>emit: 3 in DefaultDispatcher-worker-1 @coroutine#3<br>map: 1 in main @coroutine#2<br>map: 2 in main @coroutine#2<br>map: 3 in main @coroutine#2</p>
+</blockquote>
+<p>可以看到，除了 flow 代码块以外的部分，都是运行在<code>launchIn()</code>所指定的作用域当中的，包括 collect 中的代码——可是这里并没有调用<code>collect</code>操作符……这实际上是因为调用<code>collect</code>收集数据这件事已经由<code>launchIn()</code>替我们完成了，从它的源码中就可以得知。</p>
+<p>此外还有很多其它的终止操作符：</p>
+<ul>
+<li><code>first()</code>：返回 Flow 中的第一个元素，如果 Flow 为空，则抛出异常。</li>
+<li><code>single()</code>：返回接收到的第一个元素，如果 Flow 发送了多个元素，则抛出异常。</li>
+<li><code>fold()</code>：对 Flow 发送的整型数据进行累加，返回最终结果：</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> = runBlocking &#123;<br>    flow &#123;<br>        (<span class="hljs-number">1.</span><span class="hljs-number">.3</span>).forEach &#123;<br>            println(<span class="hljs-string">&quot;emit: <span class="hljs-variable">$it</span> in <span class="hljs-subst">$&#123;Thread.currentThread().name&#125;</span>&quot;</span>)<br>            emit(it)<br>        &#125;<br>    &#125;.map &#123;<br>        println(<span class="hljs-string">&quot;map: <span class="hljs-variable">$it</span> in <span class="hljs-subst">$&#123;Thread.currentThread().name&#125;</span>&quot;</span>)<br>        it * <span class="hljs-number">2</span><br>    &#125;.fold(<span class="hljs-number">0</span>) &#123; acc, value -&gt;<br>        <span class="hljs-keyword">val</span> sum = acc + value<br>        println(<span class="hljs-string">&quot;acc = <span class="hljs-variable">$acc</span>, value = <span class="hljs-variable">$value</span>, sum = <span class="hljs-variable">$sum</span>&quot;</span>)<br>        sum<br>    &#125;<br><br>    delay(<span class="hljs-number">100</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<blockquote>
+<p>emit: 1 in main @coroutine#1<br>map: 1 in main @coroutine#1<br>acc &#x3D; 0, value &#x3D; 2, sum &#x3D; 2<br>emit: 2 in main @coroutine#1<br>map: 2 in main @coroutine#1<br>acc &#x3D; 2, value &#x3D; 4, sum &#x3D; 6<br>emit: 3 in main @coroutine#1<br>map: 3 in main @coroutine#1<br>acc &#x3D; 6, value &#x3D; 6, sum &#x3D; 12</p>
+</blockquote>
+<p><code>fold()</code>接收两个参数，第一个是一个整型，代表初始值；第二个是一个挂起的函数类型的参数，这个函数又有两个参数，<code>acc</code>代表累加值，<code>value</code>代表 collect 收集的每个值。其中<code>acc</code>默认等于初始值。</p>
+<ul>
+<li><code>reduce()</code>：和<code>fold</code>类似，只不过不需要手动指定初始值，而是使用 Flow 发送的第一个元素作为初始值。</li>
+<li><code>toList()</code>：将收集到的元素放到一个 List 中并返回。</li>
+</ul>
+<p>上面这些操作符都有一些共同特性，首先是它们都会作为整个流处理中的最后一个操作符出现，并且在它们之后不能再添加别的操作符。其次就是它们都是挂起函数。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%AC%94%E8%AE%B0/" class="category-chain-item">笔记</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>更多的 Kotlin 学习笔记：协程</div>
+      <div>https://xuu6770.github.io/posts/Kotlin-study-note-Coroutine/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Aiden Lin</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年3月29日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2023年5月7日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-nc"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/2023-04-02/" title="2023 年 4 月 2 日">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">2023 年 4 月 2 日</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/2023-03-22/" title="2023 年 3 月 22 日">
+                        <span class="hidden-mobile">2023 年 3 月 22 日</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"KxvB15jyw49OOEE4AH5BpO9m-gzGzoHsz","appKey":"eiY4KeAI2BOHkSYuLYv1IBLg","path":"window.location.pathname","placeholder":"有何高见？","avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":true,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span> 7.0.0</a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span> 1.9.7</a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

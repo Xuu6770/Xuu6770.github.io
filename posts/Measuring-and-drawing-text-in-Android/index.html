@@ -1,0 +1,741 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Aiden Lin">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="看起来好像是一个个很简单的需求，实则又有很多东西需要学。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="文字的测量和绘制">
+<meta property="og:url" content="https://xuu6770.github.io/posts/Measuring-and-drawing-text-in-Android/index.html">
+<meta property="og:site_name" content="Rising Sun">
+<meta property="og:description" content="看起来好像是一个个很简单的需求，实则又有很多东西需要学。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xuu6770.github.io/Images/Note-images/Measuring-and-drawing-text-in-Android.jpg">
+<meta property="article:published_time" content="2023-04-27T12:03:01.000Z">
+<meta property="article:modified_time" content="2023-05-18T18:19:38.000Z">
+<meta property="article:author" content="Aiden Lin">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://xuu6770.github.io/Images/Note-images/Measuring-and-drawing-text-in-Android.jpg">
+  
+  
+  
+  <title>文字的测量和绘制 - Rising Sun</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/font_3301692_z35nm65vkgq.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xuu6770.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Rising Sun</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/RisingSun.jpeg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="文字的测量和绘制"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-04-27 20:03" pubdate>
+          2023年4月27日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.5k 字
+        
+      </span>
+    
+
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">文字的测量和绘制</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>看起来好像是一个个很简单的需求，实则又有很多东西需要学。</p>
+<span id="more"></span>
+
+<h2 id="垂直居中"><a href="#垂直居中" class="headerlink" title="垂直居中"></a>垂直居中</h2><h3 id="静态文本"><a href="#静态文本" class="headerlink" title="静态文本"></a>静态文本</h3><p>假设现在需要绘制一串固定内容的文本，这串文本需要垂直居中于屏幕并水平排列，尝试写出下面的代码：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> paint = Paint(Paint.ANTI_ALIAS_FLAG).apply &#123;<br>    textSize = <span class="hljs-number">70f</span>.px<br>    textAlign = Paint.Align.CENTER<br>    strokeWidth = <span class="hljs-number">2f</span>.px<br>&#125;<br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> text = <span class="hljs-string">&quot;Aiden&quot;</span><br><br><span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDraw</span><span class="hljs-params">(canvas: <span class="hljs-type">Canvas</span>)</span></span> &#123;<br>    <span class="hljs-keyword">super</span>.onDraw(canvas)<br><br>    canvas.drawText(text, width / <span class="hljs-number">2f</span>, height / <span class="hljs-number">2f</span>, paint)  <span class="hljs-comment">// 尝试在屏幕垂直居中处绘制文本</span><br>    paint.color = Color.parseColor(<span class="hljs-string">&quot;#FF0000&quot;</span>)  <span class="hljs-comment">// 修改画笔颜色</span><br><br>    <span class="hljs-comment">// 在屏幕垂直居中处绘制一条水平线段</span><br>    canvas.drawLine(width / <span class="hljs-number">2f</span> - <span class="hljs-number">150f</span>.px, height / <span class="hljs-number">2f</span>, width / <span class="hljs-number">2f</span> + <span class="hljs-number">150f</span>.px, height / <span class="hljs-number">2f</span>, paint)<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 为 Float 类型的数据定义一个扩展属性，将这个值的 dp 单位转换为 px 并返回</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">val</span> <span class="hljs-built_in">Float</span>.px<br>    <span class="hljs-keyword">get</span>() = TypedValue.applyDimension(<br>        TypedValue.COMPLEX_UNIT_DIP, <span class="hljs-keyword">this</span>, Resources.getSystem().displayMetrics<br>    )<br></code></pre></td></tr></table></figure>
+
+<p>程序运行后确实可以绘制出文本和垂直居中的水平线段，但是这个文本是位于线段之上的，也就是本文并不在理想的位置上（因为线段已经垂直居中了，所以如果文本是垂直居中的话，那么文本应该会被线段从中间穿过去）。另外如果使用微信截图或者 QQ 截图来测量文字到屏幕顶部和底部的像素会发现也是不相等的，这是为什么呢。</p>
+<p>实际上，回过头去看<code>drawText()</code>的函数签名会发现，其第三个参数的注释是这么写的：</p>
+<blockquote>
+<p>The y-coordinate of the baseline of the text being drawn</p>
+</blockquote>
+<p>就是说这个纵坐标并不是文本中心的纵坐标之类的东西，而是文本基线（baseline）的纵坐标。基线是连接所有字符底部的虚拟线条，而文本会沿着这条线排列（在上面的代码中，水平线段的纵坐标和文本基线的纵坐标是一样的，所以绘制出来的水平线段可以大致看作是所绘制文本的基线）。</p>
+<p>所以如果真的要把文字垂直居中，那主要就是调整这个基线的位置：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> paint = Paint(Paint.ANTI_ALIAS_FLAG).apply &#123;<br>    textSize = <span class="hljs-number">70f</span>.px<br>    textAlign = Paint.Align.CENTER<br>    strokeWidth = <span class="hljs-number">2f</span>.px<br>&#125;<br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> text = <span class="hljs-string">&quot;Aiden&quot;</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> bounds = Rect()  <span class="hljs-comment">// 用于存储文本边界的坐标</span><br><br><span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDraw</span><span class="hljs-params">(canvas: <span class="hljs-type">Canvas</span>)</span></span> &#123;<br>    <span class="hljs-keyword">super</span>.onDraw(canvas)<br><br>    paint.getTextBounds(text, <span class="hljs-number">0</span>, text.length, bounds)  <span class="hljs-comment">// 获取文本的边界并存储到 Rect 对象中</span><br>    canvas.drawText(<br>        text,<br>        width / <span class="hljs-number">2f</span>,<br>        height / <span class="hljs-number">2f</span> - (bounds.top + bounds.bottom) / <span class="hljs-number">2f</span>,  <span class="hljs-comment">// 结合边界进行偏移计算</span><br>        paint<br>    )<br>    paint.color = Color.parseColor(<span class="hljs-string">&quot;#FF0000&quot;</span>)  <span class="hljs-comment">// 修改画笔颜色</span><br><br>    <span class="hljs-comment">// 在屏幕垂直居中处绘制一条水平线段</span><br>    canvas.drawLine(width / <span class="hljs-number">2f</span> - <span class="hljs-number">150f</span>.px, height / <span class="hljs-number">2f</span>, width / <span class="hljs-number">2f</span> + <span class="hljs-number">150f</span>.px, height / <span class="hljs-number">2f</span>, paint)<br>&#125;<br><br><span class="hljs-comment">// 省略 val Float.px</span><br></code></pre></td></tr></table></figure>
+
+<p>在上面的改动中，用到了 Paint 对象的<code>getTextBounds()</code>，该函数用于获取使用此 Paint 对象绘制出来的文本的边界，并将其存储在一个 Rect 对象中。在得到文本的边界坐标以后，利用上下边界坐标之和除以 2 得到一个中间坐标，最后在设置基线坐标时，只需要在算出了屏幕中心位置的情况下进行相应的偏移就能让文本位于屏幕垂直居中处了。</p>
+<h3 id="动态文本"><a href="#动态文本" class="headerlink" title="动态文本"></a>动态文本</h3><p>使用<code>getTextBounds()</code>的方法一般只适用于内容不变的文本，因为<code>getTextBounds()</code>得到的 top 和 bottom 属性是与绘制文本的内容有关的，如果内容发生变化，就会导致所绘制文本的基线的纵坐标频繁变动，从而造成文本在屏幕上上下跳动的情况。</p>
+<p>所以针对内容会变化的文本，应该采用 Paint 对象的<code>getFontMetrics()</code>方案：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> paint = Paint(Paint.ANTI_ALIAS_FLAG).apply &#123;<br>    textSize = <span class="hljs-number">70f</span>.px<br>    textAlign = Paint.Align.CENTER<br>    strokeWidth = <span class="hljs-number">2f</span>.px<br>&#125;<br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> text = <span class="hljs-string">&quot;bgdq&quot;</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> fontMetrics = paint.fontMetrics  <span class="hljs-comment">// 获取当前 Paint 对象的 FontMetrics 对象</span><br><br><span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDraw</span><span class="hljs-params">(canvas: <span class="hljs-type">Canvas</span>)</span></span> &#123;<br>    <span class="hljs-keyword">super</span>.onDraw(canvas)<br><br>    canvas.drawText(<br>        text,<br>        width / <span class="hljs-number">2f</span>,<br>        height / <span class="hljs-number">2f</span> - (fontMetrics.ascent + fontMetrics.descent) / <span class="hljs-number">2f</span>,  <span class="hljs-comment">// 进行偏移计算</span><br>        paint<br>    )<br>    paint.color = Color.parseColor(<span class="hljs-string">&quot;#FF0000&quot;</span>)  <span class="hljs-comment">// 修改画笔颜色</span><br><br>    <span class="hljs-comment">// 在屏幕垂直居中处绘制一条水平线段</span><br>    canvas.drawLine(width / <span class="hljs-number">2f</span> - <span class="hljs-number">150f</span>.px, height / <span class="hljs-number">2f</span>, width / <span class="hljs-number">2f</span> + <span class="hljs-number">150f</span>.px, height / <span class="hljs-number">2f</span>, paint)<br>&#125;<br><br><span class="hljs-comment">// 省略 val Float.px</span><br></code></pre></td></tr></table></figure>
+
+<p><code>FontMetrics</code>类则是一个关于文本绘制的辅助类，用于提供关于文本字体和布局的详细信息。它同时又是一个静态类，包含了 5 个属性：</p>
+<ul>
+<li><code>top</code>：一个负数，表示基线以上的最大距离，具体距离由当前文本字体中最高的字形决定。（The maximum distance above the baseline for the tallest glyph in the font at a given text size.）</li>
+<li><code>ascent</code>：一个负数，表示文本的上行高度，也许可以理解为显示文本的核心区域。（The recommended distance above the baseline for singled spaced text.）</li>
+<li><code>descent</code>：一个正数，表示文本的下行高度，与 ascent 相对应。（The recommended distance below the baseline for singled spaced text.）</li>
+<li><code>bottom</code>：一个正数，表示基线以下的最大距离，与 top 相对应。（The maximum distance below the baseline for the lowest glyph in the font at a given text size.）</li>
+<li><code>leading</code>：行间距。（The recommended additional space to add between lines of text.）</li>
+</ul>
+<p>在上面的代码中，通过调用 Paint 对象的<code>fontMetrics</code>属性获取到了一个 FontMetrics 对象，此外也可以通过构造函数手动实例化一个 FontMetrics 对象，然后将其作为参数传进 Paint 对象的<code>getFontMetrics()</code>中，这样一来，top 、bottom 等属性就会存储进手动实例化的这个 FontMetrics 对象中，效果是一样的。</p>
+<p>在拥有 FontMetrics 对象后，就只需要在绘制文本时，对计算基线纵坐标的方式进行一点修改就好了，具体就是将原来的<code>bounds.top</code>换成<code>fontMetrics.ascent</code>，把<code>bounds.bottom</code>换成<code>fontMetrics.descent</code>。</p>
+<p>那么 FontMetrics 类中的 top &#x2F; bottom 属性和通过<code>getTextBounds()</code>获取到的 top &#x2F; bottom 属性有什么区别呢？</p>
+<ul>
+<li>FontMetrics 的 top &#x2F; bottom 属性描述的是当前字体的最高和最低边界，这些边界是相对于基线的，通常是一个固定值。它们与具体的文本内容无关，只与字体和字体大小有关。</li>
+<li><code>getTextBounds()</code>用于计算所绘制文本的实际边界，并将计算出的值保存在某个 Rect 对象中，而被保存的 top &#x2F; bottom 属性虽然也是相对于基线的，但是这两个值会与所绘制文本的具体内容有关。</li>
+</ul>
+<h2 id="文本贴边"><a href="#文本贴边" class="headerlink" title="文本贴边"></a>文本贴边</h2><p>上面提到了 FontMetrics 类的 top &#x2F; bottom 属性和通过<code>getTextBounds()</code>获取到的 top &#x2F; bottom 属性的区别，但是<code>getTextBounds()</code>不仅有 top &#x2F; bottom 属性，它还有 left &#x2F; right 属性，对应的就是文本区域的左边界和右边界。这两个属性一般可以在希望文本紧贴屏幕边缘时用到：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> paint = Paint(Paint.ANTI_ALIAS_FLAG).apply &#123;<br>    textSize = <span class="hljs-number">70f</span>.px<br>&#125;<br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> text = <span class="hljs-string">&quot;bgdq&quot;</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> fontMetrics = paint.fontMetrics<br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> bounds = Rect()<br><br><span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDraw</span><span class="hljs-params">(canvas: <span class="hljs-type">Canvas</span>)</span></span> &#123;<br>    <span class="hljs-keyword">super</span>.onDraw(canvas)<br><br>    paint.getTextBounds(text, <span class="hljs-number">0</span>, text.length, bounds)<br>    canvas.drawText(text, -bounds.left.toFloat(), -fontMetrics.top, paint)<br>&#125;<br><br><span class="hljs-comment">// 省略 val Float.px</span><br></code></pre></td></tr></table></figure>
+
+<p>在调用<code>drawText()</code>时为其第二个参数传入绘制文本的左边界，并在变量前添加负号，使其产生一个向左的偏移，就可以做到让文本紧贴屏幕左侧。如果此时文本与屏幕间仍存在空隙，那么可能是字体本身的原因。</p>
+<p>除了设置<code>drawText()</code>的第二个参数使文本紧贴屏幕左侧以外，设置第三个参数也可以让文本紧贴屏幕顶部或是底部。以顶部为例，根据之前的代码可以知道，至少有 3 种设置方式：</p>
+<ul>
+<li>FontMetrics 类的<code>top</code>属性；</li>
+<li>FontMetrics 类的<code>ascent</code>属性；</li>
+<li>通过<code>getTextBounds()</code>获取到的<code>top</code>属性；</li>
+</ul>
+<p>例如上面的用例就使用了 FontMetrics 类的<code>top</code>属性，这样一来，尽管文本和屏幕顶部仍然存在较大的间隙，但是可以保证在该字体下，就算是最高的字形也可以完整显示出来。而如果设置成 FontMetrics 类的<code>ascent</code>属性则不行，如果设置成通过<code>getTextBounds()</code>获取到的<code>top</code>属性，那这个文本将会贴紧屏幕顶部。三种设置方式会分别得到三种不同的效果，根据实际情况使用即可。</p>
+<h2 id="多行绘制"><a href="#多行绘制" class="headerlink" title="多行绘制"></a>多行绘制</h2><h3 id="StaticLayout"><a href="#StaticLayout" class="headerlink" title="StaticLayout"></a>StaticLayout</h3><p><code>StaticLayout</code>是 Android 中的一个文本布局类，用于在屏幕上绘制多行文本：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> text =<br>    <span class="hljs-string">&quot;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam accumsan venenatis aliquam. Donec vel lacus quis ligula pellentesque imperdiet eget in eros. Nullam volutpat rhoncus nunc, eu faucibus dolor pellentesque eu. Nullam viverra finibus quam, eget fringilla est blandit vel. Proin magna urna, fermentum imperdiet scelerisque sed, fermentum at mauris. Morbi a imperdiet arcu. Nulla condimentum tortor risus. Pellentesque aliquet eros et dapibus maximus. Curabitur auctor porttitor tellus in convallis.&quot;</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> paint = TextPaint(Paint.ANTI_ALIAS_FLAG)<br><br><span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDraw</span><span class="hljs-params">(canvas: <span class="hljs-type">Canvas</span>)</span></span> &#123;<br>    <span class="hljs-keyword">super</span>.onDraw(canvas)<br><br>    paint.textSize = <span class="hljs-number">20f</span>.px<br>    StaticLayout.Builder.obtain(text, <span class="hljs-number">0</span>, text.length, paint, width)<br>        .setAlignment(Layout.Alignment.ALIGN_NORMAL).build().draw(canvas)<br>&#125;<br><br><span class="hljs-comment">// 省略 val Float.px</span><br></code></pre></td></tr></table></figure>
+
+<p>可以通过 StaticLayout 类的构造函数来得到一个 StaticLayout 对象，但是在高版本的 API 中，这种方法被弃用了，取而代之的是利用<code>StaticLayout.Builder</code>来创建对象：</p>
+<ul>
+<li>在上面的代码中，先调用了<code>obtain()</code>，该函数接收 5 个参数，分别是需要绘制的文本内容、从文本的第几个字开始绘制、绘制到哪里结束、一个 TextPaint 对象、折行宽度，其中这里的文本是在 <a target="_blank" rel="noopener" href="https://www.lipsum.com/">https://www.lipsum.com/</a> 上生成的无意义文本，而折行宽度用的是屏幕宽度。</li>
+<li><code>setAlignment(@NonNull Alignment alignment)</code>用于设置文本的对其方式。</li>
+<li><code>setLineSpacing(float spacingAdd, @FloatRange(from = 0.0) float spacingMult)</code>用于设置行间距。</li>
+<li><code>setIncludePad(boolean includePad)</code>表示在计算文本布局时是否包括额外的内边距。</li>
+<li>在参数设置完成后，调用<code>build()</code>来返回一个 StaticLayout 对象。</li>
+<li>调用<code>draw()</code>并传入一个 Canvas 对象来完成绘制。</li>
+</ul>
+<h3 id="breakText"><a href="#breakText" class="headerlink" title="breakText()"></a>breakText()</h3><p>Paint 对象的<code>breakText()</code>用于在给定的最大宽度下测量和截取文本，只要知道了从哪个文字开始绘制，到哪个文字为止，就可以配合 Canvas 对象的<code>drawText()</code>来绘制多行文本了：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> text =<br>    <span class="hljs-string">&quot;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam accumsan venenatis aliquam. Donec vel lacus quis ligula pellentesque imperdiet eget in eros. Nullam volutpat rhoncus nunc, eu faucibus dolor pellentesque eu. Nullam viverra finibus quam, eget fringilla est blandit vel. Proin magna urna, fermentum imperdiet scelerisque sed, fermentum at mauris. Morbi a imperdiet arcu. Nulla condimentum tortor risus. Pellentesque aliquet eros et dapibus maximus. Curabitur auctor porttitor tellus in convallis.&quot;</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> paint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply &#123;<br>    textSize = <span class="hljs-number">20f</span>.px<br>&#125;<br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> fontMetrics = paint.fontMetrics<br><br><span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDraw</span><span class="hljs-params">(canvas: <span class="hljs-type">Canvas</span>)</span></span> &#123;<br>    <span class="hljs-keyword">super</span>.onDraw(canvas)<br><br>    <span class="hljs-keyword">var</span> start = <span class="hljs-number">0</span>  <span class="hljs-comment">// 从第几个字开始绘制</span><br>    <span class="hljs-keyword">var</span> count: <span class="hljs-built_in">Int</span>  <span class="hljs-comment">// 每一次最多绘制几个字</span><br>    <span class="hljs-keyword">val</span> measuredWidth = floatArrayOf()<br>    <span class="hljs-keyword">var</span> verticalOffset = -fontMetrics.top  <span class="hljs-comment">// 每一行文本的纵向偏移量</span><br>    <span class="hljs-keyword">while</span> (start &lt; text.length) &#123;<br>        <span class="hljs-comment">// 测量每一行可以绘制多少个字</span><br>        count = paint.breakText(text, start, text.length, <span class="hljs-literal">true</span>, width.toFloat(), measuredWidth)<br>        canvas.drawText(text, start, start + count, <span class="hljs-number">0f</span>, verticalOffset, paint)  <span class="hljs-comment">// 绘制一行文本</span><br>        start += count  <span class="hljs-comment">// 更新下一次绘制的文字的位置</span><br>        <span class="hljs-comment">// 更新下一行文本的纵向偏移量，fontSpacing 会根据当前字体和字体大小返回合适的行间距</span><br>        verticalOffset += paint.fontSpacing<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">// 省略 val Float.px</span><br></code></pre></td></tr></table></figure>
+
+<p>主要记录一下上面用到的 Paint 对象的<code>breakText()</code>，该函数接收 6 个参数：</p>
+<ol>
+<li><code>CharSequence text</code>：需要测量和截取的文本。</li>
+<li><code>int start</code>：文本开始测量的起始位置。</li>
+<li><code>int end</code>：文本测量的结束位置。</li>
+<li><code>boolean measureForwards</code>：表示测量的方向，true 为从起始位置向前测量；false 为从结束位置向后测量。具体来说就是对于从左到右的文本，该值应被设置为<code>true</code>，而对于从右到左的文本，应该将其设置为<code>false</code>。</li>
+<li><code>float maxWidth</code>：最大宽度，超过该宽度的文本将被截断。</li>
+<li><code>float[] measuredWidth</code>：一个长度为 1 的浮点数数组，用于接收测量后的实际宽度。返回的宽度将存储在 measuredWidth[0] 中。</li>
+</ol>
+<p>该函数返回一个整数，表示在不超过最大宽度的情况下可以绘制的文本的长度。在上面的代码中，把这个整数存储到了变量<code>count</code>中，在绘制文本时，使用变量<code>start</code>这个起始位置加上<code>count</code>这个绘制长度，就可以得到绘制的结束位置了。</p>
+<p>此外还有一个需要注意的地方就是在使用 FontMetrics 类时，应该在什么位置设置 Paint 对象的字体大小。以上面的代码为例，只有在执行<code>fontMetrics = paint.fontMetrics</code>这行代码前设置了 Paint 的字体大小，FontMetrics 才会在测量时使用新的大小，否则它将采用默认的字体大小进行测量，得出来的 top 等属性的结果将是不符合预期的。</p>
+<h3 id="图文并茂"><a href="#图文并茂" class="headerlink" title="图文并茂"></a>图文并茂</h3><p>接下来，在上面代码的基础上进行改动，实现一个类似于新闻页面的效果。也就是在多行文本间插入一张图片，在文本接触到图片前，文本会自动折行：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> text =<br>    <span class="hljs-string">&quot;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam accumsan venenatis aliquam. Donec vel lacus quis ligula pellentesque imperdiet eget in eros. Nullam volutpat rhoncus nunc, eu faucibus dolor pellentesque eu. Nullam viverra finibus quam, eget fringilla est blandit vel. Proin magna urna, fermentum imperdiet scelerisque sed, fermentum at mauris. Morbi a imperdiet arcu. Nulla condimentum tortor risus. Pellentesque aliquet eros et dapibus maximus. Curabitur auctor porttitor tellus in convallis.&quot;</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> paint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply &#123;<br>    textSize = <span class="hljs-number">20f</span>.px<br>&#125;<br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> imageSize = <span class="hljs-number">150f</span>.px  <span class="hljs-comment">// 图片大小</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> imageTopSidePosition = <span class="hljs-number">50f</span>.px  <span class="hljs-comment">// 图片与屏幕顶部的距离</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> bitmap = betterGetBitmap(imageSize.toInt(), R.drawable.dedsec_logo)  <span class="hljs-comment">// 获取图片</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> fontMetrics = paint.fontMetrics<br><br><span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDraw</span><span class="hljs-params">(canvas: <span class="hljs-type">Canvas</span>)</span></span> &#123;<br>    <span class="hljs-keyword">super</span>.onDraw(canvas)<br><br>    canvas.drawBitmap(bitmap, width - imageSize, imageTopSidePosition, paint)  <span class="hljs-comment">// 绘制图片</span><br>    <span class="hljs-keyword">var</span> start = <span class="hljs-number">0</span>  <span class="hljs-comment">// 从第几个字开始绘制</span><br>    <span class="hljs-keyword">var</span> count: <span class="hljs-built_in">Int</span>  <span class="hljs-comment">// 每一次要绘制几个字</span><br>    <span class="hljs-keyword">var</span> verticalOffset = -fontMetrics.top  <span class="hljs-comment">// 每一行文本的纵向偏移量</span><br>    <span class="hljs-keyword">var</span> maxWidth: <span class="hljs-built_in">Float</span>  <span class="hljs-comment">// 最大宽度，决定了文本截断的位置</span><br>    <span class="hljs-keyword">while</span> (start &lt; text.length) &#123;<br>        maxWidth =<br>            <span class="hljs-keyword">if</span> (verticalOffset + fontMetrics.bottom &gt; imageTopSidePosition &amp;&amp; verticalOffset + fontMetrics.top &lt; imageTopSidePosition + imageSize) (width - imageSize)<br>            <span class="hljs-keyword">else</span> width.toFloat()<br><br>        <span class="hljs-comment">// 测量每一行可以绘制多少个字</span><br>        count = paint.breakText(text, start, text.length, <span class="hljs-literal">true</span>, maxWidth, <span class="hljs-literal">null</span>)<br><br>        canvas.drawText(text, start, start + count, <span class="hljs-number">0f</span>, verticalOffset, paint)  <span class="hljs-comment">// 绘制一行文本</span><br>        start += count  <span class="hljs-comment">// 更新下一次绘制的起始位置</span><br><br>        <span class="hljs-comment">// 更新下一行文本的纵向偏移量，fontSpacing 会根据当前字体和字体大小返回合适的行间距</span><br>        verticalOffset += paint.fontSpacing<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 根据需求加载图片，以节省资源提高性能</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> requireWidth 需要返回的图片的宽度</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> picId 需要读取的图片</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">betterGetBitmap</span><span class="hljs-params">(requireWidth: <span class="hljs-type">Int</span>, picId: <span class="hljs-type">Int</span>)</span></span>: Bitmap &#123;<br>    <span class="hljs-keyword">val</span> options = BitmapFactory.Options().apply &#123;<br>        inJustDecodeBounds = <span class="hljs-literal">true</span>  <span class="hljs-comment">// 只获取图片的宽度和高度信息，而不加载整个图片</span><br>        BitmapFactory.decodeResource(resources, picId, <span class="hljs-keyword">this</span>)  <span class="hljs-comment">// 读取宽度和高度</span><br>        inJustDecodeBounds = <span class="hljs-literal">false</span>  <span class="hljs-comment">// 置为 false ，以便后续加载整个图片</span><br>        inDensity = outWidth  <span class="hljs-comment">// 设置读取到的图片的密度</span><br>        inTargetDensity = requireWidth  <span class="hljs-comment">// 设置目标密度</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> BitmapFactory.decodeResource(resources, picId, options)  <span class="hljs-comment">// 按照目标重新读取图片并返回</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>实现“文本遇到图片自动折行”的主要思路其实就是限制特定那几行文本的绘制宽度，也就是当某一行文本的纵向偏移量（基线纵坐标）大于图片顶部的位置，或者小于图片底部的位置（图片顶部的位置加上图片的高度）的时候，就代表该行文本如果直接采用屏幕宽度进行截断，就一定会和图片接触，这时候就要在绘制该行文本时，将其宽度限制到接触图片之前，也就是屏幕宽度减去图片的宽度，在这里将文本截断，就不会与图片接触了。</p>
+<p><img src="/../../Images/Note-images/Measuring-and-drawing-text-in-Android.jpg" srcset="/img/loading.gif" lazyload alt="图文并茂"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%AC%94%E8%AE%B0/" class="category-chain-item">笔记</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>文字的测量和绘制</div>
+      <div>https://xuu6770.github.io/posts/Measuring-and-drawing-text-in-Android/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Aiden Lin</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年4月27日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2023年5月19日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-nc"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/Review-Watch-Dogs-Legion/" title="看门狗：军团 - Review">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">看门狗：军团 - Review</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/Simple-usage-of-Xfermode/" title="Xfermode 的简单使用">
+                        <span class="hidden-mobile">Xfermode 的简单使用</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"KxvB15jyw49OOEE4AH5BpO9m-gzGzoHsz","appKey":"eiY4KeAI2BOHkSYuLYv1IBLg","path":"window.location.pathname","placeholder":"有何高见？","avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":true,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span> 7.0.0</a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span> 1.9.7</a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
