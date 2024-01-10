@@ -16,21 +16,21 @@
   <meta name="author" content="Aiden Lin">
   <meta name="keywords" content="">
   
-    <meta name="description" content="这一节进一步讲一些 Compose 中的其它概念，包括 Composable 、界面自动更新、Recompose（重组）等等。">
+    <meta name="description" content="这一节进一步讲一些 Compose 的概念，包括 Composable 、界面自动更新、Recompose（重组）等等。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Compose 学习笔记 ②">
-<meta property="og:url" content="https://xuu6770.github.io/posts/Compose-Study-Note-02/index.html">
+<meta property="og:title" content="Compose 学习笔记 ②-①">
+<meta property="og:url" content="https://xuu6770.github.io/posts/Compose-Study-Note-02-01/index.html">
 <meta property="og:site_name" content="Rising Sun">
-<meta property="og:description" content="这一节进一步讲一些 Compose 中的其它概念，包括 Composable 、界面自动更新、Recompose（重组）等等。">
+<meta property="og:description" content="这一节进一步讲一些 Compose 的概念，包括 Composable 、界面自动更新、Recompose（重组）等等。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-12-29T11:12:27.000Z">
-<meta property="article:modified_time" content="2023-12-30T15:56:29.882Z">
+<meta property="article:published_time" content="2024-01-05T11:12:27.000Z">
+<meta property="article:modified_time" content="2024-01-10T10:52:25.237Z">
 <meta property="article:author" content="Aiden Lin">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>Compose 学习笔记 ② - Rising Sun</title>
+  <title>Compose 学习笔记 ②-① - Rising Sun</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -188,7 +188,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Compose 学习笔记 ②"></span>
+            <span id="subtitle" data-typed-text="Compose 学习笔记 ②-①"></span>
           
         </div>
 
@@ -199,8 +199,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-12-29 19:12" pubdate>
-          2023年12月29日 晚上
+        <time datetime="2024-01-05 19:12" pubdate>
+          2024年1月5日 晚上
         </time>
       </span>
     
@@ -211,7 +211,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          6.4k 字
+          6.9k 字
         
       </span>
     
@@ -250,12 +250,12 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Compose 学习笔记 ②</h1>
+            <h1 id="seo-header">Compose 学习笔记 ②-①</h1>
             
             
               <div class="markdown-body">
                 
-                <p>这一节进一步讲一些 Compose 中的其它概念，包括 Composable 、界面自动更新、Recompose（重组）等等。</p>
+                <p>这一节进一步讲一些 Compose 的概念，包括 Composable 、界面自动更新、Recompose（重组）等等。</p>
 <span id="more"></span>
 
 <h2 id="Composable"><a href="#Composable" class="headerlink" title="Composable"></a>Composable</h2><p>首先是一些有关 Composable 的基础信息：</p>
@@ -397,6 +397,28 @@
 <p>好在实际情况是 Compose 把 TextField 内容更新的回调交由开发者来实现，这样一来，TextField 的数据来源就永远只有开发者一个了。</p>
 <h3 id="UDF"><a href="#UDF" class="headerlink" title="UDF"></a>UDF</h3><p>在 Compose 中的 widget 一般有状态（State）和事件（Event）这么两个概念，同样以前面的 TextField 为例，<code>value</code>就是状态，而<code>onValueChange</code>就是事件。我们在使用 TextField 时会把状态<code>value</code>传递给 TextField 让它去显示内容，然后 TextField 又会把输入回调事件<code>onValueChange</code>提取出来反向传递给我们，让我们来自定义，这么一来一回的过程在 Compose 中就被称为 <strong>Unidirectional data flow</strong> &#x2F; <strong>单向数据流</strong> 。</p>
 <p>Compose 推荐将 Single source of truth（单一数据源）与 Unidirectional data flow（单向数据流）模式一起使用，此模式可以更好地保证数据一致性，不易出错、更易于调试，并且具备 SSOT 模式的所有优势。</p>
+<h2 id="可变状态集合"><a href="#可变状态集合" class="headerlink" title="可变状态集合"></a>可变状态集合</h2><p>接下来借一个例子来简单讲一下在大多数时候应该怎样使用集合才能正常触发重组，先看下面这段代码：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs Kotlin"><span class="hljs-keyword">val</span> numberList <span class="hljs-keyword">by</span> mutableStateOf(mutableListOf(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>))<br>setContent &#123;<br>	Column &#123;<br>		Button(onClick = &#123; numberList.add(numberList.last() + <span class="hljs-number">1</span>) &#125;) &#123;<br>			Text(<span class="hljs-string">&quot;加 1&quot;</span>)<br>		&#125;<br>		<span class="hljs-keyword">for</span> (number <span class="hljs-keyword">in</span> numberList) &#123;<br>			Text(text = number.toString())<br>		&#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>先解释一下代码：</p>
+<ol>
+<li>首先使用了<code>mutableStateOf()</code>创建了一个可变列表<code>numberList</code>，目的是希望当列表中的内容发生变化时就触发重组然后刷新界面；</li>
+<li>接着创建了一个纵向布局；</li>
+<li>在纵向布局中创建了一个显示着“加 1”的按钮，点击按钮后会把一个数字添加到<code>numberList</code>列表末尾，这个数字的值是在<code>numberList</code>列表的最后一个数字的基础上加 1 ；</li>
+<li>在按钮下面遍历<code>numberList</code>列表，并把内容显示出来；</li>
+</ol>
+<p>程序运行的理想效果是：一开始会显示一个按钮以及三行数字，每当我点击一次按钮，就会多显示一行数字。</p>
+<p>但是程序实际运行起来并不是这样，这同样是因为以往我们所使用的这些集合是没办法和 Compose 合作的，它们并不具备被订阅的功能，自然也就无法触发重组，所以如果要创建一个可被订阅的列表，应该要使用<code>mutableStateListOf()</code>：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs Kotlin"><span class="hljs-keyword">val</span> numberList = mutableStateListOf(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>)<br><span class="hljs-comment">// 其余代码不变</span><br></code></pre></td></tr></table></figure>
+
+<p>对于这个改动主要有几点要注意：</p>
+<ul>
+<li>一般情况下我们只会修改集合的内部，集合本身是不需要被重新赋值的，所以改为使用<code>val</code>来修饰变量而不是<code>var</code>；</li>
+<li>可变状态集合类并没有实现委托，所以无法使用<code>by</code>关键字了，改为使用等号<code>=</code>；</li>
+<li><code>mutableStateListOf()</code>内部不需要再调用<code>mutableListOf()</code>来创建一个可变列表了，直接把初始内容写进去即可；</li>
+</ul>
+<p>这样一来，当<code>numberList</code>列表中的内容发生改变后就会正常触发重组了。</p>
+<p>另外，除了使用<code>mutableStateListOf()</code>来创建可以被订阅的列表外，还可以使用<code>mutableStateMapOf()</code>来创建可以被订阅的 Map 。</p>
 
                 
               </div>
@@ -435,8 +457,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Compose 学习笔记 ②</div>
-      <div>https://xuu6770.github.io/posts/Compose-Study-Note-02/</div>
+      <div>Compose 学习笔记 ②-①</div>
+      <div>https://xuu6770.github.io/posts/Compose-Study-Note-02-01/</div>
     </div>
     <div class="license-meta">
       
@@ -448,13 +470,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年12月29日</div>
+          <div>2024年1月5日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2023年12月30日</div>
+          <div>2024年1月10日</div>
         </div>
       
       
@@ -491,12 +513,18 @@
                   <article class="post-prev col-6">
                     
                     
+                      <a href="/posts/Compose-Study-Note-02-02/" title="Compose 学习笔记 ②-②：性能优化">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Compose 学习笔记 ②-②：性能优化</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/posts/Compose-Study-Note-01-Concepts/" title="Compose 学习笔记 ① 基础概念">
-                        <span class="hidden-mobile">Compose 学习笔记 ① 基础概念</span>
+                      <a href="/posts/Compose-Study-Note-01/" title="Compose 学习笔记 ①：基础概念">
+                        <span class="hidden-mobile">Compose 学习笔记 ①：基础概念</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
