@@ -1,0 +1,753 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Aiden Lin">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="对称加密和非对称加密、Base64 、序列化、哈希和字符集。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编码、加密、Hash、序列化和字符集">
+<meta property="og:url" content="http://example.com/post/Encoding-Encryption-Hash-Serialization-and-Character-Sets/index.html">
+<meta property="og:site_name" content="RisingSun">
+<meta property="og:description" content="对称加密和非对称加密、Base64 、序列化、哈希和字符集。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-09-05T02:44:06.000Z">
+<meta property="article:modified_time" content="2022-10-08T09:34:52.000Z">
+<meta property="article:author" content="Aiden Lin">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>编码、加密、Hash、序列化和字符集 - RisingSun</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"|","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"#"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>RisingSun</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/RisingSun.jpeg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="编码、加密、Hash、序列化和字符集"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-09-05 10:44" pubdate>
+          2022年9月5日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.1k 字
+        
+      </span>
+    
+
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">编码、加密、Hash、序列化和字符集</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>对称加密和非对称加密、Base64 、序列化、哈希和字符集。</p>
+<span id="more"></span>
+
+<h2 id="密码学"><a href="#密码学" class="headerlink" title="密码学"></a>密码学</h2><h3 id="古典密码学"><a href="#古典密码学" class="headerlink" title="古典密码学"></a>古典密码学</h3><p>起源于古代战争，在战争中，为了防⽌书信被截获后重要信息泄露，⼈们开始对书信进⾏加密。加密方式主要有：</p>
+<ul>
+<li>移位式加密。如密码棒，使⽤布条缠绕在⽊棒上的⽅式来对书信进⾏加密。尽管很古老，但是已经具备加密的两个元素，一是「加密算法」：将布条对木棒进行缠绕后再书写。二是「密钥」：⽊棒的尺⼨。</li>
+<li>替换式加密。使用字母表和码表，表示字母表中的字母应该如何被码表中的替换。加密算法：替换⽂字，密钥：替换的码表。</li>
+</ul>
+<h3 id="现代密码学"><a href="#现代密码学" class="headerlink" title="现代密码学"></a>现代密码学</h3><p>现代密码学利用数学原理，直接针对二进制数据进行加密与解密。因为文本文件本身也属于二进制文件，因此也可以进行加密和解密。现代密码学还分为「对称加密」和「非对称加密」。</p>
+<h4 id="对称加密"><a href="#对称加密" class="headerlink" title="对称加密"></a>对称加密</h4><p>对称加密在古典密码学中对应的原型是替换式加密类似：即对⽂字进⾏规则化替换来加密，对密⽂进⾏逆向的规则化替换来解密。简单来说，对称加密就是通信双⽅使⽤同⼀个密钥，加密方使⽤加密算法和密钥加密，形成密文，解密方使⽤解密算法配合密钥来进⾏解密。加解密方法不一样，密钥一样。</p>
+<p>现代密码学通过网络传输，在传输过程中可能经历了很多个节点，密文和密钥都增加了被截获的可能，故而现代密码学需要更注重反破解。</p>
+<p>经典算法：</p>
+<ul>
+<li>DES，56 位密钥，因密钥太短（容易被穷举得到答案）而被弃用。</li>
+<li>AES，128 位、192 位、256 位密钥。</li>
+</ul>
+<p>破解思路：先拿到⼀组或多组 原⽂-密⽂ 对。然后设法找到⼀个密钥，这个密钥可以将这些 原⽂-密⽂ 对中的原⽂加密为密⽂，以及将密⽂解密为原⽂，即为成功破解。</p>
+<p>反破解：</p>
+<ul>
+<li>让破解者找不到⽐穷举法（暴⼒破解法）更有效的破解⼿段。</li>
+<li>穷举法所消耗的时间⾜够⻓（例如数千年）。</li>
+<li>密钥不能泄漏。</li>
+</ul>
+<h4 id="非对称加密"><a href="#非对称加密" class="headerlink" title="非对称加密"></a>非对称加密</h4><p>使⽤公钥对数据进⾏加密得到密⽂，使⽤私钥对数据进⾏解密得到原数据。简单来说，加密解密用同一套算法，不同的密钥，加密用公钥，解密用私钥。⾮对称加密使⽤的是复杂的数学技巧，在古典密码学中没有对应的原型。</p>
+<p>使⽤⾮对称加密通信，可以在不可信⽹络上将双⽅的公钥传给对⽅，然后在发消息前分别对消息使⽤对⽅的公钥来加密和使⽤⾃⼰的私钥来签名，做到不可信⽹络上的可靠密钥传播及加密通信。例如 A 需要加密，那么只需要 B 创建一个「公钥 B」和「私钥 B」，然后将「公钥 B」发送给 A ，A 利用「公钥 B」对消息进行加密，然后再把加密后的消息发送给 B ，B 再用「私钥 B」解密即可。进一步说，「公钥 B」被称为「公钥」，表明了这个密钥就是公开的，任意一方想往 B 发送加密信息，只需要拿到这个密钥然后对消息进行加密就行了，最终也只有 B 能通过自己的「私钥」来解开密文。很明显，对称加密做不到，因为对称加密的加密和解密必须要求双方都持有同一个密钥，这个密钥就必须要在不可信网络上传输，从而被泄漏。</p>
+<p>此外非对称加密还有一个数字签名的用法。前面提到非对称加密使用公钥加密，使用私钥解密。但实际上，私钥也可以用来加密，私钥加密后形成的密文，可以用其对应的公钥进行解密，又因为公钥和私钥总是成对生成的，并且在生成的时候就已经确定了谁是公（公钥往往更容易被计算出来，例如比特币的椭圆曲线加密算法，其公钥就是通过私钥计算得出）谁是私且不可再被修改，故而可以起到了一个身份验证的作用。例如 A 利用私钥签名（加密）了一段数据，此时 B 和 C 用公钥成功解密（验证）了数据，又因为私钥只有 A 持有，所以可以断定这个加密行为是 A 做的。</p>
+<p>此外，尽管通过单方的公钥和私钥已经完成了防偷窥的效果，即通信内容不会被外人知道，但是却无法防止伪造的情况。详细点说就是，A 和 B 在互相发送公钥的过程中，公钥可能会被中间人 C 获取，从而 C 可以利用公钥伪造一条消息然后继续传输。所以 A 和 B 在互相发送公钥供对方加密消息的基础上，还需要用自身的私钥对消息进行签名，以保证对方在接收到消息的时候可以认证其接收到的消息是由己方发出。再简单点说，我给你发消息，我要用你的公钥加密消息，用我的私钥签名，发给你以后，你要用你的私钥解密，用我的公钥验证签名。</p>
+<p>事实上，签名在实际的使用过程中会附带一个哈希的过程。前面提到签名实际上也是对消息的一次加密，只不过加密使用的是发送方的私钥，而加密的对象实际上是这个消息的哈希值。因为如果消息的体积很大，那就要在加密消息的基础上还要对消息进行签名，从而造成需要传输的数据量翻倍。但是哈希值很小，对消息进行哈希，然后再对哈希值进行签名，接收方在收到签名后使用发送方的公钥验证签名得到原哈希值，然后再用自己的私钥解密消息，然后再获取消息的哈希值，最后将两个哈希值一对比，就能保证这个数据是发送方发出的。如此一来，非对称加密的一次传输过程就算完成了。</p>
+<p>经典算法：</p>
+<ul>
+<li>RSA，可⽤于加密和签名。</li>
+<li>DSA，仅⽤于签名，但速度更快。</li>
+</ul>
+<p>非对称加密的优缺点：</p>
+<ul>
+<li>优点：可以在不安全⽹络上传输密钥。</li>
+<li>缺点：计算复杂，因此性能相⽐对称加密差很多。</li>
+</ul>
+<p>破解思路：</p>
+<ul>
+<li>和对称加密不同之处在于，⾮对称加密可以很轻松地获得公钥从而很轻松地制造密文。所以，⾮对称加密的关键只在于，如何找到⼀个正确的私钥，可以解密所有经过公钥加密过的密⽂。找到这样的私钥即为成功破解。</li>
+<li>由于⾮对称加密的⾃身特性，怎样通过公钥来推断出私钥通常是⼀种思路（例如 RSA），但往往最佳⼿段依然是穷举法，只是和对称加密破解的区别在于，对称加密破解是不断尝试⾃⼰的新密钥是否可以将⾃⼰拿到的原⽂-密⽂对进⾏加密和解密，⽽⾮对称加密是不断尝试⾃⼰的新私钥是否和公钥互相可解。</li>
+</ul>
+<p>反破解：</p>
+<p>和对称加密⼀样，⾮对称加密算法优秀的标准同样在于，让破解者找不到⽐穷举法更有效的破解⼿段，并且穷举法的破解时间⾜够⻓。</p>
+<h3 id="密码学密钥和登录密码"><a href="#密码学密钥和登录密码" class="headerlink" title="密码学密钥和登录密码"></a>密码学密钥和登录密码</h3><p>密钥和密码是不一样的：</p>
+<ul>
+<li>名称不一样，密钥原文是<code>key</code>，密码原文是<code>password</code>。</li>
+<li>场景不一样，密钥⽤于加密和解密，如果密钥丢失，就代表整个数学运算的解题关键丢失了，无法算出结果。密码的英文直译实际上是「通行证」，例如⽤户在进⼊⽹站或游戏前的登录环节，账号和密码实际上是起到身份验证的作用，系统只需要比对密码和当初设置的是否一致，跟数学没关系。</li>
+<li>目的不一样，密钥的目的是保证数据不被他人读懂。密码是服务提供方对用户账户的一个保护，只有在认证成功时才提供服务。</li>
+<li>焦点不一样，密钥的焦点是数据，密码的焦点是身份。</li>
+</ul>
+<h2 id="Base64"><a href="#Base64" class="headerlink" title="Base64"></a>Base64</h2><p>二进制数据，⼴义来说所有计算机数据都是⼆进制数据，狭义来说⾮⽂本数据即⼆进制数据。而 Base64 是可以将⼆进制数据转换成由 64 个字符组成的字符串的编码算法。64 位，分别是 26 个英文字母的大小写总共 52 个，再加上 10 个数字和<code>+</code>和<code>/</code>总计 64 个。</p>
+<p>Base64 的大概算法就是将原数据中每个字节（8 位）中的 6 位二进制截取出来转成十进制然后在 Base 64 索引表中找到对应的字符，例如<code>010011</code>转成十进制是<code>19</code>，对应的字符是<code>T</code>，以此类推把剩下的数据进行转换。但是如果是这样的话肯定会出现不够 6 位的情况，假设现在原数据转换完以后多出来 4 位<code>0001</code>，此时需要在原数据中新增一个字节，并从这 8 位中取两位填充 0 然后给这 4 位凑成 6 位，这样就变成<code>000100</code>对应的十进制是<code>4</code>，8 位被取出两位后剩下的 6 位此时刚好转换完成，但是这 6 位没有数据所以整体转换后只用<code>=</code>表示。</p>
+<p>用途：</p>
+<ul>
+<li>为⼆进制数据扩充了储存和传输途径（例如可以把数据保存到⽂本⽂件、可以通过聊天对话框或短信形式发送⼆进制数据、可以在 URL 中加⼊简单的⼆进制数据）。</li>
+<li>普通的字符串在经过 Base64 编码后的结果会变得⾁眼不可读，因此可以适⽤于⼀定条件下的防偷窥（较少⽤）。</li>
+</ul>
+<blockquote>
+<p>Base64 加密文件传输会更安全和⾼效吗？</p>
+</blockquote>
+<p>不安全，Base64 本身不是什么加密技术，而且码表还是公开的；也不高效，Base64 从 8 位转成 6 位会导致数据增⼤ 1&#x2F;3 ，降低⽹络性能，增⼤⽤户流量开销，是画蛇添⾜的⼿段。如此看来，Base64 除了在一些地方用来将图片变成字符串形式进行传输以外基本没什么其它用途了。</p>
+<h3 id="Base58"><a href="#Base58" class="headerlink" title="Base58"></a>Base58</h3><p>Base64 还有一个变种是 Base58 ，Base58 是在 Base64 的基础上去掉了几个字符：<code>O</code>、<code>0</code>、<code>I</code>、<code>L</code>、<code>+</code>、<code>/</code>。比特币专门用 Base58 来存储地址。这些改动主要⽬的在于⽤户的便捷性，由于去掉了难以区分的字符，使得 Base58 对于「⼈⼯抄写」更加⽅便。另外，去掉了<code>+</code>、<code>/</code>后也让⼤多数的软件可以⽅便双击选取。</p>
+<h3 id="百分号编码"><a href="#百分号编码" class="headerlink" title="百分号编码"></a>百分号编码</h3><p>在 URL 中，对⼀些保留字符会使⽤百分号<code>%</code>为前缀进⾏单独编码，以避免出现解析错误。例如，要在<code>http://example.com/users</code>后⾯添加查询字符串，查询<code>name</code>为「Love&amp;Peace」的⽤户，如果直接写成<code>http://example.com/user/?name=Love%Peace</code>，<code>&amp;</code>符号就会被解析为分隔符号，因此需要对它进⾏转码，转码后的 URL 为<code>http://example.com/user/?name=Love%26Peace</code>。这种编码仅⽤于 URL ，⽬的是避免解析错误的出现。</p>
+<h3 id="压缩与解压缩"><a href="#压缩与解压缩" class="headerlink" title="压缩与解压缩"></a>压缩与解压缩</h3><p>压缩指的是将数据使⽤更具有存储优势的编码算法进⾏编码，简单来说就是换一种形式进行存储，使得空间占用变小。解压缩指的是将压缩数据解码还原成原来的形式。常见的压缩算法：DEFLATE 、JPEG 、MP3 等等，其中 DEFLATE 是 ZIP 的压缩算法。</p>
+<blockquote>
+<p>压缩属于编码吗？</p>
+</blockquote>
+<p>是。所谓编码，即把数据从⼀种形式转换为另⼀种形式。压缩过程属于编码过程，解压缩过程属于解码过程。</p>
+<h3 id="媒体数据编解码"><a href="#媒体数据编解码" class="headerlink" title="媒体数据编解码"></a>媒体数据编解码</h3><p>图片、音视频的编解码指的是将这些原数据编写成可以存储的格式，例如图像的编码就是将图像数据写成 JPG 、PNG 等文件等编码格式，而图片解码就是将这些格式的文件中的数据解析成标准的图像数据。此外就是有损压缩这个概念，有损压缩是不符合通常意义所说的编码的，因为有损压缩不可逆。</p>
+<h2 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h2><p>序列化是指把数据对象（⼀般是内存中的，例如 JVM 中的对象）转换成字节序列的过程。对象在程序内存⾥的存放形式是散乱的（存放在不同的内存区域、并且由引⽤进⾏连接），通过序列化可以把内存中的对象转换成⼀个连续的字节序列，从⽽使⽤ byte[] 等形式进⾏本地存储或⽹络传输。而在需要的时候可以通过反序列化将这些数据读取到内存中来使⽤。</p>
+<p>简单来说，内存中的数据存储形式是与操作系统或虚拟机相关的，不是二进制形式，因此不能进行传输和文件存储。而序列化过程把内存对象转变成了二进制形式，就可以进行传输和存储了。</p>
+<p>序列化严格意义上来说也不是编码，编码是把数据由⼀种数据格式转换成另⼀种数据格式；⽽序列化是把数据由内存中的对象（⽽不是某种具体的格式）转换成字节序列。</p>
+<h2 id="哈希"><a href="#哈希" class="headerlink" title="哈希"></a>哈希</h2><p>Hash 可以把任意数据转换成指定⼤⼩范围（通常很⼩，例如 256 字节以内）的数据，相当于从数据中提出摘要信息，因此 Hash 最主要⽤途是数字指纹。</p>
+<p>Hash 算法需要注意两点，一是确保低碰撞率，二是防破解，经典的算法有：</p>
+<ul>
+<li>MD5</li>
+<li>SHA1</li>
+<li>SHA256</li>
+</ul>
+<p>Hash 的实际用途：</p>
+<ul>
+<li>数据完整性验证。例如在下载文件时，上传者可能会提供文件对应的 MD5 或者 SHA1 方便文件下载完成后进行校对。</li>
+<li>唯一性验证。例如使用 Java 中的<code>hashCode()</code>。每次重写<code>equals()</code>时都要重写<code>hashCode()</code>，重写<code>hashCode()</code>时把<code>equals()</code>中的每个⽤于判断相等的变量都放进<code>hashCode()</code>中，⼀起⽣成⼀个尽量不会碰撞的整数即可。</li>
+<li>快速查找。例如 HashMap 。</li>
+<li>隐私保护。当重要数据暴露时，可以选择只暴露其哈希值，例如网站在注册时，键入用户名和密码后，系统在写入数据库时，不会直接明文存储密码，而是会对密码进行哈希，这样就可以保证隐私。同时现在的网站基本上已经没有「找回密码」的功能了，因为数据库存储的是哈希值，哈希值是不可逆的，网站自己都不知道密码是什么。相对的，现在的网站会提供「忘记密码」或者「重制密码」的选项，直接让用户定一个新密码。同时密码如果设置得过于简单或者大众，有可能会被使用彩虹表猜出。而为了对付彩虹表，网站系统往往也会对用户输入的密码加「盐」，例如原密码为「123456」，网站加的盐或许是可变的或许是不可变的，加了盐之后的密码假设是「123456abc」，此时再对密码进行哈希，这样以来想要通过彩虹表破解密码几乎不可能。</li>
+</ul>
+<p>Hash 不是编码。因为 Hash 是单向过程，往往是不可逆的，⽆法进⾏逆向恢复操作，此外 Hash 也不是加密，仍然是因为 Hash 是单向过程，⽆法进⾏逆向恢复操作。</p>
+<h2 id="字符集"><a href="#字符集" class="headerlink" title="字符集"></a>字符集</h2><p>⼀个由整数向现实世界中的⽂字符号的 Map 。</p>
+<ul>
+<li>ASCII：128 个字符，1 字节</li>
+<li>ISO-8859-1：对 ASCII 进⾏扩充，1 字节</li>
+<li>Unicode：13 万个字符，多字节<ul>
+<li>UTF-8：Unicode 的编码分⽀</li>
+<li>UTF-16 ：Unicode 的编码分⽀</li>
+</ul>
+</li>
+<li>GBK &#x2F; GB2312 &#x2F; GB18030：中国⾃研标准，多字节，字符集 + 编码</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%AC%94%E8%AE%B0/" class="category-chain-item">笔记</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>编码、加密、Hash、序列化和字符集</div>
+      <div>http://example.com/post/Encoding-Encryption-Hash-Serialization-and-Character-Sets/</div>
+    </div>
+    <div class="license-meta">
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年9月5日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2022年10月8日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-nc"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/post/Multi-threading-related/" title="多线程相关">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">多线程相关</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/post/Network-programming/" title="网络编程">
+                        <span class="hidden-mobile">网络编程</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"jz0Gue92oIJn3ToNZFpp6cAq-MdYXbMMI","appKey":"GmHRzEwMV0vkcMR6QsKekUNm","path":"window.location.pathname","placeholder":"不喜欢可以直接开骂，不用滑走。","avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":true,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo 7.2</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid 1.9.3</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
