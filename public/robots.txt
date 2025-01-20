@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://xuu6770.github.io/sitemap-0.xml

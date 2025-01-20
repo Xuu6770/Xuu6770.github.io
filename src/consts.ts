@@ -20,12 +20,12 @@
  *    All tags will be displayed in single page "/tags".
  */
 export const site = {
-  title: 'Astro Theme Yi', // required
-  favicon: '/favicon.svg', // required
-  description: 'Welcome to my independent blog website! ',
-  author: "Astro-Yi", // required
+  title: 'Rising Sun', // required
+  favicon: '/favicon.png', // required
+  description: '',
+  author: "Aiden Lin", // required
   avatar: '/avatar.png', // required
-  url: 'https://xxxxxx.com', // required
+  url: 'https://xuu6770.github.io', // required
   motto: 'Actions speak louder than words.',
   recentBlogSize: 5,
   archivePageSize: 25,
@@ -46,7 +46,7 @@ export const site = {
  */
 export const config = {
   busuanzi: false,
-  lang: 'en', // en | zh-cn | zh-Hant | cs
+  lang: 'zh-cn', // en | zh-cn | zh-Hant | cs
   codeFoldingStartLines: 16, // Need to re-run the project to take effect
   ga: false, // If you want to integrate with Google Analytics, just enter your GA-ID here.
 
@@ -65,53 +65,58 @@ export const config = {
  */
 export const categories = [
   {
-    name: "Blog",
-    iconClass: "ri-draft-line",
+    name: "首页",
+    iconClass: "ri-home-3-line",
     href: "/blog/1",
   },
-  {
-    name: "Feed",
-    iconClass: "ri-lightbulb-flash-line",
-    href: "/feed/1",
-  },
+  // {
+  //   name: "Feed",
+  //   iconClass: "ri-lightbulb-flash-line",
+  //   href: "/feed/1",
+  // },
   // {
   //   name: "Memos",
   //   iconClass: "ri-quill-pen-line",
   //   href: "/memos",
   // },
   {
-    name: "Archive",
+    name: "归档",
     iconClass: "ri-archive-line",
     href: "/archive/1",
   },
   {
-    name: "Message",
-    iconClass: "ri-chat-1-line",
-    href: "/message",
-  },
-  {
-    name: "Search",
+    name: "搜索",
     iconClass: "ri-search-line",
     href: "/search",
   },
+  // {
+  //   name: "Message",
+  //   iconClass: "ri-chat-1-line",
+  //   href: "/message",
+  // },
   {
-    name: "More",
-    iconClass: "ri-more-fill",
-    href: "javascript:void(0);",
-    children: [
-      {
-        name: 'About',
-        iconClass: 'ri-information-line',
-        href: '/about',
-      },
-      {
-        name: 'Friends',
-        iconClass: 'ri-user-5-line',
-        href: '/friends',
-        target: '_self',
-      },
-    ]
+    name: '关于',
+    iconClass: 'ri-information-line',
+    href: '/about',
   }
+  // {
+  //   name: "More",
+  //   iconClass: "ri-more-fill",
+  //   href: "javascript:void(0);",
+  //   children: [
+  //     {
+  //       name: 'About',
+  //       iconClass: 'ri-information-line',
+  //       href: '/about',
+  //     },
+  //     {
+  //       name: 'Friends',
+  //       iconClass: 'ri-user-5-line',
+  //       href: '/friends',
+  //       target: '_self',
+  //     },
+  //   ]
+  // }
 ]
 
 /**
@@ -120,28 +125,23 @@ export const categories = [
 export const infoLinks = [
   {
     icon: 'ri-telegram-fill',
-    name: 'telegram',
-    outlink: 'xxxxxxx',
+    name: 'Telegram',
+    outlink: 'https://t.me/ssxs727',
   },
   {
-    icon: 'ri-twitter-fill',
-    name: 'twitter',
-    outlink: 'xxxxxxx',
-  },
-  {
-    icon: 'ri-instagram-fill',
-    name: 'instagram',
-    outlink: 'xxxxxxx',
+    icon: 'ri-twitter-x-fill',
+    name: '𝕏',
+    outlink: 'https://x.com/ssxs727',
   },
   {
     icon: 'ri-github-fill',
-    name: 'github',
-    outlink: 'xxxxxxx',
+    name: 'GitHub',
+    outlink: 'https://github.com/Xuu6770',
   },
   {
-    icon: 'ri-rss-fill',
-    name: 'rss',
-    outlink: 'xxxxxxx',
+    icon: 'ri-spotify-fill',
+    name: 'Spotify',
+    outlink: 'https://open.spotify.com/user/9vb6kgxmwqem2wa9ggl8kdwuu',
   }
 ]
 

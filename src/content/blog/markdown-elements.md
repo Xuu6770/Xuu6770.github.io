@@ -1,8 +1,7 @@
 ---
-title: "A post of Markdown elements"
-description: "This post is for testing and listing a number of different markdown elements"
-date: 2024-03-19
-tags: ["test", "markdown"]
+title: "本模板的 Markdown 元素效果展示"
+date: 2019-01-01
+category: 笔记
 ---
 
 ## This is a H2 Heading

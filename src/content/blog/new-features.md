@@ -1,9 +1,10 @@
 ---
-date: 2024-03-24
-title: New features
-description: More new features specific to this theme.
+date: 2019-01-01
+title: 特殊效果展示
 mermaid: true
 mathjax: true
+draft: true
+category: 笔记
 ---
 
 ### Support Remixicon
