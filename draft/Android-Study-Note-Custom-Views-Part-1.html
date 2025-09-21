@@ -1,0 +1,456 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Aiden">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="写写停停，总共花了 4 天时间，效率有点低了。这篇笔记包括了简单的图形绘制，以及如何进行定位。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="学习 Android 自定义 View - 第 1 节">
+<meta property="og:url" content="http://xuu6770.github.io/draft/Android-Study-Note-Custom-Views-Part-1.html">
+<meta property="og:site_name" content="Rising Sun">
+<meta property="og:description" content="写写停停，总共花了 4 天时间，效率有点低了。这篇笔记包括了简单的图形绘制，以及如何进行定位。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-04-13T16:30:24.000Z">
+<meta property="article:modified_time" content="2024-09-04T16:50:27.080Z">
+<meta property="article:author" content="Aiden">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>学习 Android 自定义 View - 第 1 节｜Rising Sun</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xuu6770.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 60vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Rising Sun</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="学习 Android 自定义 View - 第 1 节"></span>
+          
+        </div>
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      <div class="container nopadding-x-md">
+        <div id="board"
+          >
+          
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-10 m-auto">
+                
+
+<article class="page-content">
+  <p>写写停停，总共花了 4 天时间，效率有点低了。这篇笔记包括了简单的图形绘制，以及如何进行定位。</p>
+<span id="more"></span>
+
+<h2 id="基本要素"><a href="#基本要素" class="headerlink" title="基本要素"></a>基本要素</h2><ul>
+<li><code>onDraw()</code>：这是<code>View</code>类中的一个重要函数，用于绘制 View 的内容。在自定义 View 开发中，通常需要重写这个函数来实现自定义的绘制逻辑。<code>onDraw()</code>接收一个<code>Canvas</code>对象作为参数，它代表了当前 View 的绘图区域。</li>
+<li><code>onMeasure()</code>：这是一个用于测量 View 的尺寸的函数，当自定义 View 有特殊的测量需求时，就需要重写这个方法来指定 View 的尺寸。</li>
+<li><code>onLayout()</code>：该函数用于确定 View 中子 View 的位置，通常只有自定义 ViewGroup（如自定义 LinearLayout、RelativeLayout 等）时需要重写它。对于不包含子 View 的自定义 View（例如自定义 TextView），通常不需要重写这个方法。</li>
+<li><code>Canvas</code>（画布）：该类是 Android 系统提供的一个用于绘图的类，它是一个 2D 绘图表面，提供了一系列绘制方法，它的实例通常作为参数传递给<code>onDraw()</code>。Canvas 不仅支持绘制基本图形，还支持矩阵变换（平移、缩放、旋转、倾斜）以及裁剪等操作。</li>
+<li><code>Paint</code>（画笔）：Canvas 仅负责提供绘图方法，而具体的绘制属性（如颜色、线宽、样式等）是由<code>Paint</code>类定义的。当使用 Canvas 绘制时，需要传递一个<code>Paint</code>对象作为参数，以确定绘制的样式和属性。</li>
+<li>坐标系：相比上学时学习的平面直角坐标系（笛卡尔坐标系），Android 坐标系存在以下几点不同：<ul>
+<li>原点位置（0,0）位于屏幕或 View 的左上角；</li>
+<li>x 轴的正方向仍然向右，但是 y 轴的正方向变成了向下；</li>
+<li>笛卡尔坐标系中第四象限的位置变成了第一象限，并且以顺时针方向增加角度，也就是以顺时针的方向定义了第二、三、四象限的位置；</li>
+<li>Android 坐标系中的使用像素（px）作为坐标和尺寸的度量单位。</li>
+</ul>
+</li>
+</ul>
+<p>接下来是一个简单用例，<code>TestView</code>类是一个自定义 View ，它继承了<code>View</code>类并实现了<code>View</code>类的其中一个构造函数，随后在<code>onDraw()</code>进行了绘制：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">// 自定义 View</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">TestView</span>(context: Context?, attrs: AttributeSet?) : View(context, attrs) &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> paint = Paint(Paint.ANTI_ALIAS_FLAG)  <span class="hljs-comment">// Paint.ANTI_ALIAS_FLAG：开启抗锯齿</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDraw</span><span class="hljs-params">(canvas: <span class="hljs-type">Canvas</span>)</span></span> &#123;<br>        <span class="hljs-keyword">super</span>.onDraw(canvas)<br>        <span class="hljs-comment">// 从 x=100 y=100 到 x=200 y=200 绘制一条直线</span><br>        canvas.drawLine(<span class="hljs-number">100f</span>, <span class="hljs-number">100f</span>, <span class="hljs-number">200f</span>, <span class="hljs-number">200f</span>, paint)<br>        <span class="hljs-comment">// 在屏幕中心绘制一个半径为 200 的圆</span><br>        canvas.drawCircle(<br>            width / <span class="hljs-number">2f</span>,<br>            height / <span class="hljs-number">2f</span>,<br>            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, <span class="hljs-number">50f</span>, resources.displayMetrics),<br>            paint<br>        )<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>其中需要解释的就是<code>TypedValue.applyDimension()</code>这个方法，这是一个主要用于将其它尺寸单位转换为像素单位的方法，例如将 dp（密度无关像素）、sp（缩放无关像素）转换为 px 。该方法接收 3 个参数：</p>
+<ul>
+<li><code>int unit</code>：要转换的尺寸单位，如<code>TypedValue.COMPLEX_UNIT_DIP</code>（表示 dp 单位）或<code>TypedValue.COMPLEX_UNIT_SP</code>（表示 sp 单位）等。</li>
+<li><code>float value</code>：要转换的值。</li>
+<li><code>DisplayMetrics metrics</code>：当前设备的显示度量信息，通常可以通过<code>getResources().getDisplayMetrics()</code>方法获得。</li>
+</ul>
+<p>如果需要在程序启动后显示这个 View 的话，可以修改<code>activity_main.xml</code>中的代码：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">androidx.constraintlayout.widget.ConstraintLayout</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">xmlns:tools</span>=<span class="hljs-string">&quot;http://schemas.android.com/tools&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">tools:context</span>=<span class="hljs-string">&quot;.MainActivity&quot;</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">com.xuu6770.androidlab.TestView</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;match_parent&quot;</span> /&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">androidx.constraintlayout.widget.ConstraintLayout</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>可以看到，要使用自定义 View 就只需要在布局文件中进行引入即可，这个操作和使用内置的 View 类似。</p>
+<h2 id="Path"><a href="#Path" class="headerlink" title="Path"></a>Path</h2><p><code>Path</code>（路径）表示一组描述图形轮廓的点和线段的集合，通过组合各种线段、曲线和形状，可以创建复杂的图形。<code>Path</code>类通常与<code>Canvas</code>和<code>Paint</code>类一起使用。</p>
+<p>接下来看一个 Path 的用例：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">class</span> <span class="hljs-title class_">TestView</span>(context: Context?, attrs: AttributeSet?) : View(context, attrs) &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> paint = Paint(Paint.ANTI_ALIAS_FLAG)  <span class="hljs-comment">// Paint.ANTI_ALIAS_FLAG：开启抗锯齿</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> path = Path()  <span class="hljs-comment">// 创建一个空的 Path 对象</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDraw</span><span class="hljs-params">(canvas: <span class="hljs-type">Canvas</span>)</span></span> &#123;<br>        <span class="hljs-keyword">super</span>.onDraw(canvas)<br>        canvas.drawPath(path, paint)<br>    &#125;<br><br>    <span class="hljs-comment">// 重写该方法，该方法会在 View 的大小改变时调用</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onSizeChanged</span><span class="hljs-params">(w: <span class="hljs-type">Int</span>, h: <span class="hljs-type">Int</span>, oldw: <span class="hljs-type">Int</span>, oldh: <span class="hljs-type">Int</span>)</span></span> &#123;<br>        <span class="hljs-keyword">super</span>.onSizeChanged(w, h, oldw, oldh)<br>        path.reset()<br>        path.addCircle(<br>            width / <span class="hljs-number">2f</span>,<br>            height / <span class="hljs-number">2f</span>,<br>            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, <span class="hljs-number">50f</span>, resources.displayMetrics),<br>            Path.Direction.CW<br>        )<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>代码运行的效果同样是在屏幕中间绘制了一个圆，只不过区别于前一个例子，绘制圆的参数是定义在 Path 中的，而这个过程又是编写在了<code>onSizeChanged()</code>中，而不是在<code>onDraw()</code>中，这是因为<code>onDraw()</code>会被频繁调用，而<code>onSizeChanged()</code>只会在 View 的大小改变时调用，而绘制时需要提供的 x 坐标和 y 坐标参数也与 View 的大小（宽和高）有关。</p>
+<p>需要注意的是<code>addCircle()</code>中的第四个参数<code>Path.Direction.CW</code>，这个参数用于指定绘制的方向，<code>CW</code>表示顺时针，逆时针则用<code>CCW</code>表示。例如在图形重叠时，绘制的方向一定程度上决定了图形重叠的部分该如何填充。来看这个用例：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">// 省略重复代码</span><br><br><span class="hljs-comment">// 将半径单独定义出来，方便复用</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> radius =<br>    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, <span class="hljs-number">50f</span>, resources.displayMetrics)<br><br><span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onSizeChanged</span><span class="hljs-params">(w: <span class="hljs-type">Int</span>, h: <span class="hljs-type">Int</span>, oldw: <span class="hljs-type">Int</span>, oldh: <span class="hljs-type">Int</span>)</span></span> &#123;<br>    <span class="hljs-keyword">super</span>.onSizeChanged(w, h, oldw, oldh)<br>    path.reset()<br>    path.addCircle(<br>        width / <span class="hljs-number">2f</span>,<br>        height / <span class="hljs-number">2f</span>,<br>        radius,<br>        Path.Direction.CCW<br>    )<br>    <span class="hljs-comment">// 以圆的下半部分为起点绘制了一个矩形</span><br>    path.addRect(<br>        width / <span class="hljs-number">2f</span> - radius,<br>        height / <span class="hljs-number">2f</span>,<br>        width / <span class="hljs-number">2f</span> + radius,<br>        height / <span class="hljs-number">2f</span> + <span class="hljs-number">2</span> * radius,<br>        Path.Direction.CW<br>    )<br>&#125;<br><br><span class="hljs-comment">// 省略重复代码</span><br></code></pre></td></tr></table></figure>
+
+<p>上面的代码在原来的基础上多绘制了一个矩形，这个矩形与圆的下半部分重叠，如果两个图形的绘制方向的参数一致的话，那么默认情况下重叠部分也会被填充，而一旦不一样，就不会填充。之所以说是默认情况，是因为是否填充还与<code>Path</code>对象的<code>fillType</code>属性相关，该属性有 4 个可选值：</p>
+<ul>
+<li><code>Path.FillType.WINDING</code>（非零环绕数规则）：默认值。个人理解，简单来说，就是在一个封闭区域内任意取一个点，以这个点水平向右做一条射线，射线与其它图形相交时，若该图形的绘制方向为顺时针，则计数器加 1 ，否则减 1 ，最终如果计数器的值不为 0 ，则表示该封闭区域在路径内部，需要被填充。</li>
+<li><code>Path.FillType.INVERSE_WINDING</code>（反向非零环绕数规则）：与<code>Path.FillType.WINDING</code>相反，顺时针减 1 ，逆时针加 1 。</li>
+<li><code>Path.FillType.EVEN_ODD</code>（奇偶规则）：个人理解，该规则同样是在一个封闭区域内任意取一个点，以这个点水平向右做一条射线，计数器在每次射线与图形相交时加 1 ，最终如果交点个数为偶数，则表示该封闭区域在路径外部，否则在内部，需要被填充。</li>
+<li><code>Path.FillType.INVERSE_EVEN_ODD</code>（反向奇偶规则）：与<code>Path.FillType.EVEN_ODD</code>相反，如果交点个数为偶数，则该点在路径内部，否则在外部。</li>
+</ul>
+<p>当<code>fillType</code>属性取默认值时，图像的绘制方向将参与到是否要填充的决定当中，而当属性取奇偶规则时，则不关心绘制方向。</p>
+<h2 id="绘制仪表盘"><a href="#绘制仪表盘" class="headerlink" title="绘制仪表盘"></a>绘制仪表盘</h2><p>接下来通过绘制一个类似于汽车的仪表盘的图形来练练手。</p>
+<h3 id="仪表盘轮廓"><a href="#仪表盘轮廓" class="headerlink" title="仪表盘轮廓"></a>仪表盘轮廓</h3><p>先绘制一个圆弧：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">class</span> <span class="hljs-title class_">TestView</span>(context: Context?, attrs: AttributeSet?) : View(context, attrs) &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> paint = Paint(Paint.ANTI_ALIAS_FLAG).apply &#123;<br>        style = Paint.Style.STROKE<br>        strokeWidth = <span class="hljs-number">3f</span>.px<br>    &#125;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> openAngle = <span class="hljs-number">120f</span><br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDraw</span><span class="hljs-params">(canvas: <span class="hljs-type">Canvas</span>)</span></span> &#123;<br>        <span class="hljs-keyword">super</span>.onDraw(canvas)<br>        canvas.drawArc(<br>            width / <span class="hljs-number">2f</span> - <span class="hljs-number">150f</span>.px,<br>            height / <span class="hljs-number">2f</span> - <span class="hljs-number">150f</span>.px,<br>            width / <span class="hljs-number">2f</span> + <span class="hljs-number">150f</span>.px,<br>            height / <span class="hljs-number">2f</span> + <span class="hljs-number">150f</span>.px,<br>            <span class="hljs-number">90</span> + openAngle / <span class="hljs-number">2</span>,<br>            <span class="hljs-number">360</span> - openAngle,<br>            <span class="hljs-literal">false</span>,<br>            paint<br>        )<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 为 Float 类型的数据定义一个扩展属性，将这个值的 dp 单位转换为 px 并返回</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">val</span> <span class="hljs-built_in">Float</span>.px<br>    <span class="hljs-keyword">get</span>() = TypedValue.applyDimension(<br>        TypedValue.COMPLEX_UNIT_DIP,<br>        <span class="hljs-keyword">this</span>,<br>        Resources.getSystem().displayMetrics<br>    )<br></code></pre></td></tr></table></figure>
+
+<p>在上面的代码中，首先在对 Paint 对象初始化完成以后，设置了它的<code>style</code>属性，该属性接收一个<code>Paint.Style</code>枚举类，该类有 3 个可选值：</p>
+<ul>
+<li><code>Paint.Style.FILL</code>：绘制几何形状时，填充其内部区域，而不绘制轮廓线条。</li>
+<li><code>Paint.Style.STROKE</code>：绘制几何形状轮廓时，只绘制轮廓线条，而不填充内部区域。</li>
+<li><code>Paint.Style.FILL_AND_STROKE</code>：同时填充内部区域并绘制轮廓线条。</li>
+</ul>
+<p>在代码中传入了第二个参数，又因为不填充，所以需要设置<code>strokeWidth</code>这个属性（代表轮廓线条的宽度），否则看不到图形。这里的<code>3f.px</code>使用了 Kotlin 的扩展属性，并把前面将 dp 单位转 px 单位的逻辑抽了出来。最后就是使用<code>drawArc()</code>绘制一个弧线，该函数有多个重载，但传递的都是必要的参数。比如必须要有一个 RectF 对象用来限定绘制区域，在上面的代码中是通过传递矩形的四个顶点的坐标来“创建”一个 RectF 对象的。接下来的第五、六个参数则代表了圆弧的起始角度和旋转角度，这里的计算涉及到最开始提到的坐标系，<code>90 + openAngle / 2</code>的值为 150° ，是个钝角，最终定位在第二象限（左下角）。旋转（顺时针）了<code>360 - openAngle</code>也就是 240° 最终停留在第一象限（右下角）。最后传入的<code>false</code>和<code>paint</code>，前者代表了是否绘制弧线的两端点和中心点之间的连线，后者就是绘制用的 Paint 对象。</p>
+<h3 id="刻度"><a href="#刻度" class="headerlink" title="刻度"></a>刻度</h3><p>在原来的基础上进行改动：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">class</span> <span class="hljs-title class_">TestView</span>(context: Context?, attrs: AttributeSet?) : View(context, attrs) &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> openAngle = <span class="hljs-number">120f</span>  <span class="hljs-comment">// 仪表盘底部的开口角度</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> scaleWidth = <span class="hljs-number">3f</span>.px  <span class="hljs-comment">// 刻度的宽度</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> scaleLength = <span class="hljs-number">15f</span>.px  <span class="hljs-comment">// 刻度的高度</span><br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> path = Path()  <span class="hljs-comment">// 改用 Path 来绘制圆弧</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">lateinit</span> <span class="hljs-keyword">var</span> pathDashEffect: PathDashPathEffect  <span class="hljs-comment">// 延迟初始化一个路径特效</span><br><br>    <span class="hljs-comment">// 使用 Path 来绘制刻度</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> scale = Path().apply &#123;<br>        addRect(<span class="hljs-number">0f</span>, <span class="hljs-number">0f</span>, scaleWidth, scaleLength, Path.Direction.CW)<br>    &#125;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> paint = Paint(Paint.ANTI_ALIAS_FLAG).apply &#123;<br>        style = Paint.Style.STROKE<br>        strokeWidth = <span class="hljs-number">3f</span>.px<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDraw</span><span class="hljs-params">(canvas: <span class="hljs-type">Canvas</span>)</span></span> &#123;<br>        <span class="hljs-keyword">super</span>.onDraw(canvas)<br>        <span class="hljs-comment">// 画弧</span><br>        canvas.drawPath(path, paint)<br><br>        <span class="hljs-comment">// 应用特效</span><br>        paint.pathEffect = pathDashEffect<br><br>        <span class="hljs-comment">// 使用特效画出刻度</span><br>        canvas.drawPath(path, paint)<br><br>        <span class="hljs-comment">// 取消特效</span><br>        paint.pathEffect = <span class="hljs-literal">null</span><br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onSizeChanged</span><span class="hljs-params">(w: <span class="hljs-type">Int</span>, h: <span class="hljs-type">Int</span>, oldw: <span class="hljs-type">Int</span>, oldh: <span class="hljs-type">Int</span>)</span></span> &#123;<br>        <span class="hljs-keyword">super</span>.onSizeChanged(w, h, oldw, oldh)<br>        path.reset()<br>        path.addArc(<br>            width / <span class="hljs-number">2f</span> - <span class="hljs-number">150f</span>.px,<br>            height / <span class="hljs-number">2f</span> - <span class="hljs-number">150f</span>.px,<br>            width / <span class="hljs-number">2f</span> + <span class="hljs-number">150f</span>.px,<br>            height / <span class="hljs-number">2f</span> + <span class="hljs-number">150f</span>.px,<br>            <span class="hljs-number">90</span> + openAngle / <span class="hljs-number">2</span>,<br>            <span class="hljs-number">360</span> - openAngle<br>        )<br>        <span class="hljs-keyword">val</span> pathMeasure = PathMeasure(path, <span class="hljs-literal">false</span>)<br>        pathDashEffect =<br>            PathDashPathEffect(<br>                scale,<br>                (pathMeasure.length - scaleWidth) / <span class="hljs-number">20f</span>,  <span class="hljs-comment">// 假设要画 21 个刻度</span><br>                <span class="hljs-number">0f</span>,<br>                PathDashPathEffect.Style.ROTATE<br>            )<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">// 省略 val Float.px</span><br></code></pre></td></tr></table></figure>
+
+<p>主要有以下几点改动：</p>
+<ul>
+<li>原来是采用<code>Canvas.drawArc()</code>来绘制圆弧，现在采用 Path 来绘制，这是因为只有这样，才能使用 PathMeasure 来对其进行测量。因为绘制圆弧涉及到 View 的宽度和高度，所以还是将绘制的具体操作放在了<code>onSizeChanged()</code>中。</li>
+<li>接下来定义了一个<code>PathDashPathEffect</code>对象，<code>PathDashPathEffect</code>是<code>PathEffect</code>的一个子类，用于在路径上重复绘制一个子路径，通过这样的操作来达到某种“效果”或者是“特效”。</li>
+<li>接下来同样是创建了一个 Path 对象，并向其中添加了矩形，用来表示刻度。</li>
+<li>接下来在<code>onDraw()</code>中将<code>drawArc()</code>改为<code>drawPath()</code>来绘制弧，随后调用了 Paint 对象的<code>pathEffect</code>属性来为其设置一个路径特效，然后在拥有了特效的情况下再画一个弧（画出来的是一圈的刻度），最后将<code>pathEffect</code>属性的值置为<code>null</code>。Paint 对象的<code>pathEffect</code>属性用于指定绘制路径时的效果，设置属性时需要传递一个<code>PathEffect</code>参数，常用的 PathEffect 类型包括：<ul>
+<li><code>DashPathEffect</code>：用于创建虚线效果。构造函数接收两个参数：一个表示虚线段长度的数组和一个表示虚线段起始位置的偏移量。数组中的值应该成对出现，例如第一个值表示实线部分的长度，第二个值表示间隙部分的长度，以此类推。</li>
+<li><code>CornerPathEffect</code>：用于将路径中的锐角变成圆角。构造函数接收一个参数，表示圆角的半径。</li>
+<li><code>DiscretePathEffect</code>：用于将路径分割成多个小段，并对每个小段进行随机偏移。构造函数接收两个参数：一个表示每段的平均长度，一个表示偏移量的最大值。可以用于创建类似于细鱼网的效果。</li>
+<li><code>PathDashPathEffect</code>：用于在路径上重复绘制一个子路径。这个类接受一个 Path 对象作为子路径，以及一个表示子路径之间间距的值。</li>
+<li><code>ComposePathEffect</code>：用于组合两个 PathEffect ，使它们在同一个路径上按顺序作用。构造函数接收两个 PathEffect 对象作为参数。</li>
+<li><code>SumPathEffect</code>：用于同时应用两个 PathEffect 到同一个路径上。这个类接受两个 PathEffect 对象作为参数。</li>
+</ul>
+</li>
+</ul>
+<p>接下来是最关键的<code>onSizeChanged()</code>的重写，首先是<code>PathMeasure</code>：</p>
+<ul>
+<li><code>PathMeasure</code>是一个用于测量路径的类，其主要功能是对 Path 对象的长度、分割点、切线等几何信息的计算和获取。主要的函数有以下几个:<ul>
+<li><code>PathMeasure(Path path, boolean forceClosed)</code>：构造函数，其中<code>path</code>为要测量的 Path 对象，<code>forceClosed</code>代表是否要强制将路径进行闭合。</li>
+<li><code>getLength()</code>：返回关联路径的总长度。</li>
+<li><code>getPosTan(float distance, float[] pos, float[] tan)</code>：获取路径上指定距离的点的位置和切线。第一个参数为路径上的距离，第二个参数为长度为 2 的数组，用于存储路径上指定距离的点的 x 和 y 坐标。如果不需要这个值，可以传入<code>null</code>。第三个参数也是长度为 2 的数组，用于存储路径上指定距离的点的切线的 x 和 y 分量。如果不需要这个值，可以传入<code>null</code>，该函数本身则返回一个布尔值。</li>
+</ul>
+</li>
+<li>然后是对前面定义的 PathDashPathEffect 对象进行初始化，构造函数接收 4 个参数：<ul>
+<li><code>Path shape</code>：这是一个子路径，表示要沿着路径重复绘制的形状，这个形状可以是线段、圆形、矩形等。</li>
+<li><code>float advance</code>：由于是重复绘制，所以这个值代表了重复绘制之间的间距。如果这个值比子路径的长度大，那么在重复绘制的时候，图形之间会有间隙；如果这个值比子路径的长度小，那么图形就会发生重叠。</li>
+<li><code>float phase</code>：这是子路径的起始位置偏移量。通过改变这个值，可以控制子路径在路径上的起始位置。如果这个值为 0，则第一个子路径将从路径的起点开始绘制。增加这个值将使子路径沿着路径移动。</li>
+<li><code>PathDashPathEffect.Style style</code>：这是用于控制子路径与原路径相交时的表现方式的枚举值，包含三个可选值：<ul>
+<li><code>Style.TRANSLATE</code>：子路径会平移，使其与原路径相交。</li>
+<li><code>Style.ROTATE</code>：子路径会旋转，使其与原路径的切线对齐。</li>
+<li><code>Style.MORPH</code>：子路径会变形，使其与原路径相交，并沿着原路径的曲率变化。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>参照以上函数的说明和参数的意义，代码将变得好理解，唯一还需要解释的就是 PathDashPathEffect 构造函数中的第二个参数<code>(pathMeasure.length - scaleWidth) / 20f</code>。这个参数首先通过<code>pathMeasure.length</code>拿到被测量的 Path 对象的长度，然后减去一个刻度的宽度，再分成 20 份，每一份的长度就是每个刻度之间的间距，这里要注意，每一份的长度实际上包括了刻度本身的宽度在里面，这也是为什么上面说“值比子路径的长度大，那么在重复绘制的时候，图形之间会有间隙；如果这个值比子路径的长度小，那么图形就会发生重叠”。这 20 份长度，每一份的头都会连着前一份的尾，这样一来，第 21 个刻度所在的位置，就是第 20 份刻度的尾巴，这就保证了圆弧的最尾巴的位置会始终有一个刻度，这样绘制出来的仪表盘就更像现实中的仪表盘。</p>
+<h3 id="指针"><a href="#指针" class="headerlink" title="指针"></a>指针</h3><p>加上绘制指针后的完整代码如下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">class</span> <span class="hljs-title class_">TestView</span>(context: Context?, attrs: AttributeSet?) : View(context, attrs) &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> openAngle = <span class="hljs-number">120f</span>  <span class="hljs-comment">// 仪表盘底部的开口角度</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> scaleWidth = <span class="hljs-number">3f</span>.px  <span class="hljs-comment">// 刻度的宽度</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> scaleLength = <span class="hljs-number">15f</span>.px  <span class="hljs-comment">// 刻度的高度</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> needleLength = <span class="hljs-number">120f</span>.px  <span class="hljs-comment">// 仪表盘指针长度</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> pointTo = <span class="hljs-number">10</span>  <span class="hljs-comment">// 指针指向的刻度（不包括起始刻度）</span><br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> path = Path()  <span class="hljs-comment">// 改用 Path 来绘制圆弧</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">lateinit</span> <span class="hljs-keyword">var</span> pathDashEffect: PathDashPathEffect  <span class="hljs-comment">// 延迟初始化一个路径特效</span><br><br>    <span class="hljs-comment">// 使用 Path 来绘制刻度</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> scale = Path().apply &#123;<br>        addRect(<span class="hljs-number">0f</span>, <span class="hljs-number">0f</span>, scaleWidth, scaleLength, Path.Direction.CW)<br>    &#125;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> paint = Paint(Paint.ANTI_ALIAS_FLAG).apply &#123;<br>        style = Paint.Style.STROKE<br>        strokeWidth = <span class="hljs-number">3f</span>.px<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDraw</span><span class="hljs-params">(canvas: <span class="hljs-type">Canvas</span>)</span></span> &#123;<br>        <span class="hljs-keyword">super</span>.onDraw(canvas)<br>        <span class="hljs-comment">// 画弧</span><br>        canvas.drawPath(path, paint)<br><br>        <span class="hljs-comment">// 应用特效</span><br>        paint.pathEffect = pathDashEffect<br><br>        <span class="hljs-comment">// 使用特效画出刻度</span><br>        canvas.drawPath(path, paint)<br><br>        <span class="hljs-comment">// 取消特效</span><br>        paint.pathEffect = <span class="hljs-literal">null</span><br><br>        <span class="hljs-comment">// 画指针</span><br>        canvas.drawLine(<br>            width / <span class="hljs-number">2f</span>,<br>            height / <span class="hljs-number">2f</span>,<br>            (width / <span class="hljs-number">2f</span> + needleLength * cos(Math.toRadians((<span class="hljs-number">90</span> + openAngle / <span class="hljs-number">2f</span> + (<span class="hljs-number">360</span> - openAngle) / <span class="hljs-number">20f</span> * pointTo).toDouble()))).toFloat(),<br>            (height / <span class="hljs-number">2f</span> + needleLength * sin(Math.toRadians((<span class="hljs-number">90</span> + openAngle / <span class="hljs-number">2f</span> + (<span class="hljs-number">360</span> - openAngle) / <span class="hljs-number">20f</span> * pointTo).toDouble()))).toFloat(),<br>            paint<br>        )<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onSizeChanged</span><span class="hljs-params">(w: <span class="hljs-type">Int</span>, h: <span class="hljs-type">Int</span>, oldw: <span class="hljs-type">Int</span>, oldh: <span class="hljs-type">Int</span>)</span></span> &#123;<br>        <span class="hljs-keyword">super</span>.onSizeChanged(w, h, oldw, oldh)<br>        path.reset()<br>        path.addArc(<br>            width / <span class="hljs-number">2f</span> - <span class="hljs-number">150f</span>.px,<br>            height / <span class="hljs-number">2f</span> - <span class="hljs-number">150f</span>.px,<br>            width / <span class="hljs-number">2f</span> + <span class="hljs-number">150f</span>.px,<br>            height / <span class="hljs-number">2f</span> + <span class="hljs-number">150f</span>.px,<br>            <span class="hljs-number">90</span> + openAngle / <span class="hljs-number">2</span>,<br>            <span class="hljs-number">360</span> - openAngle<br>        )<br>        <span class="hljs-keyword">val</span> pathMeasure = PathMeasure(path, <span class="hljs-literal">false</span>)<br>        pathDashEffect =<br>            PathDashPathEffect(<br>                scale,<br>                (pathMeasure.length - scaleWidth) / <span class="hljs-number">20f</span>,<br>                <span class="hljs-number">0f</span>,<br>                PathDashPathEffect.Style.ROTATE<br>            )<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 为 Float 类型的数据定义一个扩展属性，将这个值的 dp 单位转换为 px 并返回</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">val</span> <span class="hljs-built_in">Float</span>.px<br>    <span class="hljs-keyword">get</span>() = TypedValue.applyDimension(<br>        TypedValue.COMPLEX_UNIT_DIP, <span class="hljs-keyword">this</span>, Resources.getSystem().displayMetrics<br>    )<br></code></pre></td></tr></table></figure>
+
+<p>首先添加了两个变量<code>needleLength</code>和<code>pointTo</code>，重点还是来看在<code>onDraw()</code>中的改动。在<code>onDraw()</code>使用<code>Canvas.drawLine()</code>来绘制直线，该函数的前两个参数就是起始点的横纵坐标，后两个参数是终点的横纵坐标。起点的横纵坐标其实就是仪表盘的中心也就是 View 的中心，而终点的横纵坐标的计算则涉及到三角函数。</p>
+<p>参与三角函数运算的参数有三个，分别是一个角度和两条边，其中一条边就是斜边（指针长度），只要把角度算出来，就可以通过这两个已知量算出第三个值，也就是算出对边（纵坐标的值）或者临边（横坐标的值）。</p>
+<p>角度的计算也不算难，由于仪表盘始于第二象限，所以第一象限 90° 是固定死的了，然后加上仪表盘开口角度的一半等于仪表盘起始位置的角度。然后再将仪表盘转过的角度除以 20 得到一个刻度的度数，最后再乘以需要指向的刻度，将得到的角度加上仪表盘起始位置的角度等于最终的角度。</p>
+<p>有了角度和斜边长度，就可以通过 Kotlin 中的<code>cos()</code>来计算临边的长度，通过<code>sin()</code>来计算对边的长度。需要注意的是这两个函数接收的参数的单位是“弧度制”，而前面一系列的计算得到的值的单位是角度制，所以还需要通过调用<code>toRadians()</code>来将其转换为弧度制。</p>
+<h3 id="简单总结"><a href="#简单总结" class="headerlink" title="简单总结"></a>简单总结</h3><p>绘制少量简单图形时可以直接用 Canvas 的各种 draw 函数，当需要绘制复杂图形的时候可以考虑使用 Path ，因为有 Path 才能使用 PathMeasure 进行测量，并且 Path 在一处被定义了以后，可以通过<code>Canvas.drawPath()</code>重复调用来达到代码复用的目的。</p>
+<p>三角函数在计算坐标时似乎很常用，在已知起点坐标的情况下，通过角度和三角函数，便可以得到终点的横纵坐标。</p>
+<h2 id="绘制饼图"><a href="#绘制饼图" class="headerlink" title="绘制饼图"></a>绘制饼图</h2><p>绘制一个简单的饼图没有仪表盘那么复杂：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">class</span> <span class="hljs-title class_">PieView</span>(context: Context, attrs: AttributeSet?) : View(context, attrs) &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> radius = <span class="hljs-number">150f</span>.px<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> paint = Paint(Paint.ANTI_ALIAS_FLAG)<br>    <br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> angles = floatArrayOf(<span class="hljs-number">30f</span>, <span class="hljs-number">60f</span>, <span class="hljs-number">120f</span>, <span class="hljs-number">150f</span>)  <span class="hljs-comment">// 定义一组角度</span><br><br>    <span class="hljs-comment">// 定义一组颜色</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> colors = listOf(<br>        Color.parseColor(<span class="hljs-string">&quot;#FF3333&quot;</span>),<br>        Color.parseColor(<span class="hljs-string">&quot;#E5FFCC&quot;</span>),<br>        Color.parseColor(<span class="hljs-string">&quot;#9999FF&quot;</span>),<br>        Color.parseColor(<span class="hljs-string">&quot;#99004C&quot;</span>)<br>    )<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDraw</span><span class="hljs-params">(canvas: <span class="hljs-type">Canvas</span>)</span></span> &#123;<br>        <span class="hljs-keyword">super</span>.onDraw(canvas)<br>        <span class="hljs-keyword">var</span> startAngle = <span class="hljs-number">0f</span>  <span class="hljs-comment">// 定义起始角度</span><br>        <span class="hljs-keyword">for</span> ((index, angle) <span class="hljs-keyword">in</span> angles.withIndex()) &#123;<br>            paint.color = colors[index]<br>            canvas.drawArc(<br>                width / <span class="hljs-number">2f</span> - radius,<br>                height / <span class="hljs-number">2f</span> - radius,<br>                width / <span class="hljs-number">2f</span> + radius,<br>                height / <span class="hljs-number">2f</span> + radius,<br>                startAngle,<br>                angle,<br>                <span class="hljs-literal">true</span>,<br>                paint<br>            )<br>            startAngle += angle  <span class="hljs-comment">// 更新起始角度</span><br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>解释：</p>
+<ul>
+<li>这里把<code>150f.px</code>单独作为一个变量提取出来，方便复用和修改。同时复用了前面的<code>Float.px</code>这个扩展属性，只是上面的代码没写。</li>
+<li>增加了两个新变量，分别是一组角度和一组颜色，对应饼图中的每块区域。</li>
+<li>在<code>onDraw()</code>使用<code>Canvas.drawArc()</code>来绘制饼图，因为饼图本质上是由多个圆弧组成的一个完整的圆，其本身并不是一个圆，所以不应该使用<code>drawCircle()</code>。</li>
+<li>因为需要画 4 块扇形，所以这里使用了循环语句来进行重复绘制操作。关于 Kotlin 中循环语句的语法，这里不多阐述。</li>
+<li>使用<code>Canvas.drawArc()</code>来绘制每一块“饼”，其中第五和第六个参数代表弧的起始角度和结束角度，第七个参数<code>useCenter</code>是一个布尔类型的参数，用于指定绘制的弧形是否包含圆心。当这个值为<code>true</code>时，绘制的弧形会包含圆心，也就是从圆心开始绘制弧形。这时候，绘制的图形是一个扇形。否则绘制的弧形不会包含圆心，也就是从圆的边缘开始绘制弧形。这时候，绘制的图形是一个弧线。</li>
+</ul>
+<h3 id="位置偏移"><a href="#位置偏移" class="headerlink" title="位置偏移"></a>位置偏移</h3><p>在某些炫酷的图表库当中，当选中饼图当中的某块扇形区域时，该区域会向后偏移并高亮，这里记录以一下如何实现简单的图形偏移：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> offset = <span class="hljs-number">30f</span>.px  <span class="hljs-comment">// 图形偏移量</span><br>    <br><span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDraw</span><span class="hljs-params">(canvas: <span class="hljs-type">Canvas</span>)</span></span> &#123;<br>    <span class="hljs-keyword">super</span>.onDraw(canvas)<br>    <span class="hljs-keyword">var</span> startAngle = <span class="hljs-number">0f</span><br>    <span class="hljs-keyword">for</span> ((index, angle) <span class="hljs-keyword">in</span> angles.withIndex()) &#123;<br>        paint.color = colors[index]<br>        <span class="hljs-keyword">if</span> (index == <span class="hljs-number">1</span>) &#123;<br>            canvas.save()<br>            canvas.translate(<br>                (offset * cos(Math.toRadians((startAngle + angle / <span class="hljs-number">2f</span>).toDouble()))).toFloat(),<br>                (offset * sin(Math.toRadians((startAngle + angle / <span class="hljs-number">2f</span>).toDouble()))).toFloat()<br>            )<br>        &#125;<br>        canvas.drawArc(<br>            width / <span class="hljs-number">2f</span> - radius,<br>            height / <span class="hljs-number">2f</span> - radius,<br>            width / <span class="hljs-number">2f</span> + radius,<br>            height / <span class="hljs-number">2f</span> + radius,<br>            startAngle,<br>            angle,<br>            <span class="hljs-literal">true</span>,<br>            paint<br>        )<br>        startAngle += angle<br>        <span class="hljs-keyword">if</span> (index == <span class="hljs-number">1</span>) &#123;<br>            canvas.restore()<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>上面的代码仅对第二个扇形（下标为 1 ）进行了偏移，绘制图形前保存了 Canvas 的状态并设置了偏移量，绘制完成后恢复了 Canvas 的状态。计算偏移后的坐标时同样用到了三角函数，偏移的方向为扇形张开角度的一半。</p>
+
+
+  
+
+</article>
+
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a><!-- 7.3.0 --> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a><!-- 1.9.8 --> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

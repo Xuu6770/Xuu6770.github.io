@@ -1,0 +1,1136 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Aiden">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="这篇笔记是对 Kotlin 的基础语法和一些基本特性进行记录。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kotlin 学习笔记 - 基础">
+<meta property="og:url" content="http://xuu6770.github.io/posts/Kotlin-study-notes-basic-part/index.html">
+<meta property="og:site_name" content="Rising Sun">
+<meta property="og:description" content="这篇笔记是对 Kotlin 的基础语法和一些基本特性进行记录。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://xuu6770.github.io/images/Notes/Programming-Paradigm.png">
+<meta property="article:published_time" content="2023-03-04T03:32:06.000Z">
+<meta property="article:modified_time" content="2025-09-20T14:31:17.917Z">
+<meta property="article:author" content="Aiden">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://xuu6770.github.io/images/Notes/Programming-Paradigm.png">
+  
+  
+  
+  <title>Kotlin 学习笔记 - 基础｜Rising Sun</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xuu6770.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Rising Sun</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Kotlin 学习笔记 - 基础"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-03-04 11:32" pubdate>
+          2023年3月4日 中午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Kotlin 学习笔记 - 基础</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>这篇笔记是对 Kotlin 的基础语法和一些基本特性进行记录。</p>
+<span id="more"></span>
+
+<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p>在 Java 中存在 8 个基本数据类型以及相对应的包装类。</p>
+<ul>
+<li>int(整型) -&gt; Integer</li>
+<li>short(短整) -&gt; Short</li>
+<li>long(长整) -&gt; Long</li>
+<li>float(单精度浮点) -&gt; Float</li>
+<li>double(双精度浮点) -&gt; Double</li>
+<li>char(字符) -&gt; Character</li>
+<li>byte(字节) -&gt; Byte</li>
+<li>boolean(布尔) -&gt; Boolean</li>
+</ul>
+<p>例如<code>int</code>一般用于修饰变量，而<code>Integer</code>则是作为一个类存在的，拥有自己的成员变量和成员函数。Java 这么做是为了降低开销，提升性能，而在 Kotlin 中，则不存在基本数据类型，例如整型直接对应的就是<code>Int</code>这个类。</p>
+<p>在 Kotlin 中存在诸如<code>toByte()</code>、<code>toFloat()</code>、<code>toString()</code>等类型转换函数用于更好地转换类型。</p>
+<p>Kotlin 中的字符串也有很多实用的功能，例如：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">// 利用字符串模板在字符串中直接加入变量</span><br><span class="hljs-keyword">val</span> name = <span class="hljs-string">&quot;Aiden&quot;</span><br>println(<span class="hljs-string">&quot;name is <span class="hljs-variable">$name</span>, and length of the name is <span class="hljs-subst">$&#123;name.length&#125;</span>.&quot;</span>)<br><br><span class="hljs-comment">// 以所见即所得的形式定义一个字符串</span><br><span class="hljs-keyword">val</span> s = <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    haha</span><br><span class="hljs-string">    h e he</span><br><span class="hljs-string">&quot;&quot;&quot;</span>.trimIndent()<br>println(s)<br></code></pre></td></tr></table></figure>
+
+<p>输出结果为：</p>
+<blockquote>
+<p>name is Aiden, and length of the name is 5.<br>haha<br>h e he</p>
+</blockquote>
+<h3 id="空安全"><a href="#空安全" class="headerlink" title="空安全"></a>空安全</h3><p>假设在 Java 中定义了一个<code>Person</code>类，然后去实例化它的对象：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">Person</span> <span class="hljs-variable">person</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br></code></pre></td></tr></table></figure>
+
+<p>这么写是没错的，变量<code>person</code>就是<code>Person</code>类型的，只不过它的值为<code>null</code>而已。照着这个思路，在 Kotlin 中会很自然地写出：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">var</span> p: Person = <span class="hljs-literal">null</span><br></code></pre></td></tr></table></figure>
+
+<p>这时候编译器会报错：<code>null</code>不可以被赋值给一个值不能为<code>null</code>的类型。也就是说，变量<code>person</code>确实是<code>Person</code>类的实例，只不过它不能被赋值为<code>null</code>，如果想要把它赋值为<code>null</code>，需要把它的类型改成<code>Person?</code>：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">var</span> p: Person? = <span class="hljs-literal">null</span><br></code></pre></td></tr></table></figure>
+
+<p>而当调用一个可为空类型的对象的时候，编译器会报错并提供 3 种更加安全的方案：</p>
+<ul>
+<li>添加空检查：使用 if 语句判断对象是否为<code>null</code>，在不为<code>null</code>的分支中执行代码。</li>
+<li>使用安全调用：例如<code>person?.walk()</code>，这样一来当<code>person</code>为<code>null</code>时它将不会调用<code>walk()</code>。</li>
+<li>使用非空断言：例如<code>person!!.walk()</code>，此举将告知编译器<code>person</code>不会为空，如果为空，后果自负。</li>
+</ul>
+<p>Kotlin 的这些特性使得所有对象在默认情况下都不能为<code>null</code>，以及在一定程度上避免了出现空指针异常的情况。</p>
+<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p>函数的命名和变量一样都是小驼峰式命名法，也就是以小写字母开头。</p>
+<h3 id="单一表达式函数"><a href="#单一表达式函数" class="headerlink" title="单一表达式函数"></a>单一表达式函数</h3><p>针对只有一条 return 语句的函数，可以直接用<code>=</code>连接函数名，后面跟上返回的内容，这样就省去了花括号和返回类型：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">sayHello</span><span class="hljs-params">(name: <span class="hljs-type">String</span>)</span></span> = <span class="hljs-string">&quot;Hello, <span class="hljs-variable">$name</span>&quot;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="默认参数"><a href="#默认参数" class="headerlink" title="默认参数"></a>默认参数</h3><p>Kotlin 函数中的参数支持设置默认值，这使得函数在调用时会更灵活：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">sayHello</span><span class="hljs-params">(name: <span class="hljs-type">String</span> = <span class="hljs-string">&quot;Aiden&quot;</span>)</span></span> = <span class="hljs-string">&quot;Hello, <span class="hljs-variable">$name</span>&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>此时如果调用<code>sayHello()</code>不传入参数的话，那么<code>name</code>的值将会是<code>Aiden</code>。</p>
+<h2 id="流程控制"><a href="#流程控制" class="headerlink" title="流程控制"></a>流程控制</h2><h3 id="if"><a href="#if" class="headerlink" title="if"></a>if</h3><p>Kotlin 中的 if 语句不仅可以作为 Statement 使用，还可以作为 Expression 使用。例如：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">val</span> age = <span class="hljs-number">18</span><br><span class="hljs-keyword">val</span> isAdult = <span class="hljs-keyword">if</span> (age &gt;= <span class="hljs-number">18</span>) <span class="hljs-literal">true</span> <span class="hljs-keyword">else</span> <span class="hljs-literal">false</span>  <span class="hljs-comment">// 直接对 isAdult 进行赋值</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="when"><a href="#when" class="headerlink" title="when"></a>when</h3><p>简而言之就是 Java 中的 switch 语句，只不过同样可以当 Expression 使用：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">val</span> score = <span class="hljs-number">80</span><br><span class="hljs-keyword">val</span> level = <span class="hljs-keyword">when</span> (score) &#123;<br>    <span class="hljs-number">80</span> -&gt; <span class="hljs-string">&quot;High&quot;</span><br>    <span class="hljs-number">60</span> -&gt; <span class="hljs-string">&quot;Medium&quot;</span><br>    <span class="hljs-keyword">else</span> -&gt; <span class="hljs-string">&quot;Low&quot;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>不过与 switch 不一样的是 when 强制要求添加<code>else</code>分支。</p>
+<h3 id="while-for"><a href="#while-for" class="headerlink" title="while &amp; for"></a>while &amp; for</h3><p>Kotlin 中的 while 语句和 Java 的没什么区别，就是循环，但是 for 语句更多的起到一个遍历的用途。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">// 遍历数字区间</span><br><span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> <span class="hljs-number">1.</span><span class="hljs-number">.5</span>)  <span class="hljs-comment">// 左闭右闭区间 [1, 5]</span><br>    println(i)<br><br><span class="hljs-comment">// 倒序遍历数字区间</span><br><span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> <span class="hljs-number">5</span> downTo <span class="hljs-number">1</span>)  <span class="hljs-comment">// 不能使用 5..1</span><br>    println(i)<br><br><span class="hljs-comment">// 遍历列表</span><br><span class="hljs-keyword">val</span> stringList = listOf(<span class="hljs-string">&quot;Aiden&quot;</span>, <span class="hljs-string">&quot;Marcus&quot;</span>, <span class="hljs-string">&quot;WatchDogs&quot;</span>)<br><span class="hljs-keyword">for</span> (str <span class="hljs-keyword">in</span> stringList)<br>    println(str)<br></code></pre></td></tr></table></figure>
+
+<h2 id="面向对象"><a href="#面向对象" class="headerlink" title="面向对象"></a>面向对象</h2><h3 id="普通类"><a href="#普通类" class="headerlink" title="普通类"></a>普通类</h3><p>假设要定义一个「人」类，拥有姓名和年龄这两个属性：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Person</span>(<span class="hljs-keyword">val</span> name: String, <span class="hljs-keyword">var</span> age: <span class="hljs-built_in">Int</span>)<br></code></pre></td></tr></table></figure>
+
+<p>这一行代码中包含了很多信息：</p>
+<ul>
+<li>类名后面的括号实际上是主构造函数，在实例化对象的时候会把传进来的参数（上述例子中是<code>name</code>和<code>age</code>）赋值给类中的属性。</li>
+<li>括号内定义的是类的属性，同时编译器还会为这些属性生成 getter 和 setter 函数。只不过用<code>val</code>修饰的变量就只会有 getter 不会有 setter ，因为<code>val</code>修饰的属性是不可修改的，而<code>var</code>修饰的则两者都有。</li>
+</ul>
+<h3 id="自定义-getter-setter"><a href="#自定义-getter-setter" class="headerlink" title="自定义 getter setter"></a>自定义 getter setter</h3><p>无论是 Java 还是 Kotlin 的属性都会有 getter 和 setter 函数，但是 Kotlin 的属性还拥有自定义 getter 和 setter 这个特性。假设现在要为上面的<code>Person</code>类增加一个叫做<code>isAdult</code>的属性，获取这个属性的时候返回一个布尔值，如果是<code>true</code>就代表这个对象已经成年了，可以这么做：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    Person(<span class="hljs-string">&quot;Aiden&quot;</span>, <span class="hljs-number">23</span>).also &#123;<br>        <span class="hljs-keyword">if</span> (it.isAdult) println(<span class="hljs-string">&quot;成年了&quot;</span>)<br>        <span class="hljs-keyword">else</span> println(<span class="hljs-string">&quot;未成年&quot;</span>)<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Person</span>(<span class="hljs-keyword">val</span> name: String, <span class="hljs-keyword">var</span> age: <span class="hljs-built_in">Int</span>) &#123;<br>    <span class="hljs-keyword">val</span> isAdult<br>        <span class="hljs-keyword">get</span>() = age &gt;= <span class="hljs-number">18</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出结果为：</p>
+<blockquote>
+<p>成年了</p>
+</blockquote>
+<p>可以看到：</p>
+<ul>
+<li>成年与否实际上应该算是一个人的属性而不是函数，只有像走路、吃饭这样的事情才应该写成函数，这是很符合直觉的。</li>
+<li><code>get()</code>直接用<code>=</code>连接这种写法同样是用到了之前说到的单一表达式函数特性，但是如果 getter 的逻辑一行写不完，那也可以用花括号而不是直接用等号。</li>
+<li>从语法的角度来看，确实增加了一个新的属性<code>isAdult</code>。但是从实现层面来看，编译器在 JVM 层面仍然将其优化成了一个函数，所以这个「属性」并不会占用内存。</li>
+</ul>
+<p>被<code>var</code>修饰的属性就会有 setter ，只不过如果希望在实例化对象的时候额外做点事情，那么就可以使用自定义 setter ：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Person</span>(<span class="hljs-keyword">val</span> name: String) &#123;<br>    <span class="hljs-keyword">var</span> age: <span class="hljs-built_in">Int</span> = <span class="hljs-number">0</span><br>        <span class="hljs-keyword">set</span>(value) &#123;<br>            println(<span class="hljs-string">&quot;do something.&quot;</span>)<br>            field = value<br>        &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>可以看到：</p>
+<ul>
+<li><code>age</code>仍然是被<code>var</code>修饰，代表它有 setter 函数。</li>
+<li>想要为<code>age</code>增加自定义 setter ，需要将其从主构造函数中分离出来，并且为其初始化。</li>
+<li>例如<code>person.age = 23</code>这条语句，<code>23</code>会在自定义 setter 中作为参数被传递，也就是<code>set(value)</code>中的<code>value</code>，而函数体内的<code>field</code>代表的是<code>age</code>本身的值，这里是<code>0</code>，因为初始化为<code>0</code>。</li>
+</ul>
+<h3 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h3><p>Kotlin 在类继承方面仍然有很多新特性：</p>
+<ul>
+<li>Java 继承使用<code>extends</code>关键字，Kotlin 使用冒号<code>:</code>，继承类使用冒号，实现接口也使用冒号，类和多个接口之间用逗号<code>,</code>分离。</li>
+<li>Java 重写函数用<code>@Override</code>注解，Kotlin 使用<code>override</code>关键字修饰重写的函数。</li>
+<li>Kotlin 的类默认是不能被继承的，只有被<code>open</code>关键字修饰的类才能被继承，同样只有被<code>open</code>关键字修饰的函数才能被重写。</li>
+</ul>
+<h3 id="类嵌套"><a href="#类嵌套" class="headerlink" title="类嵌套"></a>类嵌套</h3><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> &#123;<br>    <span class="hljs-keyword">val</span> name = <span class="hljs-string">&quot;Aiden&quot;</span><br><br>    <span class="hljs-keyword">class</span> <span class="hljs-title class_">B</span> &#123;<br><span class="hljs-comment">//        val str = name  // 报错</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>将<code>B</code>类嵌套在<code>A</code>类内部，内部类不能访问外部类的属性，这种情况对应了 Java 中的静态内部类。如果想要内部类可以持有外部类的引用，则需要给内部类加上<code>inner</code>关键字：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> &#123;<br>    <span class="hljs-keyword">val</span> name = <span class="hljs-string">&quot;Aiden&quot;</span><br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">walk</span><span class="hljs-params">()</span></span> &#123;&#125;<br><br>    <span class="hljs-keyword">inner</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">B</span> &#123;<br>        <span class="hljs-keyword">val</span> str = name<br>        <span class="hljs-keyword">val</span> method = walk()<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>Kotlin 将类嵌套默认实现成静态内部类，这样在默认情况下就不会出现内存泄漏的情况。</p>
+<h3 id="数据类"><a href="#数据类" class="headerlink" title="数据类"></a>数据类</h3><p>数据类（data class）主要是用于存放数据的类，是 Java 没有的概念。</p>
+<ul>
+<li>数据类的主构造函数中至少要有一个参数。</li>
+<li>编译器会为数据类生成几个函数：N 个 componentN()，其中 N 代表主构造函数中参数的个数、<code>copy()</code>、<code>toString()</code>、<code>hashCode()</code>、<code>equals()</code></li>
+</ul>
+<h3 id="密封类"><a href="#密封类" class="headerlink" title="密封类"></a>密封类</h3><p>密封类（sealed class）类似于枚举，不过更强大。也是 Java 中没有的概念。</p>
+<p>枚举中的一个值和它自己永远是的结构相等且引用相等，如果需要枚举的值拥有不一样的引用，就可以使用密封类。</p>
+<h3 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h3><ul>
+<li>接口中可以声明属性，只不过属性不能有初始值。被<code>val</code>修饰的属性可以自定义 getter ，被<code>var</code>修饰的属性既不能自定义 getter 也不能自定义 setter 。</li>
+<li>函数也可以有默认实现。</li>
+</ul>
+<h2 id="编译器干了什么"><a href="#编译器干了什么" class="headerlink" title="编译器干了什么"></a>编译器干了什么</h2><h3 id="原始类型"><a href="#原始类型" class="headerlink" title="原始类型"></a>原始类型</h3><p>前面提到，相较 Java 来说，Kotlin 在语法层面是只有包装类的，也就是例如 Java 中的 long 到了 Kotlin 后就只有 Long 。但是原始类型的存在也是有理由的，因为它的性能损耗会更低，那么 Kotlin 是怎么优化性能的？</p>
+<p>首先在 Kotlin 写出声明 Long 类型变量的一些情况：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">// 可变和不可变的 Long</span><br><span class="hljs-keyword">val</span> a = <span class="hljs-number">1L</span><br><span class="hljs-keyword">var</span> b = <span class="hljs-number">2L</span><br><br><span class="hljs-comment">// 可变和不可变的、可为空但是并不是空的 Long</span><br><span class="hljs-keyword">val</span> c: <span class="hljs-built_in">Long</span>? = <span class="hljs-number">3L</span><br><span class="hljs-keyword">var</span> d: <span class="hljs-built_in">Long</span>? = <span class="hljs-number">4L</span><br><br><span class="hljs-comment">// 可变且可为空的 Long ，先赋为 null 再赋值为 5L</span><br><span class="hljs-keyword">var</span> f: <span class="hljs-built_in">Long</span>? = <span class="hljs-literal">null</span><br>f = <span class="hljs-number">5L</span><br><br><span class="hljs-comment">// 可变且可为空的 Long ，先赋为 6L 再赋值为 null</span><br><span class="hljs-keyword">var</span> g: <span class="hljs-built_in">Long</span>? = <span class="hljs-number">6L</span><br>g = <span class="hljs-literal">null</span><br></code></pre></td></tr></table></figure>
+
+<p>将其反编译为 Java ：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">long</span> <span class="hljs-variable">a</span> <span class="hljs-operator">=</span> <span class="hljs-number">1L</span>;<br><span class="hljs-type">long</span> <span class="hljs-variable">b</span> <span class="hljs-operator">=</span> <span class="hljs-number">2L</span>;<br><span class="hljs-type">long</span> <span class="hljs-variable">c</span> <span class="hljs-operator">=</span> <span class="hljs-number">3L</span>;<br><span class="hljs-type">long</span> <span class="hljs-variable">d</span> <span class="hljs-operator">=</span> <span class="hljs-number">4L</span>;<br><span class="hljs-type">Long</span> <span class="hljs-variable">f</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>f = <span class="hljs-number">5L</span>;<br><span class="hljs-type">Long</span> <span class="hljs-variable">g</span> <span class="hljs-operator">=</span> <span class="hljs-number">6L</span>;<br>g = <span class="hljs-literal">null</span>;<br></code></pre></td></tr></table></figure>
+
+<p>可以看到，尽管在 Kotlin 中只使用了 Long ，但是到了 Java 就变成既有 long 又有 Long 了，这背后的工作也是由 Kotlin 编译器完成的。一句话总结就是，有可能为<code>null</code>的数据，编译器会自动将其声明为包装类型。</p>
+<h3 id="接口语法"><a href="#接口语法" class="headerlink" title="接口语法"></a>接口语法</h3><p>Kotlin 中的接口可以有属性，函数可以有默认实现，这是什么原理呢。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">interface</span> <span class="hljs-title class_">ClickListener</span> &#123;<br>    <span class="hljs-keyword">val</span> enable: <span class="hljs-built_in">Boolean</span><br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">click</span><span class="hljs-params">()</span></span> &#123;<br>        println(<span class="hljs-string">&quot;被点击了&quot;</span>)<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyButton</span> : <span class="hljs-type">ClickListener</span> &#123;<br>    <span class="hljs-keyword">override</span> <span class="hljs-keyword">var</span> enable: <span class="hljs-built_in">Boolean</span> = <span class="hljs-literal">false</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>先从接口的定义看起，有一个布尔类型的属性和一个函数，反编译至 Java ：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">ClickListener</span> &#123;<br>   <span class="hljs-type">boolean</span> <span class="hljs-title function_">getEnable</span><span class="hljs-params">()</span>;<br><br>   <span class="hljs-keyword">void</span> <span class="hljs-title function_">click</span><span class="hljs-params">()</span>;<br><br>   <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">DefaultImpls</span> &#123;<br>      <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">click</span><span class="hljs-params">(<span class="hljs-meta">@NotNull</span> ClickListener $<span class="hljs-built_in">this</span>)</span> &#123;<br>         <span class="hljs-type">String</span> <span class="hljs-variable">var1</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;被点击了&quot;</span>;<br>         System.out.println(var1);<br>      &#125;<br>   &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>可以看到：属性本质上是一个 get 函数，<code>click()</code>的默认实现被放到了一个静态内部类当中的一个同名静态函数当中。再来看<code>MyButton</code>类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyButton</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">ClickListener</span> &#123;<br>   <span class="hljs-keyword">private</span> <span class="hljs-type">boolean</span> enable;<br><br>   <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">getEnable</span><span class="hljs-params">()</span> &#123;<br>      <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.enable;<br>   &#125;<br><br>   <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setEnable</span><span class="hljs-params">(<span class="hljs-type">boolean</span> var1)</span> &#123;<br>      <span class="hljs-built_in">this</span>.enable = var1;<br>   &#125;<br><br>   <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">click</span><span class="hljs-params">()</span> &#123;<br>      ClickListener.DefaultImpls.click(<span class="hljs-built_in">this</span>);<br>   &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>MyButton</code>类实现<code>ClickListener</code>接口后，重写了<code>getEnable()</code>，这是必须重写的，但是因为我在 Kotlin 的<code>MyButton</code>类中将<code>enable</code>以<code>var</code>来声明，导致编译器在 Java 里又帮我添加了一个<code>setEnable()</code>，同时它还声明了<code>private boolean enable;</code>（<code>enable</code>没有初始化为<code>false</code>是因为 boolean 默认为<code>false</code>），这样一来，一个具备 getter 和 setter 的属性就声明完成了……也就是说，我在 Kotlin 接口中声明的属性，被反编译至 Java 后，先是在 Java 的接口定义处变成了函数，然后在接口实现处又变回了属性。而<code>click()</code>也经历了重写，只不过因为它有默认实现，所以这个重写就是简单的调用这个实现就行了。</p>
+<h3 id="更多例子"><a href="#更多例子" class="headerlink" title="更多例子"></a>更多例子</h3><ul>
+<li>类型推导，定义变量时省略的变量类型，最终会被编译器补充回来。</li>
+<li>字符串模板，编译器最终会将它们转换成 Java 中拼接的形式。</li>
+<li>when 表达式，编译器最终会将它们转换成类似 switch case 的语句。</li>
+<li>类默认 public ，定义类时省略的 public 最终会被编译器补充回来。</li>
+<li>嵌套类默认 static ，嵌套类默认会被添加<code>static</code>关键字，将其变成静态内部类，防止不必要的内存泄漏。</li>
+<li>数据类，定义数据类只用一行代码，编译器在后期补充了很多相关函数。</li>
+</ul>
+<h2 id="object-关键字"><a href="#object-关键字" class="headerlink" title="object 关键字"></a>object 关键字</h2><p>Kotlin 中的<code>object</code>关键字有着三种迥然不同的语义，分别可以定义：</p>
+<ul>
+<li>匿名内部类</li>
+<li>单例模式</li>
+<li>伴生对象</li>
+</ul>
+<p>之所以会出现这样的情况，是因为设计者认为，这三种语义本质上都是在定义一个类的同时还创建了对象。</p>
+<h3 id="匿名内部类"><a href="#匿名内部类" class="headerlink" title="匿名内部类"></a>匿名内部类</h3><p>匿名内部类通常只使用一次（因为它是匿名的），并且会继承一个父类或者实现一个接口。</p>
+<p>在 Java 中不使用匿名内部类是这样的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">JavaLab</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-type">Human</span> <span class="hljs-variable">human</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Human</span>();<br>        human.walk();<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Animal</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">walk</span><span class="hljs-params">()</span>;<br>&#125;<br><br><span class="hljs-comment">// 手动继承抽象类并实现抽象函数</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Human</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Animal</span> &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">walk</span><span class="hljs-params">()</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;Human walk.&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>变量命名的意义可能不大，不过重点在于<code>Human</code>类重写了<code>walk()</code>，并且只用了一次，那大可使用匿名内部类的方式来实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">JavaLab</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-comment">// 写法是添加花括号，括号内部就是匿名类的实现，并且该类会继承 Animal</span><br>        <span class="hljs-type">Animal</span> <span class="hljs-variable">animal</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Animal</span>() &#123;<br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">walk</span><span class="hljs-params">()</span> &#123;<br>                <span class="hljs-comment">// 匿名内部类继承 Animal 后实现抽象函数</span><br>            &#125;<br>        &#125;;<br>        animal.walk();<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Animal</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">walk</span><span class="hljs-params">()</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这种写法同样可以用于接口上：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">JavaLab</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-comment">// 可以这么写</span><br>        <span class="hljs-type">Foo</span> <span class="hljs-variable">foo</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Foo</span>() &#123;<br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">Bar</span><span class="hljs-params">()</span> &#123;<br>                <br>            &#125;<br>        &#125;;<br>        foo.Bar();<br>        <br>        <span class="hljs-comment">// 也可以简化这么写</span><br>        <span class="hljs-keyword">new</span> <span class="hljs-title class_">Foo</span>() &#123;<br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">Bar</span><span class="hljs-params">()</span> &#123;<br>                <br>            &#125;<br>        &#125;.Bar();<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">interface</span> <span class="hljs-title class_">Foo</span> &#123;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">Bar</span><span class="hljs-params">()</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>甚至可以使用 Lambda 语法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>    <span class="hljs-type">Foo</span> <span class="hljs-variable">foo</span> <span class="hljs-operator">=</span> () -&gt; &#123;<br><br>    &#125;;<br>    foo.Bar();<br><br>    ((Foo) () -&gt; &#123;<br><br>    &#125;).Bar();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>接下来看一些一般用例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 继承`Thread`类来开启线程</span><br><span class="hljs-type">Thread</span> <span class="hljs-variable">thread</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>() &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">run</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-built_in">super</span>.run();<br>    &#125;<br>&#125;;<br>thread.start();<br><br><span class="hljs-comment">// 实现`Runnable`接口来开启线程</span><br><span class="hljs-type">Runnable</span> <span class="hljs-variable">runnable</span> <span class="hljs-operator">=</span> () -&gt; &#123;<br>    <span class="hljs-comment">// 编写 run() 中的逻辑</span><br>&#125;;<br><span class="hljs-type">Thread</span> <span class="hljs-variable">myThread</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(runnable);<br>myThread.start();<br><br><span class="hljs-comment">// 在 Android 中为按钮控件添加点击事件</span><br><span class="hljs-type">Button</span> <span class="hljs-variable">button</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Button</span>();  <span class="hljs-comment">// 此处报错，需要提供上下文，不过不是重点</span><br>button.setOnClickListener(<span class="hljs-keyword">new</span> <span class="hljs-title class_">View</span>.OnClickListener() &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onClick</span><span class="hljs-params">(View view)</span> &#123;<br>        <span class="hljs-comment">// 按钮点击逻辑</span><br>    &#125;<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<p>Kotlin 则通过<code>object</code>关键字来创建匿名内部类，并且同样需要重写那些未实现的函数：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">// 在 Android 中为按钮控件添加点击事件</span><br><span class="hljs-keyword">val</span> bt = Button(<span class="hljs-keyword">this</span>)<br>bt.setOnClickListener(<span class="hljs-keyword">object</span> : View.OnClickListener &#123;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onClick</span><span class="hljs-params">(p0: <span class="hljs-type">View</span>?)</span></span> &#123;<br>        TODO(<span class="hljs-string">&quot;Not yet implemented&quot;</span>)<br>    &#125;<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>只不过跟 Java 不一样的是，Kotlin 可以同时继承一个类和实现多个接口：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-comment">// 实现了 Foo 和 Foo2 两个接口以及一个抽象类 Foo3</span><br>    <span class="hljs-keyword">val</span> temp = <span class="hljs-keyword">object</span> : Foo, Foo2, Foo3() &#123;<br>        <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">bar</span><span class="hljs-params">()</span></span> &#123;<br>            TODO(<span class="hljs-string">&quot;Not yet implemented&quot;</span>)<br>        &#125;<br><br>        <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">bar2</span><span class="hljs-params">()</span></span> &#123;<br>            TODO(<span class="hljs-string">&quot;Not yet implemented&quot;</span>)<br>        &#125;<br><br>        <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">bar3</span><span class="hljs-params">()</span></span> &#123;<br>            TODO(<span class="hljs-string">&quot;Not yet implemented&quot;</span>)<br>        &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">interface</span> <span class="hljs-title class_">Foo</span> &#123;<br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">bar</span><span class="hljs-params">()</span></span><br>&#125;<br><br><span class="hljs-keyword">interface</span> <span class="hljs-title class_">Foo2</span> &#123;<br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">bar2</span><span class="hljs-params">()</span></span><br>&#125;<br><br><span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Foo3</span> &#123;<br>    <span class="hljs-keyword">abstract</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">bar3</span><span class="hljs-params">()</span></span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h3><h4 id="object"><a href="#object" class="headerlink" title="object"></a>object</h4><p>Kotlin 中最简单的定义单例类的方式就是通过<code>object</code>关键字：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    Singleton.foo()<br>&#125;<br><br><span class="hljs-comment">// 不需要 class 修饰</span><br><span class="hljs-keyword">object</span> Singleton &#123;<br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">foo</span><span class="hljs-params">()</span></span> &#123;&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>接下来将 Kotlin 字节码反编译至 Java 看看 Kotlin 是如何使用<code>object</code>关键字实现单例类的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">KotlinLabKt</span> &#123;<br>   <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span> &#123;<br>      Singleton.INSTANCE.foo();<br>   &#125;<br><br>   <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] var0)</span> &#123;<br>      main();<br>   &#125;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Singleton</span> &#123;<br>   <br>   <span class="hljs-comment">// 创建一个该类的成员变量</span><br>   <span class="hljs-meta">@NotNull</span><br>   <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Singleton INSTANCE;<br><br>   <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">foo</span><span class="hljs-params">()</span> &#123;<br>   &#125;<br><br>   <span class="hljs-comment">// 私有化构造函数</span><br>   <span class="hljs-keyword">private</span> <span class="hljs-title function_">Singleton</span><span class="hljs-params">()</span> &#123;<br>   &#125;<br><br>   <span class="hljs-keyword">static</span> &#123;<br>      <span class="hljs-type">Singleton</span> <span class="hljs-variable">var0</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Singleton</span>();<br>      INSTANCE = var0;<br>   &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>可以看到，尽管编写过程很简单，但是编译器还是在背后把该做的都做了，包括私有化构造函数、创建一个该类的成员变量，并用<code>static</code>修饰。不过仍然有需要注意的地方：程序中并没有出现我们熟悉的<code>getInstance()</code>之类的用于获取实例的函数，也没有双重检查用于保证线程安全，并且<code>INSTANCE</code>变量，也就是我们用于返回的实例变量，还被<code>final</code>修饰了——这一切其实都是因为<code>static&#123;&#125;</code>代码块。在<code>static&#123;&#125;</code>代码块中的代码，将由虚拟机保证只会被执行一次，也就是保证了线程安全，就不需要双重检查了，同时又保证了<code>INSTANCE</code>变量只会被赋值一次，所以就用<code>final</code>修饰了。同时也可以看到，调用方式为<code>单例类名.实例对象名.函数名</code>。</p>
+<p>这样的单例类真的很简洁明了，看得很舒服，但是也存在两个很明显的不足：</p>
+<ul>
+<li>不支持懒加载（懒汉和饿汉）。</li>
+<li>不支持传参构造单例（例如无法传递上下文）。</li>
+</ul>
+<h4 id="懒加载"><a href="#懒加载" class="headerlink" title="懒加载"></a>懒加载</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Data</span> <span class="hljs-keyword">private</span> <span class="hljs-keyword">constructor</span>() &#123;<br>    <span class="hljs-keyword">object</span> DataManager &#123;<br>        <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">loadData</span><span class="hljs-params">()</span></span>: Data &#123;<br>            <span class="hljs-comment">// 执行网络请求</span><br>            <span class="hljs-keyword">return</span> Data()<br>        &#125;<br>        <br>        <span class="hljs-keyword">val</span> <span class="hljs-keyword">data</span> <span class="hljs-keyword">by</span> lazy &#123;<br>            loadData()<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>使用 by lazy 把属性包裹起来，只要<code>data</code>没有被使用过，就不会触发<code>loadData()</code>。这其实是一种简洁与性能的折中方案。一个对象所占用的内存资源毕竟不大，但是从服务器去请求数据所消耗的资源就会大很多，能保证这个部分是懒加载就算不错了。</p>
+<h4 id="Double-Check"><a href="#Double-Check" class="headerlink" title="Double Check"></a>Double Check</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Singleton</span> <span class="hljs-keyword">private</span> <span class="hljs-keyword">constructor</span>() &#123;<br>    <span class="hljs-keyword">companion</span> <span class="hljs-keyword">object</span> &#123;<br>        <span class="hljs-comment">// 使用 @Volatile 注解保证同步性</span><br>        <span class="hljs-meta">@Volatile</span><br>        <span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> instance: Singleton? = <span class="hljs-literal">null</span><br>        <span class="hljs-comment">// 第一次使用 elvis 操作符进行判空</span><br>        <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">getInstance</span><span class="hljs-params">()</span></span>: Singleton = instance ?: synchronized(<span class="hljs-keyword">this</span>) &#123;<br>            <span class="hljs-comment">// 第二次判空</span><br>            instance ?: Singleton().also &#123; instance = it &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这个写法其实也来自 Google ：<a target="_blank" rel="noopener" href="https://github.com/android/architecture-components-samples/blob/master/BasicRxJavaSampleKotlin/app/src/main/java/com/example/android/observability/persistence/UsersDatabase.kt">architecture-components-samples&#x2F;UsersDatabase.kt at master · android&#x2F;architecture-components-samples · GitHub</a>，本质上和 Java 的双重检查没什么区别。</p>
+<h4 id="抽象类模板"><a href="#抽象类模板" class="headerlink" title="抽象类模板"></a>抽象类模板</h4><p>Double Check 是很好的方案，既解决了懒加载又满足了传参，可是它还不够完美，因为针对不同的类，每次都要把逻辑从头写一遍，每次都要写一遍 Double Check 就很麻烦，那么如何复用这部分操作呢。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-comment">// 使用</span><br>    <span class="hljs-keyword">val</span> <span class="hljs-keyword">data</span> = Data.getInstance(<span class="hljs-string">&quot;&quot;</span>)<br>    <span class="hljs-keyword">data</span>.foo()<br>&#125;<br><br><span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">BaseSingleton</span>&lt;<span class="hljs-type">in P, out T</span>&gt; &#123;<br>    <span class="hljs-meta">@Volatile</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> instance: T? = <span class="hljs-literal">null</span><br>    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">abstract</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">create</span><span class="hljs-params">(param: <span class="hljs-type">P</span>)</span></span>: T<br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">getInstance</span><span class="hljs-params">(param: <span class="hljs-type">P</span>)</span></span>: T = instance ?: synchronized(<span class="hljs-keyword">this</span>) &#123;<br>        instance ?: create(param).also &#123; instance = it &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Data</span> <span class="hljs-keyword">private</span> <span class="hljs-keyword">constructor</span>() &#123;<br>    <span class="hljs-keyword">companion</span> <span class="hljs-keyword">object</span> : BaseSingleton&lt;String, Data&gt;() &#123;<br>        <span class="hljs-comment">// 实例化对象的逻辑将放在 create() 中</span><br>        <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">create</span><span class="hljs-params">(param: <span class="hljs-type">String</span>)</span></span>: Data &#123;<br>            <span class="hljs-comment">// 可以进行一些额外处理</span><br>            <span class="hljs-keyword">return</span> Data()<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">foo</span><span class="hljs-params">()</span></span> &#123;&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>利用泛型并通过继承一个抽象类并实现其抽象函数，可以把重复的工作放在抽象类当中，然后把如何实例化的逻辑抽取出来，针对不同的类编写不一样的逻辑。例如上面的例子中，<code>Data</code>类中的伴生对象（伴生对象也是一个类）在继承<code>BaseSingleton&lt;in P, out T&gt;</code>以后就只需要重写<code>create()</code>，保证其最终返回一个<code>Data</code>对象就行了。至于 Volatile 和双重检查的逻辑，已经在抽象类中实现了。</p>
+<h3 id="伴生对象"><a href="#伴生对象" class="headerlink" title="伴生对象"></a>伴生对象</h3><p>Kotlin 中没有<code>static</code>关键字，想要定义静态变量和静态函数，需要使用到伴生对象也就是<code>companion object</code>：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    Foo.name = <span class="hljs-string">&quot;Aiden&quot;</span><br>    Foo.bar()<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Foo</span> &#123;<br>    <span class="hljs-keyword">companion</span> <span class="hljs-keyword">object</span> &#123;<br>        <span class="hljs-keyword">var</span> name = <span class="hljs-string">&quot;&quot;</span><br>        <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">bar</span><span class="hljs-params">()</span></span> &#123;<br>            println(<span class="hljs-string">&quot;my name is <span class="hljs-variable">$name</span>&quot;</span>)<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这样就很有静态的感觉。那么<code>object&#123;&#125;</code>和<code>companion object&#123;&#125;</code>都可以在类的内部声明，那它们之间有什么区别呢。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    ObjectTest.InnerSingleton.foo()<br>    ObjectTest.InnerSingleton.name = <span class="hljs-string">&quot;Aiden&quot;</span><br>    println(ObjectTest.InnerSingleton.name)<br><br>    CompanionObjectTest.bar()<br>    println(CompanionObjectTest.name)<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">ObjectTest</span> &#123;<br>    <span class="hljs-keyword">object</span> InnerSingleton &#123;<br>        <span class="hljs-keyword">var</span> name = <span class="hljs-string">&quot;&quot;</span><br>        <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">foo</span><span class="hljs-params">()</span></span> &#123;&#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">CompanionObjectTest</span> &#123;<br>    <span class="hljs-keyword">companion</span> <span class="hljs-keyword">object</span> &#123;<br>        <span class="hljs-keyword">const</span> <span class="hljs-keyword">val</span> name = <span class="hljs-string">&quot;Aiden&quot;</span><br>        <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">bar</span><span class="hljs-params">()</span></span> &#123;&#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>反编译至 Java ：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">KotlinLabKt</span> &#123;<br>   <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span> &#123;<br>      ObjectTest.InnerSingleton.INSTANCE.foo();<br>      CompanionObjectTest.Companion.bar();<br>   &#125;<br><br>   <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] var0)</span> &#123;<br>      main();<br>   &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>可以看到，<code>object&#123;&#125;</code>由于被嵌入到一个类中，所以在调用的时候会比<code>companion object&#123;&#125;</code>多一层，如果想要去掉这一层（.INSTANCE），可以在<code>fun foo() &#123;&#125;</code>上边加上<code>@JvmStatic</code>注解，再次反编译就会发现少了这一层，不过感觉也没什么卵用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ObjectTest</span> &#123;<br>   <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">InnerSingleton</span> &#123;<br>      <span class="hljs-meta">@NotNull</span><br>      <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">name</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;Aiden&quot;</span>;<br>      <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> age;<br>      <span class="hljs-meta">@NotNull</span><br>      <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> InnerSingleton INSTANCE;<br><br>      <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-title function_">getAge</span><span class="hljs-params">()</span> &#123;<br>         <span class="hljs-keyword">return</span> age;<br>      &#125;<br><br>      <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setAge</span><span class="hljs-params">(<span class="hljs-type">int</span> var1)</span> &#123;<br>         age = var1;<br>      &#125;<br><br>      <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">foo</span><span class="hljs-params">()</span> &#123;<br>      &#125;<br><br>      <span class="hljs-keyword">private</span> <span class="hljs-title function_">InnerSingleton</span><span class="hljs-params">()</span> &#123;<br>      &#125;<br><br>      <span class="hljs-keyword">static</span> &#123;<br>         <span class="hljs-type">InnerSingleton</span> <span class="hljs-variable">var0</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">InnerSingleton</span>();<br>         INSTANCE = var0;<br>         age = <span class="hljs-number">23</span>;<br>      &#125;<br>   &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>可以看到，<code>object&#123;&#125;</code>就是把单例类嵌入到类中（在<code>static&#123;&#125;</code>代码块中执行一些变量初始化操作），然后通过实例对象来调用变量和 getter 和 setter 以及其它函数。只不过相比直接使用<code>object</code>定义单例类，嵌入到类中的单例类还会被<code>static</code>修饰。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CompanionObjectTest</span> &#123;<br>   <span class="hljs-meta">@NotNull</span><br>   <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">name</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;Aiden&quot;</span>;<br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-variable">age</span> <span class="hljs-operator">=</span> <span class="hljs-number">23</span>;<br>   <span class="hljs-meta">@NotNull</span><br>   <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Companion</span> <span class="hljs-variable">Companion</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Companion</span>((DefaultConstructorMarker)<span class="hljs-literal">null</span>);<br><br>   <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Companion</span> &#123;<br>      <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-title function_">getAge</span><span class="hljs-params">()</span> &#123;<br>         <span class="hljs-keyword">return</span> CompanionObjectTest.age;<br>      &#125;<br><br>      <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setAge</span><span class="hljs-params">(<span class="hljs-type">int</span> var1)</span> &#123;<br>         CompanionObjectTest.age = var1;<br>      &#125;<br><br>      <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">bar</span><span class="hljs-params">()</span> &#123;<br>      &#125;<br><br>      <span class="hljs-keyword">private</span> <span class="hljs-title function_">Companion</span><span class="hljs-params">()</span> &#123;<br>      &#125;<br><br>      <span class="hljs-keyword">public</span> <span class="hljs-title function_">Companion</span><span class="hljs-params">(DefaultConstructorMarker $constructor_marker)</span> &#123;<br>         <span class="hljs-built_in">this</span>();<br>      &#125;<br>   &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>而<code>companion object&#123;&#125;</code>就有点不一样了，它首先把所有的变量放在类的最外层并且用<code>static</code>修饰，然后新建了一个叫<code>Companion</code>的静态内部类，其中包含了所有的函数（包括最外层的那些变量的 getter 和 setter）。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>看了<code>object&#123;&#125;</code>和<code>companion object&#123;&#125;</code>反编译代码的对比，感觉也没什么特别的，不如来总结一下单例类的用法：</p>
+<ul>
+<li>如果单例占用内存很小，并且对内存不敏感，不需要传参，直接使用<code>object</code>定义即可。</li>
+<li>如果单例占用内存很小，不需要传参，但它内部的属性会触发消耗资源的网络请求和数据库查询，则可以使用<code>object</code>搭配懒加载。</li>
+<li>如果工程很简单，只有一两个单例场景，同时有懒加载需求，并且需要传参，则可以直接手写 Double Check 。</li>
+<li>如果工程规模大，对内存敏感，单例场景比较多，那就很有必要使用抽象类模板了。</li>
+</ul>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><h3 id="扩展函数"><a href="#扩展函数" class="headerlink" title="扩展函数"></a>扩展函数</h3><p>扩展函数是个函数，函数可以被类实例对象调用，所以扩展很明显指的就是扩展这个类了。但是函数明明可以直接写在类里，想要什么功能就写什么函数，为什么还要扩展？所以很明显，扩展的往往是那些不能被修改的类。来看个例子：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    println(<span class="hljs-string">&quot;1000秒是多少分多少秒呢？是<span class="hljs-subst">$&#123;<span class="hljs-number">1000.</span>toMinSec()&#125;</span>&quot;</span>)<br>&#125;<br><br><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-built_in">Int</span>.<span class="hljs-title">toMinSec</span><span class="hljs-params">()</span></span>: String &#123;<br>    <span class="hljs-keyword">val</span> min = <span class="hljs-keyword">this</span> / <span class="hljs-number">60</span>  <span class="hljs-comment">// this 代表调用这个函数的 Int 对象</span><br>    <span class="hljs-keyword">val</span> sec = <span class="hljs-keyword">this</span> % <span class="hljs-number">60</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;<span class="hljs-variable">$min</span>:<span class="hljs-variable">$sec</span>&quot;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>toMinSec()</code>的具体逻辑是什么并不重要。重点在于<code>Int</code>类是 Kotlin 官方的类，是不能被修改的，但是<code>toMinSec()</code>作为扩展函数，它扩展了<code>Int</code>类，这样一来，<code>Int</code>类对象就可以直接调用这个函数。扩展函数的好处就在于方便且符合直觉：这个功能就是和这个类相关的，那么这个类的对象就应该可以直接调用函数。</p>
+<p>编写扩展函数的关键在于函数的声明处，在上面的例子中，<code>Int.toMinSec()</code>代表的是将名为<code>toMinSec()</code>的函数作为<code>Int</code>类的扩展函数，在后续的使用中，如上面的<code>1000</code>，作为<code>Int</code>对象，就可以直接调用这个函数。还有一点就是函数当中的<code>this</code>关键字，这个关键字在函数内代表的是调用这个函数的对象，在上面的例子中就是<code>1000</code>。</p>
+<p>接下来利用反编译看一下扩展函数神奇在哪里（为了简化，这里就把函数内的逻辑改成一行打印）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span> &#123;<br>    toMinSec(<span class="hljs-number">100</span>);<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">toMinSec</span><span class="hljs-params">(<span class="hljs-type">int</span> $<span class="hljs-built_in">this</span>$toMinSec)</span> &#123;<br>    System.out.println($<span class="hljs-built_in">this</span>$toMinSec);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>不难看出，Kotlin 编写的扩展函数，最终会变成静态函数的调用，并没有修改任何类的源码。</p>
+<h3 id="扩展属性"><a href="#扩展属性" class="headerlink" title="扩展属性"></a>扩展属性</h3><p>扩展属性也是类似：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    println(<span class="hljs-string">&quot;Aiden&quot;</span>.foo)<br>&#125;<br><br><span class="hljs-keyword">val</span> String.foo<br>    <span class="hljs-keyword">get</span>() = <span class="hljs-string">&quot;bar&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>可以看到，区别只是将<code>fun</code>改成<code>val</code>&#x2F;<code>var</code>而已，然后把函数体改成 get 函数，函数内同样可以通过<code>this</code>关键字引用这个 String 对象。针对这个例子反编译至 Java 会发现扩展属性的实现同样是一个静态函数，函数名为<code>getFoo</code>。</p>
+<h3 id="局限性"><a href="#局限性" class="headerlink" title="局限性"></a>局限性</h3><p>扩展并非无所不能，因为其本质终究是一个静态函数，这就导致了至少 3 个限制：</p>
+<ul>
+<li>无法被重写。这很好理解，假设为 A 类编写了一个扩展函数（这个扩展函数位于顶层），这个 A 类是用<code>open</code>修饰的，然后 B 类继承了 A 类，但是就算这样还是无法重写这个扩展函数，因为这个扩展函数根本就不是 A 类的成员。如果非要重写，那可以把这个扩展函数写在 A 类的里面，但是这样又没意义了，如果可以修改类的代码，那还要扩展函数做什么。</li>
+<li>扩展属性无法存储状态。对于扩展属性，可以编写 get 函数，但是编写 set 函数的时候并不能调用<code>field</code>进行赋值。</li>
+<li>访问的作用域仅限于两处。一是扩展声明所在的作用域的变量（例如在顶层），扩展可以访问，哪怕这个变量是私有的。二是被扩展类的公开成员，例如扩展了 String 类，那么就可以调用 String 类的<code>length</code>属性，至于 String 类的私有成员，扩展则无法访问。</li>
+</ul>
+<h2 id="高阶函数"><a href="#高阶函数" class="headerlink" title="高阶函数"></a>高阶函数</h2><p>高阶函数就是将函数用作参数或返回值的函数。在 Android 开发中，为控件添加点击监听是一个很好的例子，如果用 Java 为一个按钮添加点击监听，一般这么写：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">Button</span> <span class="hljs-variable">button</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Button</span>();  <span class="hljs-comment">// 报错，缺少上下文，不重要</span><br>button.setOnClickListener(<span class="hljs-keyword">new</span> <span class="hljs-title class_">View</span>.OnClickListener() &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onClick</span><span class="hljs-params">(View view)</span> &#123;<br>        <span class="hljs-comment">// 点击事件</span><br>    &#125;<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<p>同样的功能，用 Kotlin 来写，写法会简单很多，同时可读性也增加了：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">Button(<span class="hljs-keyword">this</span>).setOnClickListener &#123;<br>    <span class="hljs-comment">// 点击事件</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="函数类型"><a href="#函数类型" class="headerlink" title="函数类型"></a>函数类型</h3><p>函数类型是高阶函数中一个比较重要的概念，变量有类型，函数也能有类型吗？</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">foo</span><span class="hljs-params">(bar: <span class="hljs-type">Int</span>)</span></span>: String = <span class="hljs-string">&quot;6&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>以上边的<code>foo()</code>为例，它的函数类型就是<code>(Int) -&gt; String</code>，意思是这个函数接收一个整型的参数然后返回一个字符串类型的值。其它的类型比方说还有<code>() -&gt; Unit</code>、<code>Int.() -&gt; Unit</code>等等。可以看到，函数类型由以下信息组成：</p>
+<ul>
+<li>函数接收的参数的数量和类型。</li>
+<li>函数是否是扩展函数（或者说是否带有接收者）。</li>
+<li>函数的返回值类型。</li>
+</ul>
+<p>此外还可以通过函数引用的函数来确认函数类型，例如：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">val</span> method: (<span class="hljs-built_in">Int</span>) -&gt; String = ::foo  <span class="hljs-comment">// 双冒号表示函数引用</span><br></code></pre></td></tr></table></figure>
+
+<p>编译器没有报错，说明我们通过了编译器的检查，肯定了<code>foo()</code>的类型就是<code>(Int) -&gt; String</code>。</p>
+<h3 id="Lambda"><a href="#Lambda" class="headerlink" title="Lambda"></a>Lambda</h3><p>Lambda 可以理解为函数的简写，在上方的<code>setOnClickListener</code>的写法之前，其实还存在 8 种过渡写法，可以了解一下：</p>
+<h4 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h4><p>最原始的状态，本质是用<code>object</code>关键字定义了一个匿名内部类去实现<code>OnClickListener</code>这个接口：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">button.setOnClickListener(<span class="hljs-keyword">object</span> : View.OnClickListener &#123;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onClick</span><span class="hljs-params">(p0: <span class="hljs-type">View</span>?)</span></span> &#123;<br>        <span class="hljs-comment">// 点击逻辑</span><br>    &#125;<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<h4 id="第二步"><a href="#第二步" class="headerlink" title="第二步"></a>第二步</h4><p><code>object</code>关键字可以省略，重写的函数也可以省略函数体，直接把逻辑写在花括号里：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">button.setOnClickListener(View.OnClickListener &#123; view: View? -&gt;<br>    <span class="hljs-comment">// 点击逻辑</span><br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<h4 id="第三步"><a href="#第三步" class="headerlink" title="第三步"></a>第三步</h4><p><code>View.OnClickListener</code>可以省略不写：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">button.setOnClickListener(&#123; view: View? -&gt;<br>    <span class="hljs-comment">// 点击逻辑</span><br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<h4 id="第四步"><a href="#第四步" class="headerlink" title="第四步"></a>第四步</h4><p>编译器可以推导类型，所以<code>View?</code>可以省略不写：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">button.setOnClickListener(&#123; view -&gt;<br>    <span class="hljs-comment">// 点击逻辑</span><br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<h4 id="第五步"><a href="#第五步" class="headerlink" title="第五步"></a>第五步</h4><p>当表达式中只存在一个参数的时候，这个参数可以用<code>it</code>来代表：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">button.setOnClickListener(&#123; it -&gt;<br>    <span class="hljs-comment">// 点击逻辑</span><br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<h4 id="第六步"><a href="#第六步" class="headerlink" title="第六步"></a>第六步</h4><p><code>it</code>可以省略不写：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">button.setOnClickListener(&#123;<br>    <span class="hljs-comment">// 点击逻辑</span><br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<h4 id="第七步"><a href="#第七步" class="headerlink" title="第七步"></a>第七步</h4><p>当 Lambda 作为函数的最后一个参数时，花括号可以被挪到括号外面：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">button.setOnClickListener() &#123;<br>    <span class="hljs-comment">// 点击逻辑</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="第八步"><a href="#第八步" class="headerlink" title="第八步"></a>第八步</h4><p>当只有一个 Lambda 作为函数参数时，括号都可以省略不写：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">button.setOnClickListener &#123;<br>    <span class="hljs-comment">// 点击逻辑</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="SAM"><a href="#SAM" class="headerlink" title="SAM"></a>SAM</h3><p>要想使用 Lambda 表达式，一般需要满足 SAM 。SAM 是 Single Abstract Method 的缩写，意思就是只有一个抽象函数的类或者接口。只要是符合 SAM 要求的接口，编译器就能进行 SAM 转换，在编写过程中就可以直接使用 Lambda 表达式。</p>
+<p>但是从 Java 8 开始，SAM 就有了明确的名称，叫做函数式接口（Functional interface），并且想要实现函数式接口，就要满足两个条件，缺一不可：</p>
+<ul>
+<li>只能是接口，抽象类不行了。</li>
+<li>接口只有一个抽象函数（接口中的函数默认是抽象的），默认实现的函数可以有多个。</li>
+</ul>
+<p>并且从 Kotlin 1.4 开始，想要在 Kotlin 中实现函数式接口，必须要用<code>fun interface</code>来声明，普通的接口已经不行了，抽象类也不行。</p>
+<p>了解规则后，接下来用代码解释：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">JavaLab</span> &#123;<br>    <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">Test</span><span class="hljs-params">(IFoo foo)</span> &#123;<br><br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">interface</span> <span class="hljs-title class_">IFoo</span> &#123;<br>    <span class="hljs-comment">// 单抽象函数</span><br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">bar</span><span class="hljs-params">()</span>;<br><br>    <span class="hljs-comment">// 多个默认实现</span><br>    <span class="hljs-keyword">default</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">bar2</span><span class="hljs-params">()</span> &#123;<br><br>    &#125;<br>    <span class="hljs-comment">// 多个默认实现</span><br>    <span class="hljs-keyword">default</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">bar3</span><span class="hljs-params">()</span> &#123;<br><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    test &#123;<br><br>    &#125;<br><br>    test2(<span class="hljs-keyword">object</span> : Foo2 &#123;<br>        <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">bar2</span><span class="hljs-params">()</span></span> &#123;<br>            TODO(<span class="hljs-string">&quot;Not yet implemented&quot;</span>)<br>        &#125;<br>    &#125;)<br><br>    JavaLab.Test &#123;<br><br>    &#125;<br><br>    test3(<span class="hljs-string">&quot;Aiden&quot;</span>) &#123;<br>        print(<span class="hljs-string">&quot;My name is &quot;</span>)<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">// 函数式接口（Functional interface）</span><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-keyword">interface</span> Foo &#123;</span><br>    <span class="hljs-comment">// 单抽象函数</span><br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">bar</span><span class="hljs-params">()</span></span><br><br>    <span class="hljs-comment">// 默认实现</span><br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">rab</span><span class="hljs-params">()</span></span> &#123;<br><br>    &#125;<br>&#125;<br><br><span class="hljs-comment">// 普通函数，接收一个实现了 Foo 接口的对象</span><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">test</span><span class="hljs-params">(foo: <span class="hljs-type">Foo</span>)</span></span> &#123;<br><br>&#125;<br><br><span class="hljs-comment">// 普通接口</span><br><span class="hljs-keyword">interface</span> <span class="hljs-title class_">Foo2</span> &#123;<br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">bar2</span><span class="hljs-params">()</span></span><br>&#125;<br><br><span class="hljs-comment">// 普通函数，接收一个实现了 Foo2 接口的对象</span><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">test2</span><span class="hljs-params">(foo2: <span class="hljs-type">Foo2</span>)</span></span> &#123;<br><br>&#125;<br><br><span class="hljs-comment">// 高阶函数，接收了一个函数类型的参数</span><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">test3</span><span class="hljs-params">(name: <span class="hljs-type">String</span>, hello: () -&gt; <span class="hljs-type">Unit</span>)</span></span> &#123;<br>    hello.invoke()<br>    print(name)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>一个一个说明：</p>
+<ul>
+<li>Java 中的静态函数<code>Test()</code>在 Kotlin 中被直接引用，函数接收一个实现了<code>IFoo</code>接口的对象。<code>IFoo</code>接口尽管有多个默认实现函数（被<code>default</code>修饰），但只有一个抽象函数，并且因为<code>IFoo</code>是接口，所以是满足 SAM 的，所以在 Kotlin 中调用<code>Test()</code>时可以直接使用 Lambda 表达式。</li>
+<li>Kotlin 中的<code>Foo</code>接口被<code>fun interface</code>修饰，所以<code>Foo</code>接口已经被定性为函数式接口，在该接口中可以有多个默认实现的函数，但是如果没有抽象函数或者有多个抽象函数，编译器将会报错。因为<code>test()</code>接收一个实现了<code>Foo</code>接口的对象，所以在调用<code>test()</code>时可以直接使用 Lambda 表达式。</li>
+<li><code>Foo2</code>接口是普通的接口，并不满足 SAM ，所以<code>test2()</code>就算接收了它也不能使用 Lambda 表达式。</li>
+<li>抽象类也不满足 SAM ，也不能使用 Lambda 表达式，在代码里就不演示了。</li>
+<li>使用 Lambda 表达式不一定要满足 SAM ，<code>test3()</code>是高阶函数，并且把函数类型的参数放在了参数列表最后面，所以在调用<code>test3()</code>的时候也可以使用 Lambda 表达式。</li>
+</ul>
+<h2 id="函数式编程"><a href="#函数式编程" class="headerlink" title="函数式编程"></a>函数式编程</h2><p>函数式编程（Functional Programming），是一个跟「面向对象」类似的概念，它也是软件工程中的一种编程范式，它是声明式编程（Declarative Programming）的一种，而与它相反的叫做命令式编程（Imperative Programming）。这些概念之间的关系大概是这样：</p>
+<p><img src="/images/Notes/Programming-Paradigm.png" srcset="/img/loading.gif" lazyload alt="编程范式"></p>
+<p>像 C 和 Java ，它们分别属于面向过程、面向对象的语言，同时又都属于命令式的范畴。使用命令式语言进行编程，一般就是根据思路，告诉计算机每一步该做什么，比如现在要从一个集合中找出所有的偶数：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">findEvenNumber</span><span class="hljs-params">(list: <span class="hljs-type">List</span>&lt;<span class="hljs-type">Int</span>&gt; = listOf(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>)</span></span>): List&lt;<span class="hljs-built_in">Int</span>&gt; &#123;<br>    <span class="hljs-keyword">val</span> evenList = mutableListOf&lt;<span class="hljs-built_in">Int</span>&gt;()  <span class="hljs-comment">// 新建一个集合用来存放结果</span><br>    <span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> list) &#123;  <span class="hljs-comment">// 遍历数组</span><br>        <span class="hljs-keyword">if</span> (i % <span class="hljs-number">2</span> == <span class="hljs-number">0</span>)  <span class="hljs-comment">// 判断是否能被 2 整除</span><br>            evenList.add(i)  <span class="hljs-comment">// 如果能就把这个数加入到结果中</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> evenList  <span class="hljs-comment">// 返回这个集合</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>但是如果是声明式代码就需要这么写：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">// `filter()`是 Kotlin 集合类中的一个高阶函数，作用是将集合中符合 Lambda 表达式中要求的元素返回</span><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">findEvenNumber</span><span class="hljs-params">(list: <span class="hljs-type">List</span>&lt;<span class="hljs-type">Int</span>&gt; = listOf(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>)</span></span>) = list.filter &#123; it % <span class="hljs-number">2</span> == <span class="hljs-number">0</span> &#125;<br></code></pre></td></tr></table></figure>
+
+<p>通过对比还是会感觉到风格上有不一样，那么到底如何理解 Kotlin 中的函数式编程，简单来说，有这么两点：</p>
+<ul>
+<li>函数在 Kotlin 中至关重要。<ul>
+<li>函数可以独立于类之外，成为顶层函数；</li>
+<li>函数可以作为参数和返回值，也就是高阶函数和 Lambda ；</li>
+<li>函数可以像变量一样被引用；</li>
+</ul>
+</li>
+<li>纯函数。<ul>
+<li>函数不应该有副作用（不应该对函数作用域以外的数据进行修改）。</li>
+<li>具有幂等性（调用一次和调用 N 次，效果是等价的）。</li>
+<li>具有引用透明的特性。</li>
+<li>它具有无状态的特性。</li>
+</ul>
+</li>
+</ul>
+<h2 id="委托"><a href="#委托" class="headerlink" title="委托"></a>委托</h2><p>Kotlin 的委托和扩展差不多，都有两个应用场景，一个是委托类，另一个是委托属性，<strong>前者委托的是接口函数，后者委托的是属性的 getter 和 settter</strong> 。</p>
+<h3 id="委托类"><a href="#委托类" class="headerlink" title="委托类"></a>委托类</h3><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    UniversalAction(Dog()).move()<br>    UniversalAction(Person()).move()<br>&#125;<br><br><span class="hljs-comment">// 定义一个关于动作的接口</span><br><span class="hljs-keyword">interface</span> <span class="hljs-title class_">Action</span> &#123;<br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">move</span><span class="hljs-params">()</span></span><br>&#125;<br><br><span class="hljs-comment">// 定义了一个狗类并实现了 Action 接口重写了 move()</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Dog</span> : <span class="hljs-type">Action</span> &#123;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">move</span><span class="hljs-params">()</span></span> &#123;<br>        println(<span class="hljs-string">&quot;狗是爬的&quot;</span>)<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">// 定义了一个人类并实现了 Action 接口重写了 move()</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Person</span> : <span class="hljs-type">Action</span> &#123;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">move</span><span class="hljs-params">()</span></span> &#123;<br>        println(<span class="hljs-string">&quot;人是走的&quot;</span>)<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">// 通过 by 关键字进行委托</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">UniversalAction</span>(action: Action) : Action <span class="hljs-keyword">by</span> action<br></code></pre></td></tr></table></figure>
+
+<p>输出结果是：</p>
+<blockquote>
+<p>狗是爬的<br>人是走的</p>
+</blockquote>
+<p>重点在于<code>UniversalAction</code>这个类，该类也实现了<code>Action</code>接口，只不过并没有重写<code>move()</code>，而是通过<code>by</code>关键字把<code>move()</code>的实现委托给了构造函数的参数，到时候直接用参数的<code>move()</code>就行了。这样一来<code>UniversalAction</code>就相当于一个壳，它并不关心<code>move()</code>具体怎么实现，只要传入不同的参数，就会有不同的行为</p>
+<h3 id="委托属性"><a href="#委托属性" class="headerlink" title="委托属性"></a>委托属性</h3><h4 id="直接委托"><a href="#直接委托" class="headerlink" title="直接委托"></a>直接委托</h4><p>从 Kotlin 1.4 开始可以直接在语法层面将一个属性委托给另一个属性：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    Foo().run &#123;<br>        println(<span class="hljs-string">&quot;count = <span class="hljs-variable">$count</span> | total = <span class="hljs-variable">$total</span>&quot;</span>)<br>        count = <span class="hljs-number">1</span><br>        println(<span class="hljs-string">&quot;count = <span class="hljs-variable">$count</span> | total = <span class="hljs-variable">$total</span>&quot;</span>)<br>        total = <span class="hljs-number">2</span><br>        println(<span class="hljs-string">&quot;count = <span class="hljs-variable">$count</span> | total = <span class="hljs-variable">$total</span>&quot;</span>)<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Foo</span> &#123;<br>    <span class="hljs-keyword">var</span> count = <span class="hljs-number">0</span><br>    <span class="hljs-keyword">var</span> total <span class="hljs-keyword">by</span> ::count<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这种情况下<code>count</code>和<code>total</code>是完全一致的，因为<code>total</code>的 getter 和 setter 都委托给了<code>count</code>。其中<code>count</code>前面的两个冒号代表属性的引用。</p>
+<h4 id="懒加载委托"><a href="#懒加载委托" class="headerlink" title="懒加载委托"></a>懒加载委托</h4><p>懒加载的应用非常广泛，对于一些需要消耗较多资源的操作，如果希望它只有在被访问的时候才去执行（从而避免不必要的资源开销），就可以使用懒加载。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    println(result)<br>    println(result)<br>&#125;<br><br><span class="hljs-keyword">val</span> result: String <span class="hljs-keyword">by</span> lazy &#123;<br>    request()<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">request</span><span class="hljs-params">()</span></span>: String &#123;<br>    println(<span class="hljs-string">&quot;这里执行一些耗时的请求操作&quot;</span>)<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;请求结果&quot;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>上面模拟了一个网络请求，<code>result</code>通过<code>by lazy</code>进行委托，也就是只有在调用到<code>result</code>的时候才会去执行 Lambda 中的代码。主函数中第一次调用<code>result</code>触发了懒加载，执行了<code>request()</code>，返回了一个字符串，而当第二次调用<code>result</code>的时候，因为已经知道了<code>result</code>的值，所以就直接返回了字符串，而没有再去执行<code>request()</code>中的内容。</p>
+<p>另外，<code>lazy()</code>是一个高阶函数，函数接收两个参数，一个是<code>LazyThreadSafetyMode</code>枚举，一个是函数类型的参数。如果不传这个枚举参数的话，实际上调用的是单参数版本的<code>lazy()</code>，而单参数的<code>lazy()</code>默认就是调用<code>SynchronizedLazyImpl()</code>这个线程同步的实现。</p>
+<h4 id="观察者委托"><a href="#观察者委托" class="headerlink" title="观察者委托"></a>观察者委托</h4><p><a target="_blank" rel="noopener" href="https://kotlinlang.org/docs/delegated-properties.html">&#x2F;&#x2F; TODO</a></p>
+<h4 id="映射委托"><a href="#映射委托" class="headerlink" title="映射委托"></a>映射委托</h4><p><a target="_blank" rel="noopener" href="https://kotlinlang.org/docs/delegated-properties.html">&#x2F;&#x2F; TODO</a></p>
+<h3 id="自定义委托"><a href="#自定义委托" class="headerlink" title="自定义委托"></a>自定义委托</h3><p>自定义委托需要遵循一个格式，例如：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">class</span> <span class="hljs-title class_">CustomDelegate</span>(<span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> string: String) &#123;<br>    <span class="hljs-keyword">operator</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">getValue</span><span class="hljs-params">(thisRef: <span class="hljs-type">Owner</span>, property: <span class="hljs-type">KProperty</span>&lt;*&gt;)</span></span>: String &#123;<br>        <span class="hljs-keyword">return</span> string<br>    &#125;<br><br>    <span class="hljs-keyword">operator</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">setValue</span><span class="hljs-params">(thisRef: <span class="hljs-type">Owner</span>, property: <span class="hljs-type">KProperty</span>&lt;*&gt;, value: <span class="hljs-type">String</span>)</span></span> &#123;<br>        string = value<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Owner</span> &#123;<br>    <span class="hljs-keyword">var</span> text: String <span class="hljs-keyword">by</span> CustomDelegate(<span class="hljs-string">&quot;Foobar&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>有 3 点需要注意：</p>
+<ul>
+<li>对于<code>var</code>修饰的属性来说，需要有<code>getValue()</code>和<code>setValue()</code>，同时这两个函数需要被<code>operator</code>关键字修饰。</li>
+<li>变量<code>text</code>位于<code>Owner</code>类中，所以<code>getValue()</code>和<code>setValue()</code>中的第一个参数需要是<code>Owner</code>类或者是它的父类。</li>
+<li>变量<code>text</code>是 String 类型，所以<code>getValue()</code>的返回值类型和<code>setValue()</code>的第三个参数都应该要是 String 类型或者是它的父类。</li>
+</ul>
+<p>如果觉得手动编写过于繁琐，还可以通过实现 Kotlin 官方提供的接口的形式来快速自定义委托，对于<code>val</code>声明的属性，就需要继承<code>ReadOnlyProperty</code>接口：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Base interface that can be used for implementing property delegates of read-only properties.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * This is provided only for convenience; you don&#x27;t have to extend this interface</span><br><span class="hljs-comment"> * as long as your property delegate has methods with the same signatures.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> T the type of object which owns the delegated property.</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> V the type of the property value.</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-keyword">interface</span> ReadOnlyProperty<span class="hljs-type">&lt;in T, out V&gt;</span> &#123;</span><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * Returns the value of the property for the given object.</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> thisRef the object for which the value is requested.</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> property the metadata for the property.</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> the property value.</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">operator</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">getValue</span><span class="hljs-params">(thisRef: <span class="hljs-type">T</span>, property: <span class="hljs-type">KProperty</span>&lt;*&gt;)</span></span>: V<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>注意一下，<code>ReadOnlyProperty()</code>使用<code>fun interface</code>进行声明，说明在 Kotlin 中，它就是一个符合 SAM 规则的函数式接口，事实上它也的确只有一个函数。</p>
+<p>言归正传，对于<code>var</code>声明的属性来说，就需要继承<code>ReadWriteProperty</code>接口：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Base interface that can be used for implementing property delegates of read-write properties.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * This is provided only for convenience; you don&#x27;t have to extend this interface</span><br><span class="hljs-comment"> * as long as your property delegate has methods with the same signatures.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> T the type of object which owns the delegated property.</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span> V the type of the property value.</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">ReadWriteProperty</span>&lt;<span class="hljs-type">in T, V</span>&gt; : <span class="hljs-type">ReadOnlyProperty</span>&lt;<span class="hljs-type">T, V</span>&gt; &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * Returns the value of the property for the given object.</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> thisRef the object for which the value is requested.</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> property the metadata for the property.</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> the property value.</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">override</span> <span class="hljs-keyword">operator</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">getValue</span><span class="hljs-params">(thisRef: <span class="hljs-type">T</span>, property: <span class="hljs-type">KProperty</span>&lt;*&gt;)</span></span>: V<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * Sets the value of the property for the given object.</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> thisRef the object for which the value is requested.</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> property the metadata for the property.</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> value the value to set.</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">operator</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">setValue</span><span class="hljs-params">(thisRef: <span class="hljs-type">T</span>, property: <span class="hljs-type">KProperty</span>&lt;*&gt;, value: <span class="hljs-type">V</span>)</span></span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>例如：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    Owner().run &#123;<br>        println(text)<br>        text = <span class="hljs-string">&quot;666&quot;</span><br>        println(text)<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Owner</span> &#123;<br>    <span class="hljs-keyword">var</span> text: String <span class="hljs-keyword">by</span> CustomDelegate(<span class="hljs-string">&quot;Foobar&quot;</span>)<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">CustomDelegate</span>(<span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> string: String) : ReadWriteProperty&lt;Owner, String&gt; &#123;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">getValue</span><span class="hljs-params">(thisRef: <span class="hljs-type">Owner</span>, property: <span class="hljs-type">KProperty</span>&lt;*&gt;)</span></span>: String &#123;<br>        <span class="hljs-keyword">return</span> string<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">setValue</span><span class="hljs-params">(thisRef: <span class="hljs-type">Owner</span>, property: <span class="hljs-type">KProperty</span>&lt;*&gt;, value: <span class="hljs-type">String</span>)</span></span> &#123;<br>        string = value<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出结果是：</p>
+<blockquote>
+<p>Foobar<br>666</p>
+</blockquote>
+<p>另外，如果想在属性委托之前再做一些额外的判断工作，还可以使用 provideDelegate 来实现。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    Owner().run &#123;<br>        println(textA)<br>        println(textB)<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Owner</span> &#123;<br>    <span class="hljs-keyword">var</span> textA <span class="hljs-keyword">by</span> SmartDelegator()<br>    <span class="hljs-keyword">var</span> textB <span class="hljs-keyword">by</span> SmartDelegator()<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">CustomDelegate</span>(<span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> string: String) : ReadWriteProperty&lt;Owner, String&gt; &#123;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">getValue</span><span class="hljs-params">(thisRef: <span class="hljs-type">Owner</span>, property: <span class="hljs-type">KProperty</span>&lt;*&gt;)</span></span>: String &#123;<br>        <span class="hljs-keyword">return</span> string<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">setValue</span><span class="hljs-params">(thisRef: <span class="hljs-type">Owner</span>, property: <span class="hljs-type">KProperty</span>&lt;*&gt;, value: <span class="hljs-type">String</span>)</span></span> &#123;<br>        string = value<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">SmartDelegator</span> &#123;<br>    <span class="hljs-keyword">operator</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">provideDelegate</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">        thisRef: <span class="hljs-type">Owner</span>,</span></span><br><span class="hljs-params"><span class="hljs-function">        property: <span class="hljs-type">KProperty</span>&lt;*&gt;</span></span><br><span class="hljs-params"><span class="hljs-function">    )</span></span>: ReadWriteProperty&lt;Owner, String&gt; &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">if</span> (property.name.contains(<span class="hljs-string">&quot;A&quot;</span>)) CustomDelegate(<span class="hljs-string">&quot;part A&quot;</span>)<br>        <span class="hljs-keyword">else</span> CustomDelegate(<span class="hljs-string">&quot;part B&quot;</span>)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>例如上面这个例子，把<code>Owner</code>的两个属性委托给了<code>SmartDelegator</code>类，而这个类中有一个<code>provideDelegate()</code>，该函数被<code>operator</code>关键字修饰，然后可以对委托进来的属性进行一些判断，最后返回不一样的实现了<code>ReadWriteProperty</code>接口的对象。</p>
+<h3 id="案例-属性封装"><a href="#案例-属性封装" class="headerlink" title="案例 - 属性封装"></a>案例 - 属性封装</h3><p>在类中，对于那些希望只被访问但是不能被修改的属性，可以用<code>val</code>来修饰。但这也仅限于一般数据类型，对于集合来说，只要拿到了实例，就可以调用修改集合的函数。针对这种情况，可以使用委托将一个不可变集合委托给一个可变集合：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    Foo().run &#123;<br>        println(bar.size)  <span class="hljs-comment">// 正常访问</span><br>        <span class="hljs-comment">//bar.add()  // 无法使用，因为是不可变的集合</span><br>        <span class="hljs-comment">//bar = listOf()  // 属性被 val 修饰，不可修改</span><br>        addInt(<span class="hljs-number">1</span>)<br>        addInt(<span class="hljs-number">2</span>)<br>        <span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> bar) println(i)<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Foo</span> &#123;<br>    <span class="hljs-keyword">val</span> bar: List&lt;<span class="hljs-built_in">Int</span>&gt; <span class="hljs-keyword">by</span> ::_bar  <span class="hljs-comment">// 不可变集合，用于给外界访问</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> _bar = mutableListOf&lt;<span class="hljs-built_in">Int</span>&gt;()  <span class="hljs-comment">// 可变集合</span><br><br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">addInt</span><span class="hljs-params">(element: <span class="hljs-type">Int</span>)</span></span> &#123;<br>        _bar.add(element)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这样一来，当需要访问集合时就调用<code>bar</code>，但是却不能直接调用集合的<code>add()</code>等函数。</p>
+<h3 id="案例-数据绑定"><a href="#案例-数据绑定" class="headerlink" title="案例 - 数据绑定"></a>案例 - 数据绑定</h3><p>如果需要将控件上的某个属性与代码中的某个变量进行绑定，可以使用 DataBinding ，但是除了 DataBinding 以外，也可以使用自定义委托来实现，这种方式不一定完美，但也算是个有趣的思路。</p>
+<p>这里以修改 TextView 上的文本为例，这是 XML 部分：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">TextView</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:id</span>=<span class="hljs-string">&quot;@+id/textView&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:text</span>=<span class="hljs-string">&quot;Foobar&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;wrap_content&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;wrap_content&quot;</span> /&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>然后在 MainActivity 中定义一个顶层函数，同时也是 TextView 的扩展函数：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">operator</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> TextView.<span class="hljs-title">provideDelegate</span><span class="hljs-params">(value: <span class="hljs-type">Any</span>?, property: <span class="hljs-type">KProperty</span>&lt;*&gt;)</span></span> =<br>    <span class="hljs-keyword">object</span> : ReadWriteProperty&lt;Any?, String?&gt; &#123;<br>        <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">getValue</span><span class="hljs-params">(thisRef: <span class="hljs-type">Any</span>?, property: <span class="hljs-type">KProperty</span>&lt;*&gt;)</span></span>: String = text.toString()<br><br>        <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">setValue</span><span class="hljs-params">(thisRef: <span class="hljs-type">Any</span>?, property: <span class="hljs-type">KProperty</span>&lt;*&gt;, value: <span class="hljs-type">String</span>?)</span></span> &#123;<br>            text = value<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p>接着是使用部分：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">val</span> tv = findViewById&lt;TextView&gt;(R.id.textView)<br><span class="hljs-keyword">var</span> text: String? <span class="hljs-keyword">by</span> tv<br><br>Log.d(<span class="hljs-string">&quot;@@@&quot;</span>, text.toString())<br>text = <span class="hljs-string">&quot;666&quot;</span><br>Log.d(<span class="hljs-string">&quot;@@@&quot;</span>, tv.text.toString())<br></code></pre></td></tr></table></figure>
+
+<p>将变量<code>text</code>的 getter 和 setter 托管给了 TextView ，在<code>TextView.provideDelegate()</code>中将其与 TextView 的<code>text</code>属性相关联。最终程序运行会先打印 TextView 在 XML 中定义的文本，修改了<code>text</code>变量后，再打印就会得到修改后的结果。</p>
+<h3 id="案例-ViewModel-委托"><a href="#案例-ViewModel-委托" class="headerlink" title="案例 - ViewModel 委托"></a>案例 - ViewModel 委托</h3><p>ViewModel 在 Android 中经常用来存储界面数据，但是 ViewModel 的实例并不会被直接创建，而是使用委托的方式来获得。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">// 假设自定义的 ViewModel 类叫 MainViewModel</span><br><span class="hljs-keyword">val</span> viewModel: MainViewModel <span class="hljs-keyword">by</span> viewModels()<br></code></pre></td></tr></table></figure>
+
+<p>稍微看一下<code>viewModels()</code>：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">public</span> <span class="hljs-keyword">inline</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-type">&lt;<span class="hljs-keyword">reified</span> VM : ViewModel&gt;</span> ComponentActivity.<span class="hljs-title">viewModels</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">    <span class="hljs-keyword">noinline</span> extrasProducer: (() -&gt; <span class="hljs-type">CreationExtras</span>)? = <span class="hljs-literal">null</span>,</span></span><br><span class="hljs-params"><span class="hljs-function">    <span class="hljs-keyword">noinline</span> factoryProducer: (() -&gt; <span class="hljs-type">Factory</span>)? = <span class="hljs-literal">null</span></span></span><br><span class="hljs-params"><span class="hljs-function">)</span></span>: Lazy&lt;VM&gt; &#123;<br>    <span class="hljs-keyword">val</span> factoryPromise = factoryProducer ?: &#123;<br>        defaultViewModelProviderFactory<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> ViewModelLazy(<br>        VM::<span class="hljs-keyword">class</span>,<br>        &#123; viewModelStore &#125;,<br>        factoryPromise,<br>        &#123; extrasProducer?.invoke() ?: <span class="hljs-keyword">this</span>.defaultViewModelCreationExtras &#125;<br>    )<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>点进<code>Lazy</code>接口中：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Represents a value with lazy initialization.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * To create an instance of [Lazy] use the [lazy] function.</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">Lazy</span>&lt;<span class="hljs-type">out T</span>&gt; &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * Gets the lazily initialized value of the current Lazy instance.</span><br><span class="hljs-comment">     * Once the value was initialized it must not change during the rest of lifetime of this Lazy instance.</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">val</span> value: T<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * Returns `true` if a value for this Lazy instance has been already initialized, and `false` otherwise.</span><br><span class="hljs-comment">     * Once this function has returned `true` it stays `true` for the rest of lifetime of this Lazy instance.</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">isInitialized</span><span class="hljs-params">()</span></span>: <span class="hljs-built_in">Boolean</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>可以看到：</p>
+<ul>
+<li><code>viewModels()</code>是<code>ComponentActivity</code>的扩展函数，所以可以直接在 Activity 中调用<code>viewModels()</code>。</li>
+<li><code>viewModels()</code>返回<code>Lazy</code>接口，而<code>ViewModelLazy</code>是<code>Lazy</code>接口的一个实现类。</li>
+<li><code>Lazy</code>接口中的<code>value</code>属性是用<code>val</code>修饰的，但是接口内并没有定义<code>getValue()</code>，之所以能实现委托，是因为它把<code>getValue()</code>作为扩展函数来定义了。</li>
+</ul>
+<h2 id="泛型"><a href="#泛型" class="headerlink" title="泛型"></a>泛型</h2><p>在编程时会经常强调“代码复用”，而泛型的存在也算是提供了一种复用的方案。</p>
+<h3 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h3><p>假设要编写遥控器类，例如：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">// 小米电视</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MiTVController</span> &#123;<br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">on</span><span class="hljs-params">()</span></span> &#123;&#125;<br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">off</span><span class="hljs-params">()</span></span> &#123;&#125;<br>&#125;<br><br><span class="hljs-comment">// 索尼电视</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">SonyTVController</span> &#123;<br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">on</span><span class="hljs-params">()</span></span> &#123;&#125;<br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">off</span><span class="hljs-params">()</span></span> &#123;&#125;<br>&#125;<br><br><span class="hljs-comment">// TCL 电视</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">TclTVController</span> &#123;<br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">on</span><span class="hljs-params">()</span></span> &#123;&#125;<br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">off</span><span class="hljs-params">()</span></span> &#123;&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>但是针对每一个电视机品牌都需要编写开机和关机的函数实在是过于麻烦，而借助泛型，就可以实现“万能遥控”：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-comment">// 尖括号中的 MiTVController 为泛型实参</span><br>    TvController&lt;MiTV&gt;().on(MiTV())<br>&#125;<br><br><span class="hljs-comment">// T 为泛型形参</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">TvController</span>&lt;<span class="hljs-type">T</span>&gt; &#123;<br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">on</span><span class="hljs-params">(tv: <span class="hljs-type">T</span>)</span></span> &#123;&#125;<br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">off</span><span class="hljs-params">(tv: <span class="hljs-type">T</span>)</span></span> &#123;&#125;<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MiTV</span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">SonyTV</span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">TclTV</span><br></code></pre></td></tr></table></figure>
+
+<p>泛型的形参<code>T</code>代表了可以传入任意类型，借助这个特性，无论是什么品牌的电视，都可以用这个遥控器来实现开关机。</p>
+<p>泛型的形参也可以进行范围限制，例如：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    TvController&lt;MiTV&gt;().on(MiTV())<br>&#125;<br><br><span class="hljs-comment">// 在形参中添加上界</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">TvController</span>&lt;<span class="hljs-type">T : TV</span>&gt; &#123;<br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">on</span><span class="hljs-params">(tv: <span class="hljs-type">T</span>)</span></span> &#123;&#125;<br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">off</span><span class="hljs-params">(tv: <span class="hljs-type">T</span>)</span></span> &#123;&#125;<br>&#125;<br><br><span class="hljs-keyword">open</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TV</span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MiTV</span> : <span class="hljs-type">TV</span>()<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">SonyTV</span> : <span class="hljs-type">TV</span>()<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">TclTV</span> : <span class="hljs-type">TV</span>()<br></code></pre></td></tr></table></figure>
+
+<p>以上代码修改了<code>TvController</code>的形参，这样一来，<code>TvController</code>就只能接收<code>TV</code>类的子类，这叫做泛型的上界。</p>
+<p>除了类能使用泛型，Kotlin 中的函数也能使用泛型：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    turnOnTV(MiTV())<br>&#125;<br><br><span class="hljs-keyword">open</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TV</span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MiTV</span> : <span class="hljs-type">TV</span>()<br><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-type">&lt;T : TV&gt;</span> <span class="hljs-title">turnOnTV</span><span class="hljs-params">(tv: <span class="hljs-type">T</span>)</span></span> &#123;<br>    println(<span class="hljs-string">&quot;打开电视&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="泛型不变性"><a href="#泛型不变性" class="headerlink" title="泛型不变性"></a>泛型不变性</h3><p>假设一个类是另一个类的子类，那么这个类的集合和它父类的集合之间是什么关系呢：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    foo(mutableListOf(Animal()))  <span class="hljs-comment">// 报错，传入类型错误</span><br>    bar(mutableListOf(Cat()))<br>&#125;<br><br><span class="hljs-keyword">open</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Animal</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Cat</span> : <span class="hljs-type">Animal</span>()<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Dog</span> : <span class="hljs-type">Animal</span>()<br><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">foo</span><span class="hljs-params">(list: <span class="hljs-type">MutableList</span>&lt;<span class="hljs-type">Cat</span>&gt;)</span></span> &#123;<br><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">bar</span><span class="hljs-params">(list: <span class="hljs-type">MutableList</span>&lt;<span class="hljs-type">Animal</span>&gt;)</span></span> &#123;<br>    list.add(Dog())<br>    <span class="hljs-keyword">val</span> firstAnimal: Dog = list.first()  <span class="hljs-comment">// 报错，父类无法转成子类</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>结论是没什么关系，它们之间也无法替代对方，这就是泛型的不变性。泛型的不变性保证了程序上不会出现一些逻辑性错误。</p>
+<h3 id="协变（Covariant）"><a href="#协变（Covariant）" class="headerlink" title="协变（Covariant）"></a>协变（Covariant）</h3><p>众所周知，在代码中，是可以往需要父类对象的地方传入子类对象的：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    test(Son())  <span class="hljs-comment">// 需要传入 Father 类，但是却传入了 Son 类，也没问题</span><br>&#125;<br><br><span class="hljs-comment">// 父类</span><br><span class="hljs-keyword">open</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Father</span><br><br><span class="hljs-comment">// 子类</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Son</span> : <span class="hljs-type">Father</span>()<br><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">test</span><span class="hljs-params">(father: <span class="hljs-type">Father</span>)</span></span> &#123;<br>    <br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>那么在需要父类泛型的地方可以传入子类泛型吗？根据前面提到的泛型的不变性，两者间并不存在什么关系，所以这样做，编译器会报错：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    test(Foo&lt;Son&gt;())  <span class="hljs-comment">// 报错，需要传父类泛型，但是却传了子类泛型</span><br>&#125;<br><br><span class="hljs-comment">// 父类</span><br><span class="hljs-keyword">open</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Father</span><br><br><span class="hljs-comment">// 子类</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Son</span> : <span class="hljs-type">Father</span>()<br><br><span class="hljs-comment">// 泛型类</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Foo</span>&lt;<span class="hljs-type">T</span>&gt; &#123;<br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">bar</span><span class="hljs-params">()</span></span> &#123;<br><br>    &#125;<br>&#125;<br><br><span class="hljs-comment">// 使用泛型类的函数</span><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">test</span><span class="hljs-params">(foo: <span class="hljs-type">Foo</span>&lt;<span class="hljs-type">Father</span>&gt;)</span></span> &#123;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>可是在某些特殊场景下确实是要这么做，那应该怎么让编译器通过编译呢，这时候就可以使用到泛型的 <strong>协变</strong> ，协变可以在使用处或者是声明处使用：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">// 使用处协变</span><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">test</span><span class="hljs-params">(foo: <span class="hljs-type">Foo</span>&lt;<span class="hljs-type">out</span> <span class="hljs-type">Father</span>&gt;)</span></span> &#123;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>或者：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">// 声明处协变</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Foo</span>&lt;<span class="hljs-type">out T</span>&gt; &#123;<br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">bar</span><span class="hljs-params">()</span></span> &#123;<br><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这样一来，就可以在需要父类泛型的地方传入子类泛型了。Kotlin 中使用<code>out</code>来表示协变，对应 Java 中的<code>extends</code>。</p>
+<h3 id="逆变（Contravariant）"><a href="#逆变（Contravariant）" class="headerlink" title="逆变（Contravariant）"></a>逆变（Contravariant）</h3><p>协变会让父类的泛型与子类的泛型之间产生类似于父类本身与子类本身之间的关系（也就是需要父类的地方可以传入子类），而逆变就是让这个关系反过来：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    test(Foo&lt;Father&gt;())  <span class="hljs-comment">// 报错，需要传子类泛型，但是却传了父类泛型</span><br>&#125;<br><br><span class="hljs-comment">// 省略中间这部分代码</span><br><br><span class="hljs-comment">// 使用泛型类的函数</span><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">test</span><span class="hljs-params">(foo: <span class="hljs-type">Foo</span>&lt;<span class="hljs-type">Son</span>&gt;)</span></span> &#123;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>同样是在使用处或者是声明处，添加<code>in</code>关键字就可以解决编译问题：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">// 使用处协变</span><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">test</span><span class="hljs-params">(foo: <span class="hljs-type">Foo</span>&lt;<span class="hljs-type">in</span> <span class="hljs-type">Son</span>&gt;)</span></span> &#123;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">// 声明处协变</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Foo</span>&lt;<span class="hljs-type">in T</span>&gt; &#123;<br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">bar</span><span class="hljs-params">()</span></span> &#123;<br><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>Kotlin 中使用<code>in</code>来表示逆变，对应 Java 中的<code>super</code>。</p>
+<p>那么该如何记忆协变对应<code>out</code>，逆变对应<code>in</code>呢，我觉得可以这样理解：in 的意思是在什么的里面，子类往往是父类的扩展（父类有的子类都有，子类有的父类不一定有），所以如果画图来表示的话，父类是被“包含”在子类里面的，所以当遇到<code>&lt;in T&gt;</code>时，我们就可以知道，这个地方可以传入 T 的父类。因为“T 的父类 in T”。</p>
+<h3 id="星投影（Star-Projections）"><a href="#星投影（Star-Projections）" class="headerlink" title="星投影（Star-Projections）"></a>星投影（Star-Projections）</h3><p>Kotlin 可以使用星号<code>*</code>来作为泛型的实参：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    bar(Foo&lt;<span class="hljs-built_in">Int</span>&gt;())  <span class="hljs-comment">// 可以传入整型</span><br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Foo</span>&lt;<span class="hljs-type">T</span>&gt;<br><br><span class="hljs-comment">// 使用星投影</span><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">bar</span><span class="hljs-params">(foo: <span class="hljs-type">Foo</span>&lt;*&gt;)</span></span> &#123;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>Foo</code>类在声明形参时使用了<code>T</code>，代表了这是个泛型，并不关心传入什么类型进来。然而<code>bar()</code>在使用泛型的时候在实参中使用了<code>*</code>，也是代表它并不关心传入什么类型，把最终的决定权放在了调用<code>bar()</code>的地方，所以在<code>main()</code>中就直接传入了整型。也就是说，星投影是在我们不关心实参到底是什么的时候就可以使用。</p>
+<p>要想稍加限制也可以，只要在形参处进行限制就行了：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-comment">// bar(Foo&lt;String&gt;())  // 报错</span><br>    bar(Foo&lt;MyActivity&gt;())<br>&#125;<br><br><span class="hljs-keyword">open</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Foo</span>&lt;<span class="hljs-type">T : Activity</span>&gt;  // 传进来的参数需要是 <span class="hljs-title">Activity</span> 类或者是它的子类<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyActivity</span> : <span class="hljs-type">Activity</span>() &#123;<br><br>&#125;<br><br><span class="hljs-comment">// 使用星投影</span><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">bar</span><span class="hljs-params">(foo: <span class="hljs-type">Foo</span>&lt;*&gt;)</span></span> &#123;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这样一来，虽然<code>bar()</code>选择摆烂，但是真正在调用<code>bar()</code>传参数的时候，还是会收到<code>Foo</code>类的约束。</p>
+<h3 id="in-还是-out-？"><a href="#in-还是-out-？" class="headerlink" title="in 还是 out ？"></a>in 还是 out ？</h3><p>前面稍微提到了如何记忆和使用 in 与 out ，不过实际上也没有那么复杂，无论是 Java 还是 Kotlin 的泛型，都提到了另外两个词：生产者和消费者。前者对应 out ，而后者对应 in 。</p>
+<p>用通俗的话来说，被 in 修饰的泛型，往往会以函数的参数的形式，被传入函数里面，这是一种写入行为。而被 out 修饰的泛型，往往会以返回值的形式，被函数返回，这是一种读取行为。总的来说，传入用 in ，传出用 out ，泛型作为参数的时候用 in ，泛型作为返回值的时候用 out 。接下来看一下 Kotlin 官方的用例吧：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">Comparable</span>&lt;<span class="hljs-type">in T</span>&gt; &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">operator</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">compareTo</span><span class="hljs-params">(other: <span class="hljs-type">T</span>)</span></span>: <span class="hljs-built_in">Int</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">Iterator</span>&lt;<span class="hljs-type">out T</span>&gt; &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">operator</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">next</span><span class="hljs-params">()</span></span>: T<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">operator</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">hasNext</span><span class="hljs-params">()</span></span>: <span class="hljs-built_in">Boolean</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="注解与反射"><a href="#注解与反射" class="headerlink" title="注解与反射"></a>注解与反射</h2><p>泛型提高了代码的复用性，注解与反射则是提高了代码的灵活性。</p>
+<h3 id="注解"><a href="#注解" class="headerlink" title="注解"></a>注解</h3><p>注解可以理解为对程序代码的一种补充，最常见的注解，例如 Java 中的<code>@Override</code>代表重写，以及<code>@Deprecated</code>代表了函数被弃用，以及 Jetpack Compose 中的<code>@Composable</code>代表了定义一个可组合项。</p>
+<p>那么什么是“元注解”呢，在<code>@Deprecated</code>中可以看到，在<code>Deprecated</code>类的上面还有<code>@Target</code>和<code>@MustBeDocumented</code>，像这种本身既是注解，又可以修饰其它注解的就是元注解。</p>
+<p>Kotlin 常见的元注解有四个：</p>
+<ul>
+<li><code>@Target</code>：指定了被修饰的注解可以用在什么地方，也就是目标。</li>
+<li><code>@Retention</code>：指定了被修饰的注解是否编译后可见、是否运行时可见，也就是注解的保留位置，是保留在编译时还是运行时。</li>
+<li><code>@Repeatable</code>：允许在同一个地方多次使用相同的被修饰的注解，使用场景比较少。</li>
+<li><code>@MustBeDocumented</code>：指定被修饰的注解应该在生成的 API 文档中显示，这个注解一般用于 SDK 当中。</li>
+</ul>
+<p>其中<code>@Target</code>有很多可取值，代表了它可以用来修饰什么：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">public</span> <span class="hljs-keyword">enum</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AnnotationTarget</span> &#123;<br>    <span class="hljs-comment">/** Class, interface or object, annotation class is also included */</span><br>    CLASS,<br>    <span class="hljs-comment">/** Annotation class only */</span><br>    ANNOTATION_CLASS,<br>    <span class="hljs-comment">/** Generic type parameter */</span><br>    TYPE_PARAMETER,<br>    <span class="hljs-comment">/** Property */</span><br>    PROPERTY,<br>    <span class="hljs-comment">/** Field, including property&#x27;s backing field */</span><br>    FIELD,<br>    <span class="hljs-comment">/** Local variable */</span><br>    LOCAL_VARIABLE,<br>    <span class="hljs-comment">/** Value parameter of a function or a constructor */</span><br>    VALUE_PARAMETER,<br>    <span class="hljs-comment">/** Constructor only (primary or secondary) */</span><br>    CONSTRUCTOR,<br>    <span class="hljs-comment">/** Function (constructors are not included) */</span><br>    FUNCTION,<br>    <span class="hljs-comment">/** Property getter only */</span><br>    PROPERTY_GETTER,<br>    <span class="hljs-comment">/** Property setter only */</span><br>    PROPERTY_SETTER,<br>    <span class="hljs-comment">/** Type usage */</span><br>    TYPE,<br>    <span class="hljs-comment">/** Any expression */</span><br>    EXPRESSION,<br>    <span class="hljs-comment">/** File */</span><br>    FILE,<br>    <span class="hljs-comment">/** Type alias */</span><br>    <span class="hljs-meta">@SinceKotlin(<span class="hljs-string">&quot;1.1&quot;</span>)</span><br>    TYPEALIAS<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>同样在<code>@Retention</code>中的取值也值得注意：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">public</span> <span class="hljs-keyword">enum</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AnnotationRetention</span> &#123;<br>    <span class="hljs-comment">/** Annotation isn&#x27;t stored in binary output */</span><br>    <span class="hljs-comment">/** 注解只存在于源代码，编译后不可见 */</span><br>    SOURCE,<br>    <span class="hljs-comment">/** Annotation is stored in binary output, but invisible for reflection */</span><br>    <span class="hljs-comment">/** 注解编译后可见，运行时不可见 */</span><br>    BINARY,<br>    <span class="hljs-comment">/** Annotation is stored in binary output and visible for reflection (default retention) */</span><br>    <span class="hljs-comment">/** 注解编译后可见，运行时可见 */</span><br>    RUNTIME<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>那么该如何使用注解，以<code>@Deprecated</code>修饰函数为例：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-meta">@Deprecated(</span><br><span class="hljs-meta">    message = <span class="hljs-string">&quot;请使用 newFoo() 代替&quot;</span>,</span><br><span class="hljs-meta">    replaceWith = ReplaceWith(<span class="hljs-string">&quot;newFoo()&quot;</span>),</span><br><span class="hljs-meta">    level = DeprecationLevel.ERROR</span><br><span class="hljs-meta">)</span><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">oldFoo</span><span class="hljs-params">()</span></span> &#123;<br><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">newFoo</span><span class="hljs-params">()</span></span> &#123;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这里定义了两个函数，我们假装<code>oldFoo()</code>是过时的函数，需要用<code>newFoo()</code>来代替它，所以我们使用了<code>@Deprecated</code>来修饰<code>oldFoo()</code>，并补充了 3 个参数，包括关于废弃它的信息，以及应该用什么函数来代替，以及使用这个废弃的函数的严重程度。关于第 3 个参数，在这里定义的是<code>DeprecationLevel.ERROR</code>，这就代表使用这个函数会被编译器视为错误，从而无法通过编译。而当鼠标移到<code>oldFoo()</code>的调用处上面时，IDE 还会提供快速修复选项（如果有定义的话），在这里就是将<code>oldFoo()</code>替换成<code>newFoo()</code>。</p>
+<p>Kotlin 的注解还有一个细节就是注解的精确使用目标，例如在使用依赖注入框架时，如果去标记一个被<code>var</code>修饰的属性，那么编译器会报错，因为被<code>var</code>修饰的属性包含了属性背后的字段、getter、setter 三个含义，如果不明确标记其中之一，编译器根本不知道该怎么做。例如使用 Dagger ，要标记 setter ，那么只需要在属性上方插入：<code>@set:Inject</code>即可。除了 set 以外，Kotlin 当中还有其它的使用目标：</p>
+<ul>
+<li>file：作用于文件</li>
+<li>property：作用于属性</li>
+<li>field：作用于字段</li>
+<li>get：作用于属性 getter</li>
+<li>set：作用于属性 setter</li>
+<li>receiver：作用于扩展的接受者参数</li>
+<li>param：作用于构造函数参数</li>
+<li>setparam：作用于函数参数</li>
+<li>delegate：作用于委托字段</li>
+</ul>
+<h3 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h3><p>Kotlin 反射具备这三个特质：</p>
+<ul>
+<li>感知程序的状态，包含程序的运行状态和源代码结构。</li>
+<li>修改程序的状态。例如修改某个变量，即使这个变量是被<code>private</code>或者<code>final</code>修饰的。</li>
+<li>根据程序的状态调整自身的决策行为。例如 JSON 解析经常会用到<code>@SerializedName</code>这个注解，如果属性有<code>@SerializedName</code>修饰的话，解析时就会以指定的名称为准，如果没有，那就直接使用属性的名称来解析。</li>
+</ul>
+<p>来看一个感知程序状态的简单案例：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">import</span> kotlin.reflect.full.functions<br><span class="hljs-keyword">import</span> kotlin.reflect.full.memberProperties<br><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    readMembers(Student(<span class="hljs-string">&quot;Aiden&quot;</span>, <span class="hljs-number">23</span>))<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Student</span>(<span class="hljs-keyword">val</span> name: String, <span class="hljs-keyword">val</span> age: <span class="hljs-built_in">Int</span>) &#123;<br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">study</span><span class="hljs-params">()</span></span> &#123;&#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">readMembers</span><span class="hljs-params">(obj: <span class="hljs-type">Any</span>)</span></span> &#123;<br>    <span class="hljs-comment">// 打印属性</span><br>    obj::<span class="hljs-keyword">class</span>.memberProperties.forEach &#123;<br>        println(<span class="hljs-string">&quot;<span class="hljs-subst">$&#123;obj::class.simpleName&#125;</span>.<span class="hljs-subst">$&#123;it.name&#125;</span> = <span class="hljs-subst">$&#123;it.getter.call(obj)&#125;</span>&quot;</span>)<br>    &#125;<br><br>    <span class="hljs-comment">// 打印函数</span><br>    obj::<span class="hljs-keyword">class</span>.functions.forEach &#123;<br>        println(<span class="hljs-string">&quot;<span class="hljs-subst">$&#123;it.name&#125;</span>()&quot;</span>)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出结果是：</p>
+<blockquote>
+<p>Student.age &#x3D; 23<br>Student.name &#x3D; Aiden<br>study()<br>equals()<br>hashCode()<br>toString()</p>
+</blockquote>
+<ul>
+<li><code>readMembers()</code>接收了一个<code>Any</code>类型的参数，也就是任何类都可以通过反射来获取成员属性和函数。</li>
+<li><code>obj::class</code>叫类引用，是 Kotlin 反射的语法，通过该语法就可以拿到一个<code>KClass</code>接口，通过这个接口间接拿到实际的类的成员信息。</li>
+<li>通过调用<code>memberProperties</code>就可以拿到类的属性的集合，在这里利用<code>forEach</code>遍历集合就拿到了<code>Student</code>类中的<code>name</code>属性和<code>age</code>属性。值得补充的是，<code>memberProperties</code>是<code>KClass</code>的扩展属性，定义于 Kotlin 的反射库中（需要在 Gradle 中引入这个库），而<code>KClass</code>是默认存在于标准库中的，也就是说，要想使用完整的反射，需要引入反射库。</li>
+<li>调用<code>memberProperties</code>返回的是一个集合：<code>Collection&lt;KProperty1&lt;T, *&gt;&gt;</code>，<code>KClass</code>代表的是类的反射，而<code>KProperty1</code>就代表的是属性的反射了，通过调用<code>KProperty1.name</code>就可以拿到属性的名称，然后调用<code>KProperty1.getter.call()</code>就可以获取属性的值。另外这里的<code>getter</code>实际上是<code>KProperty1</code>中的属性，是<code>Getter&lt;T, out V&gt;</code>类型，而它又实现了<code>KProperty.Getter&lt;out V&gt;</code>接口，而它又实现了<code>KFunction&lt;out R&gt;</code>接口，而它又实现了<code>KCallable&lt;out R&gt;</code>，这就是可以调用<code>call()</code>的原因。</li>
+</ul>
+<p>接下来是一个修改属性值的案例：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    changeName(Student(<span class="hljs-string">&quot;Aiden&quot;</span>, <span class="hljs-number">23</span>))<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Student</span>(<span class="hljs-keyword">var</span> name: String, <span class="hljs-keyword">val</span> age: <span class="hljs-built_in">Int</span>)<br><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">changeName</span><span class="hljs-params">(obj: <span class="hljs-type">Any</span>)</span></span> &#123;<br>    obj::<span class="hljs-keyword">class</span>.memberProperties.forEach &#123;<br>        <span class="hljs-keyword">if</span> (it.getter.call(obj) == <span class="hljs-string">&quot;Aiden&quot;</span> &amp;&amp; it <span class="hljs-keyword">is</span> KMutableProperty1 &amp;&amp; it.setter.parameters.size == <span class="hljs-number">2</span> &amp;&amp; it.getter.returnType.classifier == String::<span class="hljs-keyword">class</span>) &#123;<br>            it.setter.call(obj, <span class="hljs-string">&quot;Marcus&quot;</span>)<br>            println(it.getter.call(obj))<br>            <span class="hljs-keyword">return</span><br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>输出结果是：</p>
+<blockquote>
+<p>Marcus</p>
+</blockquote>
+<ul>
+<li>在<code>changeName()</code>中遍历属性，并通过反射进行各种判断，包括但不限于：<ul>
+<li>通过<code>it.getter.call(obj) == &quot;Aiden&quot;</code>判断属性的值是否为<code>Aiden</code>；</li>
+<li>通过<code>it is KMutableProperty1</code>判断这个属性是否被<code>var</code>修饰；</li>
+<li>通过<code>it.setter.parameters.size == 2</code>判断如果要修改这个属性的话需要传几个参数，在这里是两个参数，一个是 obj 本身，另一个是新值；</li>
+<li>通过<code>it.getter.returnType.classifier == String::class</code>判断属性的返回值是否为<code>String</code>类型。</li>
+</ul>
+</li>
+<li>接着通过<code>setter.call()</code>来修改属性值。不过在调用这个函数前还需要用<code>it is KMutableProperty1</code>来判断属性是否可被修改，否则就调用不了<code>setter</code>。</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%AC%94%E8%AE%B0/" class="category-chain-item">笔记</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Kotlin 学习笔记 - 基础</div>
+      <div>http://xuu6770.github.io/posts/Kotlin-study-notes-basic-part/</div>
+    </div>
+    <div class="license-meta">
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年3月4日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年9月20日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-cc-nc"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/posts/2023-04-02/" title="2023 年 4 月 2 日">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">2023 年 4 月 2 日</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/posts/Git-Study-Guide/" title="学习使用 Git">
+                        <span class="hidden-mobile">学习使用 Git</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a><!-- 7.3.0 --> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a><!-- 1.9.8 --> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

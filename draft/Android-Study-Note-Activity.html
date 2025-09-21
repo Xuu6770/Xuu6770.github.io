@@ -1,0 +1,455 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Aiden">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="主要记录一下 Activity 的生命周期、启动模式，以及 Intent 。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Android 学习笔记 - Activity">
+<meta property="og:url" content="http://xuu6770.github.io/draft/Android-Study-Note-Activity.html">
+<meta property="og:site_name" content="Rising Sun">
+<meta property="og:description" content="主要记录一下 Activity 的生命周期、启动模式，以及 Intent 。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://xuu6770.github.io/images/Notes/Activity_Life_Cycle.jpg">
+<meta property="article:published_time" content="2021-12-29T10:37:10.000Z">
+<meta property="article:modified_time" content="2025-09-20T14:31:17.917Z">
+<meta property="article:author" content="Aiden">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://xuu6770.github.io/images/Notes/Activity_Life_Cycle.jpg">
+  
+  
+  
+  <title>Android 学习笔记 - Activity｜Rising Sun</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xuu6770.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 60vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Rising Sun</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Android 学习笔记 - Activity"></span>
+          
+        </div>
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      <div class="container nopadding-x-md">
+        <div id="board"
+          >
+          
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-10 m-auto">
+                
+
+<article class="page-content">
+  <p>主要记录一下 Activity 的生命周期、启动模式，以及 Intent 。</p>
+<span id="more"></span>
+
+<h2 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h2><p>Activity 存储在栈这种先进后出的结构中，位于栈顶的 Activity 将会展示给用户，执行「返回」操作的时候栈顶的 Activity 也会先出栈。</p>
+<p>Activity 在生命周期中会存在 4 种状态：</p>
+<ul>
+<li>运行：当打开一个 Activity 的时候，它就会位于栈顶，并且处于运行状态。</li>
+<li>暂停：不是每一个 Activity 都会占满整个屏幕，例如对话框。而当我们将一个对话框形式的 Activity 入栈时，位于其之下的 Activity 也就是原来位于栈顶的 Activity 就会进入暂停状态。因为这个 Activity 被对话框挡住了，但又没完全不可见，尤其是对话框还导致这个 Activity 变得不可交互，所以就进入了暂停状态。</li>
+<li>停止：当一个 Activity 不再处于栈顶位置时，且完全不可视时，将会进入此状态。处于该状态的 Activity 有可能会被系统回收。</li>
+<li>销毁：当 Activity 出栈后就会变成这个状态。</li>
+</ul>
+<p>这 4 种状态伴随着 7 个回调方法：</p>
+<ol>
+<li><code>onCreate()</code>：在 Activity 在第一次创建的时候调用，在里面执行一些初始化操作。</li>
+<li><code>onStart()</code>：在 Activity 由不可见变为可见时调用。</li>
+<li><code>onResume()</code>：在 Activity 准备好和用户进行交互的时候调用。此时的 Activity 一定位于栈顶。</li>
+<li><code>onPause()</code>：在系统准备去启动或者恢复另一个 Activity 的时候调用。通常会在这个方法中将一些消耗 CPU 的资源释放掉，以及保存一些关键数据。这个方法的执行速度一定要快，不然会影响到新的栈顶 Activity 的使用。</li>
+<li><code>onStop()</code>：在 Activity 完全不可见的时候调用。和<code>onPause()</code>的主要区别在于，如果启动的新 Activity 是一个对话框形式的 Activity ，那么<code>onPause()</code>会得到执行。</li>
+<li><code>onDestroy()</code>：在 Activity 被销毁之前调用。</li>
+<li><code>onRestart()</code>：这个方法在 Activity 由停止状态变为运行状态之前调用。</li>
+</ol>
+<p>以上 7 个方法中除了<code>onRestart()</code>，其它都是两两对应的，可以这样简单理解：Activity 的创建和销毁对应 1 和 6 ，可见和完全不可见对应 2 和 5 并且 7 穿插在 5 到 2 之间，4 是部分可见，3 是从部分可见恢复到完全可见。</p>
+<p><img src="/images/Notes/Activity_Life_Cycle.jpg" srcset="/img/loading.gif" lazyload alt="Android 生命周期"></p>
+<h2 id="Intent"><a href="#Intent" class="headerlink" title="Intent"></a>Intent</h2><p>Intent 是 Android 程序中各组件之间进行交互的一种重要方式，它不仅可以指明当前组件想要执行的动作，还可以在不同组件之间传递数据。Intent一般可用于启动 Activity 、启动 Service 以及发送广播等场景。</p>
+<h3 id="显式-Intent"><a href="#显式-Intent" class="headerlink" title="显式 Intent"></a>显式 Intent</h3><p>最简单的用于启动 Activity 的方式，只需要提供两个参数，一是启动 Activity 的上下文，二是指定要启动的目标 Activity 。假设当前项目中有一个 Activity 的名称为「SecondActivity」。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">val</span> intent = Intent(<span class="hljs-keyword">this</span>, SecondActivity::<span class="hljs-keyword">class</span>.java)  <span class="hljs-comment">// 构建一个 Intent 对象</span><br>startActivity(intent)  <span class="hljs-comment">// 通过 Intent 对象启动 Activity</span><br></code></pre></td></tr></table></figure>
+
+<p>Kotlin 中的<code>SecondActivity::class.java</code>相当于 Java 中的<code>SecondActivity.class</code>。</p>
+<h3 id="隐式-Intent"><a href="#隐式-Intent" class="headerlink" title="隐式 Intent"></a>隐式 Intent</h3><p>隐式 Intent 并不明确指出想要启动哪一个 Activity ，而是预先在<code>AndroidManifest.xml</code>的<code>&lt;intent-filter&gt;</code>中设置<code>&lt;action&gt;</code>、<code>&lt;catagories&gt;</code>，来让同时满足这两个条件的 Activity 响应。</p>
+<p>如果有多个应用可处理 Intent ，系统会为用户显示一个对话框，供其选择要使用的应用。</p>
+<h4 id="启动自己程序的-Activity"><a href="#启动自己程序的-Activity" class="headerlink" title="启动自己程序的 Activity"></a>启动自己程序的 Activity</h4><p>假设在程序中有一个叫「SecondActivity」的 Activity ，那么此时需要在<code>AndroidManifest.xml</code>中对名为「.SecondActivity」的 Activity 标签进行设置，具体操作就是为其增加<code>&lt;intent-filter&gt;</code>标签，并且在其中按需指定 action 和 category ：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">activity</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;.SecondActivity&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:exported</span>=<span class="hljs-string">&quot;false&quot;</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">intent-filter</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">action</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;Start Second Activity&quot;</span> /&gt;</span> <span class="hljs-comment">&lt;!-- 指定 action --&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">category</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;android.intent.category.DEFAULT&quot;</span> /&gt;</span> <span class="hljs-comment">&lt;!-- 指定 category --&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">intent-filter</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">meta-data</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;android.app.lib_name&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:value</span>=<span class="hljs-string">&quot;&quot;</span> /&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">activity</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>接下来需要在调用处新建 Intent 对象并指定 action 和 category 信息，然后如果存在某个 Activity ，它在<code>AndroidManifest.xml</code>中注册了 Intent 对象中一摸一样的 action 和 category （比如上面提到的「SecondActivity」），那么该 Activity 将会响应<code>startActivity()</code>：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">val</span> intent = Intent(<span class="hljs-string">&quot;Start Second Activity&quot;</span>)  <span class="hljs-comment">// 指定 action</span><br>startActivity(intent)<br></code></pre></td></tr></table></figure>
+
+<p>不同于显式 Intent 使用的构造函数，此处构建 Intent 对象传入的参数是一个 action 。并且此处没有明确指定 category ，是因为默认就会使用<code>android.intent.category.DEFAULT</code>这个 category 。除了默认的 category ，也可以通过<code>intent.addCategory()</code>手动为 Intent 对象添加多个 category ，但是 action 只能有一个。当<code>startActivity(intent)</code>执行后，将成功启动「SecondActivity」。</p>
+<h4 id="启动其它程序的-Activity"><a href="#启动其它程序的-Activity" class="headerlink" title="启动其它程序的 Activity"></a>启动其它程序的 Activity</h4><p>根据需求在构建 Intent 对象时指定相应的 action ，就可以启动其它程序的 Activity。</p>
+<ul>
+<li>网络浏览器加载网址</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">val</span> intent = Intent(Intent.ACTION_VIEW, Uri.parse(<span class="hljs-string">&quot;http://www.baidu.com&quot;</span>))<br>startActivity(intent)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>发起通话</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">val</span> intent = Intent(Intent.ACTION_DIAL, Uri.parse(<span class="hljs-string">&quot;tel:10086&quot;</span>))<br>startActivity(intent)<br></code></pre></td></tr></table></figure>
+
+<h2 id="Activity-间传递数据"><a href="#Activity-间传递数据" class="headerlink" title="Activity 间传递数据"></a>Activity 间传递数据</h2><p>Intent 提供了一系列<code>putExtra()</code>方法的重载，可以把想要传递的数据暂存在 Intent 中，在启动另一个 Activity 后，再把这些数据从 Intent 中取出就可以了。</p>
+<h3 id="向下一个-Activity-传递"><a href="#向下一个-Activity-传递" class="headerlink" title="向下一个 Activity 传递"></a>向下一个 Activity 传递</h3><p>存储消息并启动 Activity ，其中<code>putExtra()</code>需要两个参数，可以视为键值对，第一个是键，第二个才是值。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">/* MainActivity */</span><br><br><span class="hljs-keyword">val</span> <span class="hljs-keyword">data</span> = <span class="hljs-string">&quot;Greetings to SecondActivity!&quot;</span><br><span class="hljs-keyword">val</span> intent = Intent(<span class="hljs-keyword">this</span>, SecondActivity::<span class="hljs-keyword">class</span>.java).apply &#123;<br>    putExtra(<span class="hljs-string">&quot;dataFromMainActivity&quot;</span>, <span class="hljs-keyword">data</span>)<br>&#125;<br>startActivity(intent)<br></code></pre></td></tr></table></figure>
+
+<p>接下来取出消息并打印，取消息时需要根据数据类型来使用不同的 getXxxExtra 方法。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">/* SecondActivity */</span><br><br><span class="hljs-keyword">val</span> <span class="hljs-keyword">data</span> = intent.getStringExtra(<span class="hljs-string">&quot;dataFromMainActivity&quot;</span>)<br>Log.d(<span class="hljs-string">&quot;SecondActivity&quot;</span>, <span class="hljs-string">&quot;传递过来的消息是：<span class="hljs-variable">$data</span>&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>在「SecondActivity」中并没有定义名为<code>intent</code>的 Intent 对象，<code>intent.getStringExtra(&quot;dataFromMainActivity&quot;)</code>中的<code>intent</code>实际上是调用了父类的<code>getIntent()</code>，该方法会获取用于启动「SecondActivity」的 Intent ，然后再通过 getXxxExtra 方法并传入键（dataFromMainActivity），就可以取出相应的值。</p>
+<p>除了上方代码中的<code>getStringExtra()</code>以及其它用于接收基本数据类型的方法之外，还有<code>getSerializableExtra()</code>、<code>getParcelableExtra()</code>、<code>getBundleExtra()</code>、<code>getCharSequenceExtra()</code>这四个方法用于接收相对应的对象。</p>
+<h3 id="返回给上一个-Activity"><a href="#返回给上一个-Activity" class="headerlink" title="返回给上一个 Activity"></a>返回给上一个 Activity</h3><p>在<code>androidx.appcompat:appcompat:1.3.0</code>以及更高的版本当中，<code>startActivityForResult()</code>已被废弃，同时被废弃的还有<code>requestPermissions()</code>。取而代之的是 Activity Result API ，通过这个 API 来实现两个 Activity 间的数据交换以及请求运行时权限。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">/* MainActivity */</span><br><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> requestDataLauncher =<br>    <span class="hljs-comment">// 调用 registerForActivityResult() 来注册一个对 Activity 结果的监听</span><br>    registerForActivityResult(ActivityResultContracts.StartActivityForResult()) &#123;<br>        <span class="hljs-comment">// 若有结果发返回则会回调此处的 Lambda 表达式对结果进行处理</span><br>        <span class="hljs-keyword">if</span> (it.resultCode == RESULT_OK) &#123;<br>            <span class="hljs-keyword">val</span> <span class="hljs-keyword">data</span> = it.<span class="hljs-keyword">data</span>?.getStringExtra(<span class="hljs-string">&quot;dataFromSecondActivity&quot;</span>)<br>            Log.d(<span class="hljs-string">&quot;dataFromSecondActivity&quot;</span>, <span class="hljs-string">&quot;<span class="hljs-variable">$data</span>&quot;</span>)<br>        &#125;<br>    &#125;<br><br><span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onCreate</span><span class="hljs-params">(savedInstanceState: <span class="hljs-type">Bundle</span>?)</span></span> &#123;<br>    <span class="hljs-keyword">super</span>.onCreate(savedInstanceState)<br>    <span class="hljs-keyword">val</span> intent = Intent(<span class="hljs-keyword">this</span>, SecondActivity::<span class="hljs-keyword">class</span>.java)<br>    setContent &#123;<br>        <span class="hljs-comment">// 使用 ActivityResultLauncher 对象的 launch() 来启动 Intent</span><br>        Button(onClick = &#123; requestDataLauncher.launch(intent) &#125;) &#123;<br>            Text(text = <span class="hljs-string">&quot;启动 SecondActivity&quot;</span>)<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">/* SecondActivity */</span><br><br>Button(onClick = &#123;<br>    <span class="hljs-keyword">val</span> intent = Intent()<br>    intent.putExtra(<span class="hljs-string">&quot;dataFromSecondActivity&quot;</span>, <span class="hljs-string">&quot;Greetings to MainActivity!&quot;</span>)<br>    setResult(RESULT_OK, intent)<br>    finish()  <span class="hljs-comment">// 销毁当前 Activity</span><br>&#125;) &#123;<br>    Text(text = <span class="hljs-string">&quot;结束 SecondActivity 并返回数据&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在 MainActivity 中已经完全移除了对<code>onActivityResult()</code>的重写，而是调用<code>registerForActivityResult()</code>方法来注册一个对 Activity 结果的监听。<code>registerForActivityResult()</code>方法接收两个参数，第一个参数是一种 Contract 类型，由于是从另外一个 Activity 中请求数据，因此这里使用了 StartActivityForResult 这种 Contract 。第二个参数是一个 Lambda 表达式，当有结果返回时则会回调到这里，然后在这里获取并处理数据即可。</p>
+<p><code>registerForActivityResult()</code>方法的返回值是一个<code>ActivityResultLauncher</code>对象，这个对象当中有一个<code>launch()</code>可以用于去启用 Intent。这样就不需要再调用<code>startActivityForResult()</code>了，而是直接调用<code>launch()</code>并把 Intent 传入即可。</p>
+<h2 id="启动模式"><a href="#启动模式" class="headerlink" title="启动模式"></a>启动模式</h2><p>某个 Activity 的启动模式是在清单文件中其对应的<code>&lt;activity&gt;</code>标签内进行设置的，例如此处将 MainActivity 的启动模式设置为<code>singleTask</code>：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">activity</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;.MainActivity&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:exported</span>=<span class="hljs-string">&quot;true&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">android:launchMode</span>=<span class="hljs-string">&quot;singleTask&quot;</span>&gt;</span><span class="hljs-comment">&lt;!-- 将启动模式设置为 singleTask --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">intent-filter</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">action</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;android.intent.action.MAIN&quot;</span> /&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">category</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;android.intent.category.LAUNCHER&quot;</span> /&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">intent-filter</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">activity</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>启动模式可分为两大类，<code>standard</code>和<code>singleTop</code>是一类，<code>singleTask</code>、<code>singleInstance</code>和<code>singleInstancePerTask</code>是另一类。如此分类的依据是前者可以对 Activity 进行多次实例化。</p>
+<h3 id="standard"><a href="#standard" class="headerlink" title="standard"></a>standard</h3><p><code>standard</code>是 Activity 默认的启动模式，对于使用该模式的 Activity ，系统每次都会在当前任务栈顶创建一个新实例而不会理会栈中是否已经存在实例。每个实例可以属于不同的任务，而一个任务可以有多个实例。</p>
+<h3 id="singleTop"><a href="#singleTop" class="headerlink" title="singleTop"></a>singleTop</h3><p>在该模式下，如果 Activity 已经处于当前任务栈栈顶，那么系统将不会创建新的实例，而是复用已有的实例，并调用其<code>onNewIntent()</code>。</p>
+<p><code>onNewIntent()</code>可以在 Activity 中被重写，其在<code>onPause()</code>之后，<code>onResume()</code>之前被调用，并且接收一个<code>Intent</code>类型的参数，这个 Intent 就是在调用<code>startActivity()</code>时传递的 Intent 。</p>
+<h3 id="singleTask"><a href="#singleTask" class="headerlink" title="singleTask"></a>singleTask</h3><p>如果要启动的 Activity 已经存在于某个任务栈中，那么系统会把该任务栈调到前台，并将其之上的所有 Activity 通通出栈，然后再调用其<code>onNewIntent()</code>。如果要启动的 Activity 不存在于任何任务栈中，那么系统会创建一个新的任务栈并在其根位置创建实例。</p>
+<p>接下来是一个简单的测试用例，假设有两个 Activity 分别为 MainActivity 和 SecondActivity ，且 MainActivity 的<code>launchMode</code>设置为<code>singleTask</code>。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MainActivity</span> : <span class="hljs-type">ComponentActivity</span>() &#123;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onCreate</span><span class="hljs-params">(savedInstanceState: <span class="hljs-type">Bundle</span>?)</span></span> &#123;<br>        <span class="hljs-keyword">super</span>.onCreate(savedInstanceState)<br>        setContent &#123;<br>            Button(onClick = &#123;startActivity(Intent(<span class="hljs-keyword">this</span>, SecondActivity::<span class="hljs-keyword">class</span>.java))&#125;) &#123;<br>                Text(text = <span class="hljs-string">&quot;启动 SecondActivity&quot;</span>)<br>            &#125;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onPause</span><span class="hljs-params">()</span></span> &#123;<br>        <span class="hljs-keyword">super</span>.onPause()<br>        Log.i(<span class="hljs-string">&quot;@@@&quot;</span>, <span class="hljs-string">&quot;MainActivity onPause() 被调用&quot;</span>)<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onResume</span><span class="hljs-params">()</span></span> &#123;<br>        <span class="hljs-keyword">super</span>.onResume()<br>        Log.i(<span class="hljs-string">&quot;@@@&quot;</span>, <span class="hljs-string">&quot;MainActivity onResume() 被调用&quot;</span>)<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onNewIntent</span><span class="hljs-params">(intent: <span class="hljs-type">Intent</span>?)</span></span> &#123;<br>        <span class="hljs-keyword">super</span>.onNewIntent(intent)<br>        Log.i(<span class="hljs-string">&quot;@@@&quot;</span>, <span class="hljs-string">&quot;MainActivity onNewIntent() 被调用&quot;</span>)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">class</span> <span class="hljs-title class_">SecondActivity</span> : <span class="hljs-type">ComponentActivity</span>() &#123;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onCreate</span><span class="hljs-params">(savedInstanceState: <span class="hljs-type">Bundle</span>?)</span></span> &#123;<br>        <span class="hljs-keyword">super</span>.onCreate(savedInstanceState)<br>        setContent &#123;<br>            Button(onClick = &#123; startActivity(Intent(<span class="hljs-keyword">this</span>, MainActivity::<span class="hljs-keyword">class</span>.java)) &#125;) &#123;<br>                Text(text = <span class="hljs-string">&quot;启动 MainActivity&quot;</span>)<br>            &#125;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDestroy</span><span class="hljs-params">()</span></span> &#123;<br>        <span class="hljs-keyword">super</span>.onDestroy()<br>        Log.i(<span class="hljs-string">&quot;@@@&quot;</span>, <span class="hljs-string">&quot;SecondActivity onDestroy() 被调用&quot;</span>)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>程序运行，在 MainActivity 中点击按钮启动 SecondActivity 会得到如下打印：</p>
+<blockquote>
+<p>MainActivity onPause() 被调用</p>
+</blockquote>
+<p>随后在 SecondActivity 中点击按钮启动 MainActivity 会得到如下打印：</p>
+<blockquote>
+<p>MainActivity onNewIntent() 被调用<br>MainActivity onResume() 被调用<br>SecondActivity onDestroy() 被调用</p>
+</blockquote>
+<h3 id="singleInstance"><a href="#singleInstance" class="headerlink" title="singleInstance"></a>singleInstance</h3><p>在该模式下，只允许一个 Activity 的实例存在，并且该实例会运行在一个单独的任务栈中。如果要启动的 Activity 已经存在于该任务栈中，那么系统会直接调用其 onNewIntent() 方法。</p>
+<p>接下来是一个简单的测试用例，假设程序中有三个 Activity ：</p>
+<ul>
+<li>MainActivity 用来启动 SecondActivity 。</li>
+<li>SecondActivity 的启动模式设置为<code>singleInstance</code>且用来启动 ThirdActivity 。</li>
+<li>三个 Activity 的<code>onCreate()</code>中都会打印<code>taskId</code>。</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MainActivity</span> : <span class="hljs-type">ComponentActivity</span>() &#123;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onCreate</span><span class="hljs-params">(savedInstanceState: <span class="hljs-type">Bundle</span>?)</span></span> &#123;<br>        <span class="hljs-keyword">super</span>.onCreate(savedInstanceState)<br>        <span class="hljs-keyword">val</span> context = <span class="hljs-keyword">this</span><br>        Log.i(<span class="hljs-string">&quot;@@@&quot;</span>, <span class="hljs-string">&quot;MainActivity 启动，任务 ID 为：<span class="hljs-variable">$taskId</span>&quot;</span>)<br>        setContent &#123;<br>            Column(modifier = Modifier.fillMaxSize()) &#123;<br>                Text(text = <span class="hljs-string">&quot;目前位于 MainActivity&quot;</span>)<br>                Button(onClick = &#123; startActivity(Intent(context, SecondActivity::<span class="hljs-keyword">class</span>.java)) &#125;) &#123;<br>                    Text(text = <span class="hljs-string">&quot;启动 SecondActivity&quot;</span>)<br>                &#125;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">class</span> <span class="hljs-title class_">SecondActivity</span> : <span class="hljs-type">ComponentActivity</span>() &#123;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onCreate</span><span class="hljs-params">(savedInstanceState: <span class="hljs-type">Bundle</span>?)</span></span> &#123;<br>        <span class="hljs-keyword">super</span>.onCreate(savedInstanceState)<br>        <span class="hljs-keyword">val</span> context = <span class="hljs-keyword">this</span><br>        Log.i(<span class="hljs-string">&quot;@@@&quot;</span>, <span class="hljs-string">&quot;SecondActivity 启动，任务 ID 为：<span class="hljs-variable">$taskId</span>&quot;</span>)<br>        setContent &#123;<br>            Column(modifier = Modifier.fillMaxSize()) &#123;<br>                Text(text = <span class="hljs-string">&quot;目前位于 SecondActivity&quot;</span>)<br>                Button(onClick = &#123; startActivity(Intent(context, ThirdActivity::<span class="hljs-keyword">class</span>.java)) &#125;) &#123;<br>                    Text(text = <span class="hljs-string">&quot;启动 ThirdActivity&quot;</span>)<br>                &#125;<br>            &#125;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onNewIntent</span><span class="hljs-params">(intent: <span class="hljs-type">Intent</span>?)</span></span> &#123;<br>        <span class="hljs-keyword">super</span>.onNewIntent(intent)<br>        Log.i(<span class="hljs-string">&quot;@@@&quot;</span>, <span class="hljs-string">&quot;SecondActivity onNewIntent() 被调用&quot;</span>)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">class</span> <span class="hljs-title class_">ThirdActivity</span> : <span class="hljs-type">ComponentActivity</span>() &#123;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onCreate</span><span class="hljs-params">(savedInstanceState: <span class="hljs-type">Bundle</span>?)</span></span> &#123;<br>        <span class="hljs-keyword">super</span>.onCreate(savedInstanceState)<br>        <span class="hljs-keyword">val</span> context = <span class="hljs-keyword">this</span><br>        Log.i(<span class="hljs-string">&quot;@@@&quot;</span>, <span class="hljs-string">&quot;ThirdActivity 启动，任务 ID 为：<span class="hljs-variable">$taskId</span>&quot;</span>)<br>        setContent &#123;<br>            Column(modifier = Modifier.fillMaxSize()) &#123;<br>                Text(text = <span class="hljs-string">&quot;目前位于 ThirdActivity&quot;</span>)<br>                Button(onClick = &#123; startActivity(Intent(context, SecondActivity::<span class="hljs-keyword">class</span>.java)) &#125;) &#123;<br>                    Text(text = <span class="hljs-string">&quot;启动 ThirdActivity&quot;</span>)<br>                &#125;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>程序运行，会得到第一个打印：</p>
+<blockquote>
+<p>MainActivity 启动，任务 ID 为：55</p>
+</blockquote>
+<p>接着点击按钮启动 SecondActivity 会得到第二个打印：</p>
+<blockquote>
+<p>SecondActivity 启动，任务 ID 为：56</p>
+</blockquote>
+<p>接着点击按钮启动 ThirdActivity 会得到第三个打印：</p>
+<blockquote>
+<p>ThirdActivity 启动，任务 ID 为：55</p>
+</blockquote>
+<p>可以看到，MainActivity 和 ThirdActivity 的<code>taskId</code>是一致的，说明它们位于同一个栈内，而 SecondActivity 由于将启动模式设置成了<code>singleInstance</code>，使其单独被放置在一个栈中进行管理。这时候在设备上进行「返回」操作，会发现 ThirdActivity 会直接返回到 MainActivity ，然后再返回到 SecondActivity ，最后才退出程序。</p>
+<p>而当在 ThirdActivity 中点击按钮启动 SecondActivity 时，由于其已经实例化过了，所以会直接被复用并且调用其<code>onNewIntent()</code>。</p>
+<h3 id="singleInstancePerTask"><a href="#singleInstancePerTask" class="headerlink" title="singleInstancePerTask"></a>singleInstancePerTask</h3><p>真的是永远有学不完的新东西……<code>singleInstancePerTask</code>是 Android 12 新增的第五种启动模式，它的作用是让 Activity 只能作为任务栈的根 Activity 存在，并且每个任务栈内只能有一个实例。但是在不同的任务栈中可以有不同的实例，如果想要这么做，就需要在 Intent 内设置<code>Intent.FLAG_ACTIVITY_MULTIPLE_TASK</code>或<code>Intent.FLAG_ACTIVITY_NEW_DOCUMENT</code>标志。而<code>singleTask</code>是在整个应用内只有一个实例，但是它可以是也可以不是一个任务栈的根，这将由任务的亲和性决定，也就是清单文件中的<code>&lt;activity&gt;</code>标签内<code>taskAffinity</code>属性。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/C62WVau-AU0MH7S4Ix85ew">Activity Result API详解，是时候放弃startActivityForResult了</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.android.com/guide/components/intents-common">通用 Intent | Android 开发者 | Android Developers</a></li>
+<li>《第一行代码 Android 第3版》郭霖 著</li>
+</ul>
+
+
+  
+
+</article>
+
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a><!-- 7.3.0 --> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a><!-- 1.9.8 --> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

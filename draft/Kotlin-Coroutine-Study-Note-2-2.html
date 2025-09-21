@@ -1,0 +1,363 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Aiden">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="「结构化并发」与父、子协程的生命周期关联有很大的关系，并且在讨论父、子协程的生命周期时，往往离不开 Job 。前一节也有提到，当涉及到一些「流程」相关的事务管理时，就要用到 Job 。例如使用 Job 对象的parent属性来获取父协程，用children属性来获取子协程。接下来就简单来看看父、子协程是如何体现的。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Kotlin 协程学习笔记 2.2">
+<meta property="og:url" content="http://xuu6770.github.io/draft/Kotlin-Coroutine-Study-Note-2-2.html">
+<meta property="og:site_name" content="Rising Sun">
+<meta property="og:description" content="「结构化并发」与父、子协程的生命周期关联有很大的关系，并且在讨论父、子协程的生命周期时，往往离不开 Job 。前一节也有提到，当涉及到一些「流程」相关的事务管理时，就要用到 Job 。例如使用 Job 对象的parent属性来获取父协程，用children属性来获取子协程。接下来就简单来看看父、子协程是如何体现的。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-12-03T16:38:00.000Z">
+<meta property="article:modified_time" content="2024-12-03T16:38:37.740Z">
+<meta property="article:author" content="Aiden">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Kotlin 协程学习笔记 2.2｜Rising Sun</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xuu6770.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 60vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Rising Sun</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Kotlin 协程学习笔记 2.2"></span>
+          
+        </div>
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      <div class="container nopadding-x-md">
+        <div id="board"
+          >
+          
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-10 m-auto">
+                
+
+<article class="page-content">
+  <p>「结构化并发」与父、子协程的生命周期关联有很大的关系，并且在讨论父、子协程的生命周期时，往往离不开 Job 。前一节也有提到，当涉及到一些「流程」相关的事务管理时，就要用到 Job 。例如使用 Job 对象的<code>parent</code>属性来获取父协程，用<code>children</code>属性来获取子协程。接下来就简单来看看父、子协程是如何体现的。</p>
+<span id="more"></span>
+
+<p>一个协程之所以能成为「父」协程通常是因为它创建了「子」协程，这可能是通过<code>launch()</code>创建的：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> = runBlocking &#123;<br>    <span class="hljs-keyword">var</span> childJob: Job? = <span class="hljs-literal">null</span><br>    <span class="hljs-keyword">val</span> parentJob = CoroutineScope(EmptyCoroutineContext).launch &#123;<br>        childJob = launch &#123;<br>            delay(<span class="hljs-number">1000</span>)<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">// 获取子协程集合</span><br>    <span class="hljs-keyword">val</span> childrenJobs = parentJob.children<br><br>    <span class="hljs-comment">// 打印子协程数量</span><br>    println(childrenJobs.count())<br><br>    <span class="hljs-comment">// 看一下这个子协程与集合里的是不是同一个</span><br>    println(childJob === childrenJobs.first())<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>程序运行输出：</p>
+<blockquote>
+<p>1<br>true</p>
+</blockquote>
+<p>在上面的例子中，我在<code>parentJob</code>内部创建了一个子协程，并将其赋值给一开始就声明的变量<code>childJob</code>方便后续调用。在<code>parentJob</code>外部，我调用了它的<code>children</code>属性来获取它的子协程，由于<code>parentJob</code>可能不止有一个子协程，所以<code>children</code>属性实际上返回的是一个集合，不过在这个例子中，这个集合内应当只有一个对象。接下来我尝试打印这个集合中的数量，结果是<code>1</code>，和猜想的一样，同时我还使用了引用相等来判断通过<code>children</code>属性获取到的这个子协程与我在<code>parentJob</code>内部创建的是不是同一个，结果是<code>true</code>。同样的，如果利用引用相等来判断<code>childJob</code>的父协程是不是<code>parentJob</code>，得到的结果也会是<code>true</code>。</p>
+<p>也就是说，一个协程通过<code>launch()</code>创建子协程，双方的父子关系也经由<code>launch()</code>形成，就像上面的例子一样。不过如果要从更加严谨的角度来看的话，父子关系还是要取决于<code>launch()</code>是由谁调用的，且看下面这个例子：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> = runBlocking &#123;<br>    <span class="hljs-keyword">val</span> scope = CoroutineScope(EmptyCoroutineContext)<br>    <span class="hljs-keyword">val</span> parentJob = scope.launch &#123;<br>        <span class="hljs-comment">//  ↓ 此时 childJob 还是 parentJob 的子协程吗？</span><br>        <span class="hljs-keyword">val</span> childJob = scope.launch &#123;<br>            <br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在最上面的例子中，创建子协程时，<code>launch()</code>前面并没有写明调用者，事实上它的调用者是<code>this</code>，只不过被省略了。而在当前的例子中，尽管<code>childJob</code>嵌于<code>parentJob</code>中，但是由于它们都是由<code>scope</code>这个 CoroutineScope 对象（这个对象也是有 Job 的，如果我们没有传入 Job ，它就会自己创建一个）创建的协程，所以它们两个其实是兄弟关系而不是父子关系。</p>
+<p>不过这还没完，<code>launch()</code>可以接收一个<code>CoroutineContext</code>类型的参数，对于这个参数，我们可以传入一个 Job 对象，而传入的这个 Job 对象，将会被指定为<code>launch()</code>新创建的子协程的父协程，也就是无论<code>launch()</code>是谁调用的，我们都可以通过传入参数的方式来手动指定父协程：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> = runBlocking &#123;<br>    <span class="hljs-keyword">val</span> scope = CoroutineScope(EmptyCoroutineContext)<br>    <span class="hljs-keyword">val</span> parentJob = scope.launch &#123;<br>        <span class="hljs-comment">// scope.coroutineContext[Job] 可能为空，此处用双感叹号来断言</span><br>        <span class="hljs-keyword">val</span> childJob = launch(scope.coroutineContext[Job]!!) &#123;<br><br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>例如这种写法和上面的例子的写法的效果是一样的，<code>parentJob</code>和<code>childJob</code>依旧是由<code>scope</code>创建的协程，它们仍然是兄弟关系。</p>
+<p>在简单看完一个协程是如何成为父协程以及一个子协程是属于哪个父协程以后，我们再回过头来看结构化并发，这其中包含了结构化取消和结构化结束，对于前者来说，父协程一旦取消，那么它下面的子协程也会全部取消执行，而对于后者来说，父协程会等待所有的子协程执行完成之后，它才会结束。这里可以再看一个例子：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> = runBlocking &#123;<br>    <span class="hljs-keyword">val</span> scope = CoroutineScope(EmptyCoroutineContext)<br>    <span class="hljs-keyword">val</span> parentJob = scope.launch &#123;<br>        launch &#123;<br>            delay(<span class="hljs-number">100</span>)<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">val</span> startTimestamp = System.currentTimeMillis()<br>    parentJob.join()<br>    <span class="hljs-keyword">val</span> duration = System.currentTimeMillis() - startTimestamp<br>    println(<span class="hljs-string">&quot;Duration: <span class="hljs-variable">$duration</span> ms&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>程序运行，打印的时间大概是一百零几毫秒，但是如果此时创建的协程不属于<code>parentJob</code>的子协程的话：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> = runBlocking &#123;<br>    <span class="hljs-keyword">val</span> scope = CoroutineScope(EmptyCoroutineContext)<br>    <span class="hljs-keyword">val</span> parentJob = scope.launch &#123;<br>        <span class="hljs-comment">//     ↓ 传入一个自定义 Job 对象作为这个协程的父协程</span><br>        launch(Job()) &#123;<br>            delay(<span class="hljs-number">100</span>)<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">val</span> startTimestamp = System.currentTimeMillis()<br>    parentJob.join()<br>    <span class="hljs-keyword">val</span> duration = System.currentTimeMillis() - startTimestamp<br>    println(<span class="hljs-string">&quot;Duration: <span class="hljs-variable">$duration</span> ms&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>打印的时间就只有几毫秒了，由此可以验证父协程在等待子协程执行完成。</p>
+<p>而像这种「等待子协程完成后才会接着往下做」的特性，往往也可以应用于实际业务中的应用初始化的场景。</p>
+<p>最后还有一点：在协程中，无论父子协程兄弟协程，所有的协程都是并行执行的，虽然父子协程的代码不能同时在<code>Dispatchers.Main</code>中运行，但是在流程上，父子协程依旧是并行关系。</p>
+
+
+  
+
+</article>
+
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a><!-- 7.3.0 --> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a><!-- 1.9.8 --> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

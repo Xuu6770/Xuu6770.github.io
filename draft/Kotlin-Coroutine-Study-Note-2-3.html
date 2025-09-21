@@ -1,0 +1,362 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Aiden">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="线程的取消和协程的取消是一样的，都是交互式。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Kotlin 协程学习笔记 2.3 - 线程、协程的取消与停止">
+<meta property="og:url" content="http://xuu6770.github.io/draft/Kotlin-Coroutine-Study-Note-2-3.html">
+<meta property="og:site_name" content="Rising Sun">
+<meta property="og:description" content="线程的取消和协程的取消是一样的，都是交互式。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-12-03T16:38:00.000Z">
+<meta property="article:modified_time" content="2024-12-19T15:50:17.400Z">
+<meta property="article:author" content="Aiden">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Kotlin 协程学习笔记 2.3 - 线程、协程的取消与停止｜Rising Sun</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xuu6770.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 60vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Rising Sun</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Kotlin 协程学习笔记 2.3 - 线程、协程的取消与停止"></span>
+          
+        </div>
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      <div class="container nopadding-x-md">
+        <div id="board"
+          >
+          
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-10 m-auto">
+                
+
+<article class="page-content">
+  <p>线程的取消和协程的取消是一样的，都是交互式。</p>
+<span id="more"></span>
+
+<h2 id="线程的-stop"><a href="#线程的-stop" class="headerlink" title="线程的 stop()"></a>线程的 stop()</h2><p>Java 线程中的<code>stop()</code>也是老生常谈的内容了，它的作用是强制停止一个正在运行的线程。强制停止会带来包括但可能不限于以下问题：</p>
+<ol>
+<li>线程突然终止会导致资源无法正常释放；<ol>
+<li>数据库连接没有正常关闭；</li>
+<li>文件流没有及时关闭；</li>
+<li>数据写入操作可能只完成一部分</li>
+</ol>
+</li>
+<li>突然终止会导致对象处于不一致状态。例如一个转账操作，可能转出账户已扣款，但转入账户还未收到款项就被终止了。</li>
+<li>会立即释放该线程所持有的所有锁，可能导致受保护的数据处于不一致状态。</li>
+<li>……</li>
+</ol>
+<p><code>stop()</code>由于本身的工作机制导致使用时会产生各种不可预期的后果，所以它在 1998 年时就已被废弃（deprecated），只不过考虑到兼容性，目前 JDK 里仍然保留着。</p>
+<h2 id="interrupt"><a href="#interrupt" class="headerlink" title="interrupt()"></a>interrupt()</h2><p><code>interrupt()</code>是 Java 中推荐使用的线程中断机制，它属于「交互式」的中断，即它不会立刻杀掉线程，而是会给线程发送一个中断信号，让线程进行收尾工作后，自行结束。相比<code>stop()</code>来说，<code>interrupt()</code>更可靠，但这种可靠，并不是说其内部实现有多么优秀，同样的，<code>stop()</code>被废弃也不是因为它有多烂，这两个方法的处境是由它们自身的机制造成的，一个是强制中断，一个是交互式中断（非强制）。</p>
+<p>另外需要知道，<code>interrupt()</code>是在线程外部被调用的，因为在线程内部调用这个方法并没有什么意义，如果想要在线程内部结束线程，那直接 return 就行了。</p>
+<p><code>interrupt()</code>虽说是交互式「中断」，但是到底中不中断，中断前要干什么，也不是它说了算，它只是起到一个通知的作用而已。进一步说，它的通知方式有两种，一种是修改中断标记位，第二种则是抛出异常，这里先来看第一种。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-keyword">val</span> myThread = thread &#123;<br>        <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) &#123;<br>            <span class="hljs-comment">// ↓ 对中断标记位进行判断，如果为 true 则结束线程</span><br>            <span class="hljs-keyword">if</span> (Thread.currentThread().isInterrupted) &#123;<br>                <span class="hljs-comment">// 假设这里是线程结束前的一些收尾工作，比如释放资源</span><br><br>                <span class="hljs-comment">// ↓ 收尾工作完成，正式结束该线程</span><br>                <span class="hljs-keyword">return</span><span class="hljs-symbol">@thread</span><br>            &#125;<br><br>            <span class="hljs-comment">// 假设这里是线程内具体的业务逻辑</span><br>            <span class="hljs-comment">// 如果标记位为 false 则说明线程不需要中止</span><br>            <span class="hljs-comment">// 那么就继续线程的工作就好了</span><br>        &#125;<br>    &#125;<br>    <br>    <span class="hljs-comment">//       ↓ 调用方法将中断标记位设置为 true</span><br>    myThread.interrupt()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>第一种情况是当<code>interrupt()</code>被调用时，调用它的线程的中断标记位就会被置为 true ，此时如果线程内有判断标记位的代码以及相应的线程收尾工作代码（这些代码都是开发人员自行编写的），则代表该线程可以配合中断标记位对线程进行中断处理。</p>
+<p>第一种情况还算好理解，这其中需要注意的是「应该在线程内的什么位置来对中断标记位进行判断」——一般来说是在耗时操作之前进行判断，因为如果线程被通知该中断了，那么在耗时操作前及时中断线程就可以避免不必要的等待和资源浪费。</p>
+<p>这里还要补充一个上面的示例代码中没有提到的方法：<code>interrupted()</code>，它和<code>isInterrupted</code>一样是用来判断标记位的，不同在于前者在判断完以后还会顺带把标记位置为 false 。也就是说假设你在线程外调用了<code>interrupt()</code>，然后在线程内连续调用多次<code>interrupted()</code>，那么只有第一次调用时会获得 true 结果，后续都会得到 false 。</p>
+<p>第二种情况其实也不复杂，就是在线程执行阻塞操作（例如<code>wait()</code>、<code>sleep()</code>、<code>join()</code>）时调用了<code>interrupt()</code>的话，线程就会立即抛出<code>InterruptedException</code>。以<code>sleep()</code>来说，这就是一个简单的延时等待操作，但是在调用这个方法时，我们会被要求使用 try 语句来将<code>sleep()</code>包住。这就是因为在线程等待的过程中，一旦外部调用了线程的<code>interrupt()</code>方法，线程就会通过抛出异常的方式从睡眠中“醒”过来，此时如果要像在第一种情况中那样进行一些收尾工作并结束线程的话，就需要使用 catch 来捕获异常，同时在代码块中编写相应的收尾工作的代码。</p>
+<p>如果对这两种情况进行分析，我们会发现其实第一种情况也是属于非强制性打断，因为<code>interrupt()</code>只是改了一个变量（标记位），然后需要我们自己在线程中去对变量进行判断。但是第二种情况则相反，属于强制性打断。这其实也好理解，因为第一种情况下存在太多未知因素，外部调用<code>interrupt()</code>时我们并不知道线程目前的工作进行到哪一步了，故而不能强制打断，否则也有可能会损坏程序的状态。但是在第二种情况下，线程是处于一个「等待」、「睡眠」的状态，此时线程并不会干其它的事情，只是在等而已，所以当外部调用<code>interrupt()</code>时，线程就会被直接唤醒（打断）。</p>
+<p>对于第二种情况，还有两点补充一下，一是当外部调用<code>interrupt()</code>时，哪怕线程还没有开始睡眠（或等待），或者是即将开始睡眠（或等待），这都不重要，只要它一睡，异常就会被抛出。第二点是，异常被抛出后，线程的中断标记位也会被重置为 false 。</p>
+
+
+  
+
+</article>
+
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a><!-- 7.3.0 --> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a><!-- 1.9.8 --> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

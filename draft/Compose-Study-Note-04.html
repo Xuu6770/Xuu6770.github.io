@@ -1,0 +1,401 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Aiden">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="本节主要讲一下derivedStateOf()这个函数是什么，怎么用。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Compose 学习笔记 ④ - derivedStateOf">
+<meta property="og:url" content="http://xuu6770.github.io/draft/Compose-Study-Note-04.html">
+<meta property="og:site_name" content="Rising Sun">
+<meta property="og:description" content="本节主要讲一下derivedStateOf()这个函数是什么，怎么用。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-01-10T10:50:00.000Z">
+<meta property="article:modified_time" content="2024-09-04T16:50:54.720Z">
+<meta property="article:author" content="Aiden">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Compose 学习笔记 ④ - derivedStateOf｜Rising Sun</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xuu6770.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 60vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Rising Sun</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Compose 学习笔记 ④ - derivedStateOf"></span>
+          
+        </div>
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      <div class="container nopadding-x-md">
+        <div id="board"
+          >
+          
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-10 m-auto">
+                
+
+<article class="page-content">
+  <p>本节主要讲一下<code>derivedStateOf()</code>这个函数是什么，怎么用。</p>
+<span id="more"></span>
+
+<p>简单概括一下<code>derivedStateOf()</code>的功能：状态对象 A 的更新被委托给了<code>derivedStateOf()</code>，<code>derivedStateOf()</code>又会去订阅另一个状态对象 B ，当 B 的状态变化后，<code>derivedStateOf()</code>会根据已给出的逻辑去更新 A 。接下来我们看一下官方文档中的例子：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-meta">@Composable</span><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">TodoList</span><span class="hljs-params">(highPriorityKeywords: <span class="hljs-type">List</span>&lt;<span class="hljs-type">String</span>&gt; = listOf(<span class="hljs-string">&quot;Review&quot;</span>, <span class="hljs-string">&quot;Unblock&quot;</span>, <span class="hljs-string">&quot;Compose&quot;</span>)</span></span>) &#123;<br><br>    <span class="hljs-keyword">val</span> todoTasks = remember &#123; mutableStateListOf&lt;String&gt;() &#125;<br><br>    <span class="hljs-comment">// Calculate high priority tasks only when the todoTasks or highPriorityKeywords</span><br>    <span class="hljs-comment">// change, not on every recomposition</span><br>    <span class="hljs-keyword">val</span> highPriorityTasks <span class="hljs-keyword">by</span> remember(highPriorityKeywords) &#123;<br>        derivedStateOf &#123; todoTasks.filter &#123; it.containsWord(highPriorityKeywords) &#125; &#125;<br>    &#125;<br><br>    Box(Modifier.fillMaxSize()) &#123;<br>        LazyColumn &#123;<br>            items(highPriorityTasks) &#123; <span class="hljs-comment">/* ... */</span> &#125;<br>            items(todoTasks) &#123; <span class="hljs-comment">/* ... */</span> &#125;<br>        &#125;<br>        <span class="hljs-comment">/* Rest of the UI where users can add elements to the list */</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>文档地址：<a target="_blank" rel="noopener" href="https://developer.android.com/jetpack/compose/side-effects?hl=zh-cn#derivedstateof">https://developer.android.com/jetpack/compose/side-effects?hl=zh-cn#derivedstateof</a></p>
+<p>首先代码的用意其实也就是根据函数参数中给到的字符串列表<code>highPriorityKeywords</code>去对列表<code>todoTasks</code>进行过滤，得到一个新列表<code>highPriorityTasks</code>，然后在一个纵向布局中先展示<code>highPriorityTasks</code>中的内容，后展示<code>todoTasks</code>的内容。其中重点在于<code>highPriorityKeywords</code>和<code>todoTasks</code>这两个列表：</p>
+<ul>
+<li><code>highPriorityKeywords</code>作为参数被传递进了<code>remember()</code>中，而<code>remember()</code>这个函数，我们前面提到过它大概是起到一个缓存的作用。在这个场景中，如果<code>remember()</code>的参数发生变化，Compose 在重组时就会重新执行<code>remember()</code>中的代码，然后将执行后得到的新结果进行缓存。</li>
+<li><code>todoTasks</code>在<code>derivedStateOf()</code>中被<code>derivedStateOf()</code>订阅，当<code>todoTasks</code>内部发生变化时，<code>derivedStateOf()</code>会重新执行 Lambda 表达式中的代码，通过<code>filter()</code>计算出新的值（当然在别的场景中不一定是<code>filter()</code>）。</li>
+</ul>
+<p>无论是<code>remember()</code>被重新执行还是<code>derivedStateOf()</code>被重新执行，它们重新执行的部分都是一样的，也就是<code>todoTasks.filter &#123; it.containsWord(highPriorityKeywords) &#125;</code>这条语句，并且最终都会去更新变量<code>highPriorityTasks</code>的值。</p>
+<p>官方所提供的这个例子可以说是<code>derivedStateOf()</code>使用场景的“最终形态”，因为官方将<code>derivedStateOf()</code>和带参数的<code>remember()</code>结合起来使用了。但是为了更好理解，我们需要先从几个简单的场景来渐进到官方的这个“最终形态”。</p>
+<h2 id="场景一"><a href="#场景一" class="headerlink" title="场景一"></a>场景一</h2><p>前面提到<code>derivedStateOf()</code>的作用就是根据一个状态的变化计算出另一个状态，接下来就这个定义来编写一个最简单的用例：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">setContent &#123;<br>	<span class="hljs-keyword">var</span> name <span class="hljs-keyword">by</span> remember &#123; mutableStateOf(<span class="hljs-string">&quot;Aiden&quot;</span>) &#125;<br>	<span class="hljs-keyword">val</span> upperCaseName <span class="hljs-keyword">by</span> remember &#123;<br>		derivedStateOf &#123; name.uppercase() &#125;<br>	&#125;<br>	Column &#123;<br>		Text(text = upperCaseName)<br>		Button(onClick = &#123; name = <span class="hljs-string">&quot;Marcus&quot;</span> &#125;) &#123;<br>			Text(text = <span class="hljs-string">&quot;修改名字&quot;</span>)<br>		&#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>程序的功能很简单，用<code>derivedStateOf()</code>订阅一个字符串类型的 state object 的变化，将这个字符串转换成大写然后赋值给变量<code>upperCaseName</code>，最后再把<code>upperCaseName</code>显示出来。此外还有几个要点：</p>
+<ol>
+<li>变量<code>upperCaseName</code>被使用<code>by</code>关键字委托给了<code>derivedStateOf()</code>，尽管<code>derivedStateOf()</code>函数本身返回的是一个<code>State</code>对象，但是因为委托，变量<code>upperCaseName</code>在这里只会是<code>String</code>类型；</li>
+<li>变量<code>upperCaseName</code>被<code>val</code>修饰，这是因为<code>derivedStateOf()</code>会帮我们去更新<code>upperCaseName</code>的值，我们并不需要也并不能去手动更新<code>upperCaseName</code>，如果手动更新，那就违背了使用<code>derivedStateOf()</code>的目的；</li>
+<li><code>derivedStateOf()</code>返回的对象和<code>mutableStateOf()</code>返回的对象都是会被订阅状态变化的；</li>
+</ol>
+<p>程序运行，<code>derivedStateOf()</code>和<code>remember()</code>都会执行一次，前者是为了进行第一次的委托计算并赋值（也就是将变量<code>name</code>的字符串转换为大写），而后者是为了缓存这个结果。于是界面上会显示一行大写的文本“AIDEN”以及在它下方的一个按钮，当我点击按钮改变<code>name</code>的值后，由于<code>derivedStateOf()</code>内部使用（订阅）到了<code>name</code>，所以<code>derivedStateOf()</code>中的代码会再次执行，从而计算出新的值，也就是“MARCUS”，并将其赋值给<code>upperCaseName</code>，最后<code>Text()</code>这边也会进行重组，界面上最终显示着一行大写的文本“MARCUS”以及在它下方的一个按钮。</p>
+<p>这个例子看起来还挺简单的，而且这个“根据变化重复执行代码”的特性好像在之前也遇到过……好像用带参数的<code>remember()</code>也可以实现上面代码相同的效果来着……我们来看一下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">setContent &#123;<br>	<span class="hljs-keyword">var</span> name <span class="hljs-keyword">by</span> remember &#123; mutableStateOf(<span class="hljs-string">&quot;Aiden&quot;</span>) &#125;<br>	<span class="hljs-comment">//                     ↓ 使用带参数的 remember() 来更新</span><br>	<span class="hljs-keyword">val</span> upperCaseName = remember(name) &#123; name.uppercase() &#125;<br>	Column &#123;<br>		Text(text = upperCaseName)<br>		Button(onClick = &#123; name = <span class="hljs-string">&quot;Marcus&quot;</span> &#125;) &#123;<br>			Text(text = <span class="hljs-string">&quot;修改名字&quot;</span>)<br>		&#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>程序运行，由于点击按钮改变了<code>name</code>的值，这就导致在重组时 Compose 发现传入<code>remember()</code>中的参数有变化，于是就刷新了缓存（也就是重复执行了<code>remember()</code>中的代码），<code>upperCaseName</code>的值得到更新，程序最终的运行效果和上面使用<code>derivedStateOf()</code>时是一样的……带参数的<code>remember()</code>和<code>derivedStateOf()</code>运行的效果竟然是一样的……这就不禁让人开始思考这两者的区别在哪里……</p>
+<h2 id="场景二"><a href="#场景二" class="headerlink" title="场景二"></a>场景二</h2><p>在上面的场景中可以看到带参数的<code>remember()</code>和<code>derivedStateOf()</code>都可以根据变化在重组时重新执行代码，这是它们相同的地方，而不同的地方就在于它们判断变化的依据：</p>
+<ul>
+<li><code>remember()</code>在重组时是否会重新执行代码，是依据于它的参数本身有没有发生变化，比如从一个<code>String</code>变成另一个<code>String</code>，这种对象的变化往往伴随着赋值操作。也就是说，当参数是集合类型时，就属于特殊情况了，因为集合内部发生的变化（例如增加元素或者移除元素）是不会引起<code>remember()</code>的注意的，从而也就不会刷新缓存；</li>
+<li><code>derivedStateOf()</code>是否会重新执行代码，是依据于它所订阅的 state object 的变化，比如说当订阅的是<code>mutableStateOf()</code>创建的 state object 时，一旦这个 state object 发生了赋值操作，那就会引起<code>derivedStateOf()</code>内部代码的再执行。包括<code>mutableStateListOf()</code>创建的集合对象也是一样，当集合内发生变动时，就会触发<code>derivedStateOf()</code>内部代码的再执行；</li>
+</ul>
+<p>接下来根据上面的结论再来看个例子：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">setContent &#123;<br>	<span class="hljs-keyword">val</span> names = remember &#123; mutableStateListOf(<span class="hljs-string">&quot;Aiden&quot;</span>, <span class="hljs-string">&quot;Marcus&quot;</span>) &#125;<br>	<span class="hljs-keyword">val</span> upperCaseNames <span class="hljs-keyword">by</span> remember &#123;<br>		derivedStateOf &#123; names.map &#123; it.uppercase() &#125; &#125;<br>	&#125;<br>	Column &#123;<br>		<span class="hljs-keyword">for</span> (name <span class="hljs-keyword">in</span> upperCaseNames) &#123;<br>			Text(text = name)<br>		&#125;<br>		Button(onClick = &#123; names.add(<span class="hljs-string">&quot;Wrench&quot;</span>) &#125;) &#123;<br>			Text(text = <span class="hljs-string">&quot;添加名字&quot;</span>)<br>		&#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这一次使用了<code>mutableStateListOf()</code>创建了一个可被订阅内部状态变化的列表<code>names</code>，接着同样使用<code>derivedStateOf()</code>对<code>names</code>进行订阅，当<code>names</code>的内部发生变化时，<code>derivedStateOf()</code>内的代码就会被再次执行，从而计算出新的值并赋给变量<code>upperCaseNames</code>。</p>
+<p>程序的功能就是把列表中的名字全部变成大写然后展示出来。程序跑起来以后，会先显示两行大写的名字，分别是<code>AIDEN</code>和<code>MARCUS</code>，当我点击按钮后，列表中就会添加一个新的名字，列表这个变化会引起<code>derivedStateOf()</code>内代码的再次执行，原本只显示两行大写名字的界面在点击按钮后显示了第三行大写名字，运行效果很理想。</p>
+<p>接着再来看看如果将<code>names</code>作为参数传递进<code>remember()</code>以后会怎么样：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">setContent &#123;<br>	<span class="hljs-keyword">val</span> names = remember &#123; mutableStateListOf(<span class="hljs-string">&quot;Aiden&quot;</span>, <span class="hljs-string">&quot;Marcus&quot;</span>) &#125;<br>	<span class="hljs-comment">//                     ↓ 使用带参数的 remember() 来更新</span><br>	<span class="hljs-keyword">val</span> upperCaseNames = remember(names) &#123;<br>		names.map &#123; it.uppercase() &#125;<br>	&#125;<br>	Column &#123;<br>		<span class="hljs-keyword">for</span> (name <span class="hljs-keyword">in</span> upperCaseNames) &#123;<br>			Text(text = name)<br>		&#125;<br>		Button(onClick = &#123; names.add(<span class="hljs-string">&quot;Wrench&quot;</span>) &#125;) &#123;<br>			Text(text = <span class="hljs-string">&quot;添加名字&quot;</span>)<br>		&#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>程序运行，点击按钮，界面是没反应的。原因其实就是尽管列表<code>names</code>中添加了新的元素，但是<code>remember()</code>并不关心这样的变化，除非<code>names</code>被用等号<code>=</code>赋值成了另一个列表。</p>
+<p>到此为止，我们似乎就对什么时候该使用<code>derivedStateOf()</code>和什么时候该使用带参数的<code>remember()</code>有一个初步的概念了，那就是“当涉及到集合内部变化时，我们使用<code>derivedStateOf()</code>，当涉及到赋值操作时，我们就使用带参数的<code>remember()</code>”，对吧？对，但是还不够。</p>
+<h2 id="场景三"><a href="#场景三" class="headerlink" title="场景三"></a>场景三</h2><p>把话挑明了说，<code>remember()</code>和<code>derivedStateOf()</code>的本质从头到尾都没变过，<code>remember()</code>的作用其实就是我们前面说到的“缓存”，它的参数只是作为一个“是否要刷新缓存”的依据；而<code>derivedStateOf()</code>的作用就是监听其订阅对象的状态变化，当变化发生时，重新执行代码，执行的结果是根据其订阅对象的变化而变化的。<code>remember()</code>加<code>derivedStateOf()</code>这个组合其实与<code>remember()</code>加<code>mutableStateOf()</code>这个组合类似，<code>remember()</code>和它们都在各司其职。</p>
+<p>最后来看一个类似于官方例子的例子：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-meta">@Composable</span><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">UpperCaseNames</span><span class="hljs-params">(names: <span class="hljs-type">List</span>&lt;<span class="hljs-type">String</span>&gt;, onAddElement: () -&gt; <span class="hljs-type">Unit</span>)</span></span> &#123;<br>    <span class="hljs-comment">//                             ↓ 我该添加参数吗？</span><br>    <span class="hljs-keyword">val</span> upperCaseNames <span class="hljs-keyword">by</span> remember( ) &#123;<br>        <span class="hljs-comment">// ↓ 我该使用 derivedStateOf 吗？</span><br>        derivedStateOf &#123; names.map &#123; it.uppercase() &#125; &#125;<br>    &#125;<br>    Column &#123;<br>        <span class="hljs-keyword">for</span> (name <span class="hljs-keyword">in</span> upperCaseNames) &#123;<br>            Text(text = name)<br>        &#125;<br>        Button(onClick = &#123; onAddElement.invoke() &#125;) &#123;<br>            Text(text = <span class="hljs-string">&quot;增加元素&quot;</span>)<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>首先可以看到上面的例子是一个自定义的 Composable 函数，这意味着这个例子具有一定的通用性，包括官方给的例子也是一个自定义的 Composable ，因为在实际开发中我们不可能像前面的例子那样把代码都写在<code>setContent()</code>里。</p>
+<p>接着再来看看这个函数的功能，我的想法很简单，就是在调用这个 Composable 的时候传入一个储存着名字的列表，函数把列表里的名字全部变成大写再展示出来，并且当我点击按钮以后，我希望往列表里添加一个名字，最后函数要把更新后的列表里的名字全部变成大写再展示出来。那么现在问题就来了，对于这个需求，我是应该使用带参数的<code>remember()</code>还是应该使用<code>derivedStateOf()</code>？还是说两个都用？</p>
+<p>首先我在点击按钮往列表里增加新的名字的时候，我需要这个变化能被感知到，也就是要能触发重组刷新界面，所以这个列表应该是一个由<code>mutableStateListOf()</code>创建的可被订阅内部变化的列表才行。接着我把这个列表作为参数传递进<code>UpperCaseNames()</code>中：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">setContent &#123;<br>	<span class="hljs-comment">//                            ↓ 可被订阅内部变化的列表</span><br>	<span class="hljs-keyword">val</span> names = remember &#123; mutableStateListOf(<span class="hljs-string">&quot;Aiden&quot;</span>, <span class="hljs-string">&quot;Marcus&quot;</span>) &#125;<br>	<span class="hljs-comment">//                       ↓ 传递参数</span><br>	UpperCaseNames(names = names) &#123;<br>		names.add(<span class="hljs-string">&quot;Wrench&quot;</span>)<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>既然我传递的是一个可以被订阅的列表，那我直接用<code>derivedStateOf()</code>订阅它不就好了吗？我试试只用<code>derivedStateOf()</code>而不用带参数的<code>remember()</code>。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-meta">@Composable</span><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">UpperCaseNames</span><span class="hljs-params">(names: <span class="hljs-type">List</span>&lt;<span class="hljs-type">String</span>&gt;, onAddElement: () -&gt; <span class="hljs-type">Unit</span>)</span></span> &#123;<br>    <span class="hljs-keyword">val</span> upperCaseNames <span class="hljs-keyword">by</span> remember &#123;<br>		<span class="hljs-comment">//                 ↓ 订阅列表的内部变化</span><br>        derivedStateOf &#123; names.map &#123; it.uppercase() &#125; &#125;<br>    &#125;<br>    Column &#123;<br>        <span class="hljs-keyword">for</span> (name <span class="hljs-keyword">in</span> upperCaseNames) &#123;<br>            Text(text = name)<br>        &#125;<br>        Button(onClick = &#123; onAddElement.invoke() &#125;) &#123;<br>            Text(text = <span class="hljs-string">&quot;增加元素&quot;</span>)<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>运行程序，当我点击按钮后，列表<code>names</code>增加了一个新名字，<code>names</code>的内部变化让<code>derivedStateOf()</code>重新执行了 Lambda 中的代码，从而计算出了新的列表，最后再刷新界面把新的名字的大写形态展示出来，整体效果理想。这样看来，我似乎真的就不需要带参数的<code>remember()</code>了……</p>
+<p>那倒还真不是，我们再来看一个场景：我现在有两个名字列表和一个代表年龄的变量，我现在不想往列表里增加新的名字了，我也不 care 名字是不是大写了，我现在的新需求就是要根据年龄显示不同的名字列表，当年龄大于或等于 18 岁时，我显示一个列表，否则我显示另一个。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">setContent &#123;<br>	Column &#123;<br>		<span class="hljs-keyword">var</span> age <span class="hljs-keyword">by</span> remember &#123; mutableIntStateOf(<span class="hljs-number">17</span>) &#125;<br>		<span class="hljs-keyword">val</span> names = remember(age) &#123;<br>			<span class="hljs-keyword">if</span> (age &gt;= <span class="hljs-number">18</span>) mutableStateListOf(<span class="hljs-string">&quot;Aiden&quot;</span>, <span class="hljs-string">&quot;Marcus&quot;</span>)<br>			<span class="hljs-keyword">else</span> mutableStateListOf(<span class="hljs-string">&quot;想不出别的英文呢名了&quot;</span>, <span class="hljs-string">&quot;随便写两个字符串&quot;</span>)<br>		&#125;<br>		UpperCaseNames(names = names) &#123; names.add(<span class="hljs-string">&quot;Wrench&quot;</span>) &#125;<br>		Button(onClick = &#123; age = <span class="hljs-number">18</span> &#125;) &#123;<br>			Text(text = <span class="hljs-string">&quot;成年了&quot;</span>)<br>		&#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>UpperCaseNames()</code>函数的代码暂时不动。程序运行，因为<code>age</code>初始化为<code>17</code>，所以先展示<code>&quot;想不出别的英文呢名了&quot;, &quot;随便写两个字符串&quot;</code>这个列表，当我点击按钮后，<code>age</code>被改为<code>18</code>，触发重组，又因为<code>age</code>是<code>remember()</code>的参数，所以<code>remember()</code>中的代码也会重新执行，所以不用担心<code>names</code>不更新。程序继续往下跑，<code>names</code>被更新为<code>&quot;Aiden&quot;, &quot;Marcus&quot;</code>这个列表以后被作为参数传递进<code>UpperCaseNames()</code>函数中，照理说<code>UpperCaseNames()</code>接下来应该会根据新的参数来显示新的列表，但实际上界面并没有变化。</p>
+<p>我们回看<code>UpperCaseNames()</code>函数其实也很容易发现问题，问题就在于<code>remember()</code>没参数。尽管重组带着新的名字列表进入了<code>UpperCaseNames()</code>函数内部，但是因为<code>remember()</code>没参数导致缓存没刷新，<code>upperCaseNames</code>这个变量所持有的列表仍然是之前缓存过的<code>&quot;想不出别的英文呢名了&quot;, &quot;随便写两个字符串&quot;</code>这个列表，这也就是界面显示没变化的原因了。</p>
+<p>解决方案也很简单，为<code>remember()</code>添加参数即可，并且这个参数就是<code>UpperCaseNames()</code>函数的参数：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-meta">@Composable</span><br><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">UpperCaseNames</span><span class="hljs-params">(names: <span class="hljs-type">List</span>&lt;<span class="hljs-type">String</span>&gt;, onAddElement: () -&gt; <span class="hljs-type">Unit</span>)</span></span> &#123;<br>    <span class="hljs-comment">//                               ↓ 添加参数</span><br>    <span class="hljs-keyword">val</span> upperCaseNames <span class="hljs-keyword">by</span> remember(names) &#123;<br>        derivedStateOf &#123; names.map &#123; it.uppercase() &#125; &#125;<br>    &#125;<br>    Column &#123;<br>        <span class="hljs-keyword">for</span> (name <span class="hljs-keyword">in</span> upperCaseNames) &#123;<br>            Text(text = name)<br>        &#125;<br>        Button(onClick = &#123; onAddElement.invoke() &#125;) &#123;<br>            Text(text = <span class="hljs-string">&quot;增加元素&quot;</span>)<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这样一来，当列表内部元素发生变动的时候，就由<code>derivedStateOf()</code>来负责重新执行代码，而当列表本身变成另一个对象的时候，就由<code>remember()</code>来负责重新执行代码。这也符合了我前面说到的两者各司其职并不冲突。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>说了那么多只是为了搞清楚<code>remember()</code>和<code>derivedStateOf()</code>的本质而已，前者首先是起到一个缓存作用，其次是根据参数是否变化决定是否要刷新缓存；后者则是用于监听状态变化从而重新执行代码的。剩下的就是要结合实际场景来决定使用哪一个以及是否需要搭配使用了。</p>
+
+
+  
+
+</article>
+
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a><!-- 7.3.0 --> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a><!-- 1.9.8 --> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
