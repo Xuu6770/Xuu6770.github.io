@@ -72,6 +72,10 @@
 
 
 
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
@@ -89,7 +93,7 @@
 
 
   
-<meta name="generator" content="Hexo 7.3.0"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
 <body>
@@ -267,7 +271,7 @@
 
 <p>查看 commits 历史，其中新的 commit 始终打印在屏幕上边。一个 commit 记录大概长这样：</p>
 <blockquote>
-<p>commit sc872s0vvke49ee6a7bac1952a6c5942b1195a11 (HEAD -&gt; main, origin&#x2F;main, origin&#x2F;HEAD)<br>Author: Aiden Lin <a href="mailto:&#x65;&#120;&#97;&#x6d;&#x70;&#108;&#x65;&#64;&#121;&#x61;&#x68;&#111;&#111;&#46;&#x63;&#x6f;&#x6d;">example@yahoo.com</a><br>Date:   Fri Feb 3 12:00:00 2023 +0800</p>
+<p>commit sc872s0vvke49ee6a7bac1952a6c5942b1195a11 (HEAD -&gt; main, origin&#x2F;main, origin&#x2F;HEAD)<br>Author: Aiden Lin <a href="mailto:&#x65;&#120;&#97;&#109;&#x70;&#108;&#101;&#64;&#121;&#x61;&#104;&#111;&#x6f;&#x2e;&#x63;&#111;&#x6d;">example@yahoo.com</a><br>Date:   Fri Feb 3 12:00:00 2023 +0800</p>
 <p>Initial commit</p>
 </blockquote>
 <p>一个记录大致涵盖了几条信息，首先<code>11867c9dfce49ee6a7bac1952a6c5942b1195a11</code>是这个 commit 的哈希值，往下是这次 commit 的提交者和他的邮箱，以及提交日期，最后是这次 commit 的备注。而在哈希值的右边，<code>HEAD</code>代表了一个指针，其往往会指向最新一次的 commit 。除了指针，分支也算是引用的一种，例如<code>main</code>分支，其可以指向一个 commit ，也可以被<code>HEAD</code>指向，实际中往往是后者。</p>

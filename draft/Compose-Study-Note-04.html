@@ -61,6 +61,10 @@
 
 
 
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
@@ -78,7 +82,7 @@
 
 
   
-<meta name="generator" content="Hexo 7.3.0"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
 <body>
@@ -221,7 +225,7 @@
 <li><code>highPriorityKeywords</code>作为参数被传递进了<code>remember()</code>中，而<code>remember()</code>这个函数，我们前面提到过它大概是起到一个缓存的作用。在这个场景中，如果<code>remember()</code>的参数发生变化，Compose 在重组时就会重新执行<code>remember()</code>中的代码，然后将执行后得到的新结果进行缓存。</li>
 <li><code>todoTasks</code>在<code>derivedStateOf()</code>中被<code>derivedStateOf()</code>订阅，当<code>todoTasks</code>内部发生变化时，<code>derivedStateOf()</code>会重新执行 Lambda 表达式中的代码，通过<code>filter()</code>计算出新的值（当然在别的场景中不一定是<code>filter()</code>）。</li>
 </ul>
-<p>无论是<code>remember()</code>被重新执行还是<code>derivedStateOf()</code>被重新执行，它们重新执行的部分都是一样的，也就是<code>todoTasks.filter &#123; it.containsWord(highPriorityKeywords) &#125;</code>这条语句，并且最终都会去更新变量<code>highPriorityTasks</code>的值。</p>
+<p>无论是<code>remember()</code>被重新执行还是<code>derivedStateOf()</code>被重新执行，它们重新执行的部分都是一样的，也就是<code>todoTasks.filter { it.containsWord(highPriorityKeywords) }</code>这条语句，并且最终都会去更新变量<code>highPriorityTasks</code>的值。</p>
 <p>官方所提供的这个例子可以说是<code>derivedStateOf()</code>使用场景的“最终形态”，因为官方将<code>derivedStateOf()</code>和带参数的<code>remember()</code>结合起来使用了。但是为了更好理解，我们需要先从几个简单的场景来渐进到官方的这个“最终形态”。</p>
 <h2 id="场景一"><a href="#场景一" class="headerlink" title="场景一"></a>场景一</h2><p>前面提到<code>derivedStateOf()</code>的作用就是根据一个状态的变化计算出另一个状态，接下来就这个定义来编写一个最简单的用例：</p>
 <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">setContent &#123;<br>	<span class="hljs-keyword">var</span> name <span class="hljs-keyword">by</span> remember &#123; mutableStateOf(<span class="hljs-string">&quot;Aiden&quot;</span>) &#125;<br>	<span class="hljs-keyword">val</span> upperCaseName <span class="hljs-keyword">by</span> remember &#123;<br>		derivedStateOf &#123; name.uppercase() &#125;<br>	&#125;<br>	Column &#123;<br>		Text(text = upperCaseName)<br>		Button(onClick = &#123; name = <span class="hljs-string">&quot;Marcus&quot;</span> &#125;) &#123;<br>			Text(text = <span class="hljs-string">&quot;修改名字&quot;</span>)<br>		&#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
